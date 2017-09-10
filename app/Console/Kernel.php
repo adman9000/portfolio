@@ -36,15 +36,18 @@ class Kernel extends ConsoleKernel
             foreach($coins as $coin) {
                 //Get latest price from kraken
                 $info = KrakenAPIFacade::getTicker(array($coin->code, "EUR"));
-                $result = reset($info['result']);
-                $latest = $result['a'][0];
 
-                $price = new CoinPrice();
-                $price->coin_id = $coin->id;
-                $price->current_price = $latest;
-                $price->save();
-                $price->coin_code = $coin->code;
-                $latest_prices[] = $price;
+                if($info['result']) {
+                    $result = reset($info['result']);
+                    $latest = $result['a'][0];
+
+                    $price = new CoinPrice();
+                    $price->coin_id = $coin->id;
+                    $price->current_price = $latest;
+                    $price->save();
+                    $price->coin_code = $coin->code;
+                    $latest_prices[] = $price;
+                }
             }
 
             //send pusher event informing of latest coin prices
