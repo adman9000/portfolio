@@ -43,8 +43,17 @@ class Kernel extends ConsoleKernel
                 $price->coin_id = $coin->id;
                 $price->current_price = $latest;
                 $price->save();
+                $price->coin_code = $coin->code;
+                $latest_prices[] = $price;
             }
 
+            //send pusher event informing of latest coin prices
+            $data = array();
+            foreach($latest_prices as $price) {
+                $data[$price->coin_code]->price = $price->current_price;
+                $data[$price->coin_code]->updated_at = $price->created_at;
+            }
+            broadcast(new App\Events\PusherEvent(json_encode($data)));
 
         })->everyFiveMinutes();
     }

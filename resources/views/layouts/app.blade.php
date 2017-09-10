@@ -14,6 +14,8 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
+
+<greet-user></greet-user>
     <div id="app">
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">
@@ -37,6 +39,7 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                         <li><a href="{{ route('coins') }}">Coins</a></li>
+                        <li><a href="{{ route('transactions') }}">Transactions</a></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -76,5 +79,15 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+    <!-- AngularJS -->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.js" type="text/javascript"></script>
+
+
+<!-- pusher-angular -->
+<script src="/js/angular-pusher.js"></script>
+<script src="{{ asset('js/custom.js') }}"></script>
+
+ @yield('footer_scripts')
+
 </body>
 </html>
