@@ -32,7 +32,7 @@ class Kernel extends ConsoleKernel
 
          $schedule->call(function () {
 
-            $coins = Coin::all();
+            $coins = Coin::where("code", "!=", "EUR")->get();
             foreach($coins as $coin) {
                 //Get latest price from kraken
                 $info = KrakenAPIFacade::getTicker(array($coin->code, "EUR"));
@@ -53,6 +53,7 @@ class Kernel extends ConsoleKernel
             //send pusher event informing of latest coin prices
             $data = array();
             foreach($latest_prices as $price) {
+             $data[$price->coin_code] = new StdClass();
                 $data[$price->coin_code]->price = $price->current_price;
                 $data[$price->coin_code]->updated_at = $price->created_at;
             }
