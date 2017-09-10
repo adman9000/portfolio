@@ -37,7 +37,7 @@ class Kernel extends ConsoleKernel
                 //Get latest price from kraken
                 $info = KrakenAPIFacade::getTicker(array($coin->code, "EUR"));
 
-                if($info['result']) {
+                if((isset($info['result'])) && (is_array($info['result']))) {
                     $result = reset($info['result']);
                     $latest = $result['a'][0];
 
