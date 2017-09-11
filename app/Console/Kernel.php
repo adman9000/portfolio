@@ -56,6 +56,7 @@ class Kernel extends ConsoleKernel
              $data[$price->coin_code] = new StdClass();
                 $data[$price->coin_code]->price = $price->current_price;
                 $data[$price->coin_code]->updated_at = $price->created_at;
+                $data[$price->coin_code]->updated_at_short = $price->created_at->format('D G:i');
             }
             broadcast(new App\Events\PusherEvent(json_encode($data)));
 
