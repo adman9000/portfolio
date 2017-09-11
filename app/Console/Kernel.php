@@ -53,9 +53,16 @@ class Kernel extends ConsoleKernel
             //send pusher event informing of latest coin prices
             $data = array();
             foreach($latest_prices as $price) {
+<<<<<<< HEAD
              $data[$price->coin_code] = array();
                 $data[$price->coin_code]['price'] = $price->current_price;
                 $data[$price->coin_code]['updated_at'] = $price->created_at;
+=======
+             $data[$price->coin_code] = new StdClass();
+                $data[$price->coin_code]->price = $price->current_price;
+                $data[$price->coin_code]->updated_at = $price->created_at;
+                $data[$price->coin_code]->updated_at_short = $price->created_at->format('D G:i');
+>>>>>>> 9415d8a22cc84af7033745d1e34e01e8b2ad3555
             }
             broadcast(new \App\Events\PusherEvent(json_encode($data)));
 
