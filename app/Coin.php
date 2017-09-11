@@ -22,7 +22,6 @@ class Coin extends Model
 
     public function coinprices24Hours()
     { 
-    $yesterday = strtotime("2 hours ago");
     echo $yesterday;
       return $this->hasMany('App\CoinPrice')->where("created_at", ">=", $yesterday);
     }

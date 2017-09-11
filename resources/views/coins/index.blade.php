@@ -19,7 +19,7 @@
 									<tr>
 									<td> {{ $coin->code }} </td> 
 									<td > {{ $coin->name }} </td> 
-									<td ng-bind='current_price_{{ $coin->code }}'></td> 
+									<td ng-bind='current_price_{{ $coin->code }}' ng-class='current_price_class_{{ $coin->code }}'></td> 
 									<td ng-bind='amount_owned_{{ $coin->code }}'></td>
 									<td ng-bind='current_value_{{ $coin->code }}'></td>
 									<td align=right> <a class='btn btn-info btn-sm' href='/coins/{{ $coin->id }}'>View</a> <a class='btn btn-info btn-sm' href='/coins/{{ $coin->id }}/edit'>Edit</a>
@@ -59,6 +59,8 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 	  var current_total = 0;
 	  var current_value = 0;
 
+	  var current_price_class_XBT = "text-danger";
+
 	//Initial setting  
 	@foreach ($coins as $coin)
 
@@ -82,9 +84,9 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 
 		@endif
 
-		console.log("{{$coin->code}}");
-		console.log(parseFloat($scope.current_price_{{$coin->code}}));
-		console.log(parseFloat($scope.amount_owned_{{$coin->code}}));
+		//console.log("{{$coin->code}}");
+		//console.log(parseFloat($scope.current_price_{{$coin->code}}));
+		//console.log(parseFloat($scope.amount_owned_{{$coin->code}}));
 
 
 		current_value  = parseFloat($scope.current_price_{{$coin->code}}) * parseFloat($scope.amount_owned_{{$coin->code}});
@@ -102,10 +104,16 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 	//console.log(data.message);
 	message = angular.fromJson(data.message);
 	var current_total = 0;
+	var dt;
 	angular.forEach(message, function(val, key) {
 		//console.log(key);
 		//console.log(val);
 		price = val.price;
+		dt = val.updated_at_short;
+
+		//get old price
+		var old_price = eval("self.current_price_"+key);
+
 		eval("self.current_price_"+key+" = '"+price+"'");
 		//console.log("self.current_price_"+key+" = '"+price+"'");
 
@@ -114,11 +122,23 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 		
 		eval("self.current_value_"+key+" = '\u20AC'+current_value");
 
+		console.log(old_price+" : "+price);
+
+		//Set colour based on price change
+		if(price > old_price)
+	  		eval("self.current_price_class_"+key+" = 'text-success'");
+	  	else if(price < old_price)
+	  		eval("self.current_price_class_"+key+" = 'text-danger'");
+	  	else 
+	  		eval("self.current_price_class_"+key+" = 'text-default'");
+
 		current_total += current_value;
     })
 
     $scope.current_total = current_total;
 
+
+    $scope.last_updated = "Last Update: " + dt;
   });
 
 

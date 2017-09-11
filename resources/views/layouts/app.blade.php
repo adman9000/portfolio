@@ -13,9 +13,8 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body>
+<body ng-app='myApp' ng-controller='myCtrl'>
 
-<greet-user></greet-user>
     <div id="app">
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">
@@ -85,6 +84,15 @@
 
         @yield('content')
     </div>
+
+<footer class='footer'>
+    <div class='row'>
+        <div class='col-xs-12'>
+        <center><span ng-bind='last_updated'></span></center>
+        </div>
+    </div>
+
+</footer>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>

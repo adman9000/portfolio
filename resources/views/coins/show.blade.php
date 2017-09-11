@@ -2,7 +2,7 @@
 
 @section('content') 
 
-<div class="container" ng-app='myApp' ng-controller='myCtrl'>
+<div class="container" >
     <div class="row">
         <div class="col-md-12 ">
             <div class="panel panel-default">
@@ -116,6 +116,8 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 		num_results++;
 		chart_options.hAxis.showTextEvery = Math.round(num_results/5);
 		chart.draw(chart_data, chart_options);
+
+    $scope.last_updated = "Last Update: " + dt;
 	  });
 });
 

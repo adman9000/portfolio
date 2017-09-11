@@ -2,7 +2,7 @@
 
 @section('content') 
 
-<div class="container" ng-app='myApp' ng-controller='myCtrl'>
+<div class="container" >
 
 @foreach($coins as $coin)
 
