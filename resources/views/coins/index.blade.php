@@ -33,6 +33,8 @@
 							@endforeach
 
 						</tbody>
+
+						<tfoot><tr><th></th><th></th><th></th><th></th><th ng-bind='current_total'></th><th></th></tr></tfoot>
 					</table>
 
 					<br />
@@ -53,6 +55,9 @@
 app.controller('myCtrl', function($scope, $http, Pusher) {
 
 	  var self = $scope;
+
+	  var current_total = 0;
+	  var current_value = 0;
 
 	//Initial setting  
 	@foreach ($coins as $coin)
@@ -82,25 +87,38 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 		console.log(parseFloat($scope.amount_owned_{{$coin->code}}));
 
 
-		$scope.current_value_{{$coin->code}} = parseFloat($scope.current_price_{{$coin->code}}) * parseFloat($scope.amount_owned_{{$coin->code}});
+		current_value  = parseFloat($scope.current_price_{{$coin->code}}) * parseFloat($scope.amount_owned_{{$coin->code}});
 		
+		$scope.current_value_{{$coin->code}} = "\u20AC"+current_value;
+
+		current_total += current_value;
+
 	@endforeach
+
+	$scope.current_total = "\u20AC"+current_total;
 
 	Pusher.subscribe('kraken', 'App\\Events\\PusherEvent', function (item) {
 	data = angular.fromJson(item);
-	console.log(data.message);
+	//console.log(data.message);
 	message = angular.fromJson(data.message);
+	var current_total = 0;
 	angular.forEach(message, function(val, key) {
-		console.log(key);
-		console.log(val);
+		//console.log(key);
+		//console.log(val);
 		price = val.price;
 		eval("self.current_price_"+key+" = '"+price+"'");
-		console.log("self.current_price_"+key+" = '"+price+"'");
+		//console.log("self.current_price_"+key+" = '"+price+"'");
 
-		eval("self.current_value_"+key+" = parseFloat(self.current_price_"+key+") * parseFloat(self.amount_owned_"+key+")");
-		console.log("self.current_value_"+key+" = parseFloat(self.current_price_"+key+") * parseFloat(self.amount_owned_"+key+")");
+		eval("current_value = parseFloat(self.current_price_"+key+") * parseFloat(self.amount_owned_"+key+")");
+		//console.log("self.current_value_"+key+" = parseFloat(self.current_price_"+key+") * parseFloat(self.amount_owned_"+key+")");
 		
+		eval("self.current_value_"+key+" = '\u20AC'+current_value");
+
+		current_total += current_value;
     })
+
+    $scope.current_total = current_total;
+
   });
 
 

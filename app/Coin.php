@@ -20,6 +20,13 @@ class Coin extends Model
 	  return $this->hasOne('App\CoinPrice')->latest();
 	}
 
+    public function coinprices24Hours()
+    { 
+    $yesterday = strtotime("2 hours ago");
+    echo $yesterday;
+      return $this->hasMany('App\CoinPrice')->where("created_at", ">=", $yesterday);
+    }
+
     //All price records for this coin
     public function coinprices() {
         return $this->hasMany('App\CoinPrice');

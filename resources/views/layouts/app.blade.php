@@ -40,6 +40,15 @@
                     <ul class="nav navbar-nav">
                         <li><a href="{{ route('coins') }}">Coins</a></li>
                         <li><a href="{{ route('transactions') }}">Transactions</a></li>
+                         <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    Charts <span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu" role="menu">
+                         <li><a href="{{ route('charts') }}">All Time</a></li>
+                         <li><a href="{{ route('charts24', '24hr') }}">24 Hour</a></li>
+                         </ul></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->

@@ -62,6 +62,7 @@
     var chart_data = new Array();
     var chart;
     var chart_options;
+    var num_results= <?=sizeof($coin->coinprices)?>;
 
       // Load the Visualization API and the corechart package.
       google.charts.load('current', {'packages':['corechart']});
@@ -89,7 +90,7 @@
         chart_options = {'title':'Live Prices',
                        'width':'90%',
                        height: 400,
-           hAxis: { showTextEvery: <?=round(sizeof($coin->coinprices)/5)?> }
+           hAxis: { showTextEvery: Math.round(num_results/5) }
                    };
 
         // Instantiate and draw our chart, passing in some options.
@@ -112,6 +113,8 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 		var arr = [dt, pr];
 		chart_data.addRow(arr);
 
+		num_results++;
+		chart_options.hAxis.showTextEvery = Math.round(num_results/5);
 		chart.draw(chart_data, chart_options);
 	  });
 });

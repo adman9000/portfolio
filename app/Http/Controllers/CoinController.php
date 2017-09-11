@@ -7,6 +7,7 @@ use App\Coin;
 use App\CoinPrice;
 use App\Events\PusherEvent;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CoinController extends Controller
 {
@@ -45,6 +46,30 @@ class CoinController extends Controller
 
         return view('coins.index', $data);
     }
+
+
+    /**
+     * Show the price charts.
+     *
+     * @return \Illuminate\Http\Response
+     */
+     public function charts($time=false)
+        {
+            $data = array();
+            //Include latest prices & exclude Euro
+            if($time == "24hr") {
+                $coins = Coin::with(['coinprices' => function($query) {
+                     $yesterday = date("Y-m-d G:i:s", time()-(60*60*24));
+                    $query->where('coin_prices.created_at', '>=', $yesterday);
+                }])->where("code", "!=","EUR")->get();
+            }
+            else {
+                $coins = Coin::where("code", "!=","EUR")->get();
+}
+            $data['coins'] = $coins;
+
+            return view('coins.charts', $data);
+        }
 
 
 

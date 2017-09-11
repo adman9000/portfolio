@@ -55,6 +55,8 @@ Route::get('/pusher', function() {
 //Coins
 Route::get('/coins', 'CoinController@index')->name('coins'); //view all
 Route::get('/coins/create', 'CoinController@create'); // create form
+Route::get('/coins/charts', 'CoinController@charts')->name('charts'); // charts
+Route::get('/coins/charts/{time}', 'CoinController@charts')->name("charts24"); // charts
 Route::get('/coins/{coin}/edit', 'CoinController@edit'); //edit form
 Route::get('/coins/{coin}', 'CoinController@show'); //view
 Route::post('/coins', 'CoinController@store'); //Submit new
