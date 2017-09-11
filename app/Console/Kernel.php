@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel
             $coins = Coin::where("code", "!=", "EUR")->get();
             foreach($coins as $coin) {
                 //Get latest price from kraken
-                $info = KrakenAPIFacade::getTicker(array($coin->code, "EUR"));
+                $info = KrakenAPIFacade::getTicker(array($coin->code, "EUR")); 
 
                 if((isset($info['result'])) && (is_array($info['result']))) {
                     $result = reset($info['result']);
@@ -53,16 +53,12 @@ class Kernel extends ConsoleKernel
             //send pusher event informing of latest coin prices
             $data = array();
             foreach($latest_prices as $price) {
-<<<<<<< HEAD
+
              $data[$price->coin_code] = array();
                 $data[$price->coin_code]['price'] = $price->current_price;
                 $data[$price->coin_code]['updated_at'] = $price->created_at;
-=======
-             $data[$price->coin_code] = new StdClass();
-                $data[$price->coin_code]->price = $price->current_price;
-                $data[$price->coin_code]->updated_at = $price->created_at;
-                $data[$price->coin_code]->updated_at_short = $price->created_at->format('D G:i');
->>>>>>> 9415d8a22cc84af7033745d1e34e01e8b2ad3555
+                $data[$price->coin_code]['updated_at_short'] = $price->created_at->format('D G:i');
+
             }
             broadcast(new \App\Events\PusherEvent(json_encode($data)));
 
