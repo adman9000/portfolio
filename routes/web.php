@@ -71,3 +71,8 @@ Route::get('/transactions/{transaction}', 'TransactionController@show'); //view
 Route::post('/transactions', 'TransactionController@store'); //Submit new
 Route::patch('/transactions/{transaction}', 'TransactionController@update'); //Submit edit
 Route::delete('/transactions/{transaction}', 'TransactionController@destroy'); //Submit delete
+
+//Exchanges
+
+Route::get('/exchanges', 'ExchangeController@index')->name('exchanges'); //view all
+Route::post('/exchanges', 'ExchangeController@index'); //view all
