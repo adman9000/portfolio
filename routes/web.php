@@ -37,7 +37,7 @@ Route::get('/pusher', function() {
             else {
                  $info = KrakenAPIFacade::getTicker(array($coin->code, "XBT"));
                 }
-                if((is_array($info) && (is_array($info['result']))) {
+                if((is_array($info)) && (isset($info['result']))) {
                     $result = reset($info['result']);
                     $latest = $result['a'][0];
                 }
@@ -46,7 +46,7 @@ Route::get('/pusher', function() {
         //Get latest price from bittrex (BITCOIN)
         else if($coin->exchange == "bittrex"){
             $info = Bittrex::getTicker("BTC-".$coin->code);
-            if((is_array($info) && (is_array($info['result']))) $latest = $info['result']['Last'];
+            if((is_array($info)) && (isset($info['result']))) $latest = $info['result']['Last'];
         }
 
         if($latest) {
