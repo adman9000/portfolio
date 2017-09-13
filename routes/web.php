@@ -27,7 +27,7 @@ Route::get('/pusher', function() {
    
     $coins = Coin::where("code", "!=", "EUR")->get();
     foreach($coins as $coin) {
-
+        $latest = false;
         //Get latest price from kraken (EUROS)
         if($coin->exchange == "kraken") {
             if($coin->code == "XBT") {
@@ -37,22 +37,26 @@ Route::get('/pusher', function() {
             else {
                  $info = KrakenAPIFacade::getTicker(array($coin->code, "XBT"));
                 }
-                 $result = reset($info['result']);
-                $latest = $result['a'][0];
+                if(is_array($info['result'])) {
+                    $result = reset($info['result']);
+                    $latest = $result['a'][0];
+                }
             
         }
         //Get latest price from bittrex (BITCOIN)
         else if($coin->exchange == "bittrex"){
             $info = Bittrex::getTicker("BTC-".$coin->code);
-            $latest = $info['result']['Last'];
+            if(is_array($info['result'])) $latest = $info['result']['Last'];
         }
 
-        $price = new CoinPrice();
-        $price->coin_id = $coin->id;
-        $price->current_price = $latest;
-        $price->save();
-        $price->coin_code = $coin->code;
-        $latest_prices[] = $price;
+        if($latest) {
+            $price = new CoinPrice();
+            $price->coin_id = $coin->id;
+            $price->current_price = $latest;
+            $price->save();
+            $price->coin_code = $coin->code;
+            $latest_prices[] = $price;
+        }
     }
 
     //send pusher event informing of latest coin prices
