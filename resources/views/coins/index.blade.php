@@ -40,7 +40,8 @@
 						<tfoot><tr><th></th><th></th><th></th><th></th><th ng-bind='current_total_xbt'></th><th ng-bind='current_total_euro'></th><th></th></tr></tfoot>
 					</table>
 
-					<p>Total XBT value: <b><span ng-bind='current_total_xbt'></span></b></p>
+					<p>Additional XBT held: <b><span ng-bind='amount_owned_XBT'></span></b></p>
+					<p>Total XBT: <b><span ng-bind='total_XBT'></span></b></p>
 					<p>XBT/Euro Rate: <b><span ng-bind='xbt_rate'></span></b></p>
 					<p>Total Euro value: <b><span ng-bind='current_total_euro'></span></b></p>
 
@@ -67,6 +68,7 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 	  var current_value = 0;
 	
 		$scope.xbt_rate = {{$XBT->latestCoinPrice->current_price }};
+		$scope.amount_owned_XBT = {{$XBT->amount_owned }};
 
 	  var current_price_class_XBT = "text-danger";
 
@@ -112,7 +114,9 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 
 	$scope.current_total_xbt = current_total;
 
-    $scope.current_total_euro = current_total * {{ $XBT->latestCoinPrice->current_price }};
+	$scope.total_XBT = {{$XBT->amount_owned }} + current_total;
+
+    $scope.current_total_euro = $scope.total_XBT * {{ $XBT->latestCoinPrice->current_price }};
 
 	Pusher.subscribe('kraken', 'App\\Events\\PusherEvent', function (item) {
 	data = angular.fromJson(item);
@@ -157,7 +161,8 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 
     $scope.current_total = current_total;
     $scope.current_total_xbt = current_total;
-    $scope.current_total_euro = current_total*self.xbt_rate;
+    $scope.total_XBT = $scope.amount_owned_XBT + current_total;
+    $scope.current_total_euro =  $scope.total_XBT*self.xbt_rate;
 
 
 

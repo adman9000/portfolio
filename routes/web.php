@@ -10,10 +10,6 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-use App\Coin;
-use App\CoinPrice;
-use adman9000\kraken\KrakenAPIFacade;
-use adman9000\Bittrex\Bittrex;
 
 Route::get('/', function () {
     return view('welcome');
