@@ -57,8 +57,25 @@
 	                		 </select>
 
 	                		<input type='number' name='volume' value='{{ $balance }}' step='any' />
-	                		<input type='submit' class='btn btn-xs btn-warning' value='Sell' >
+	                		<input type='submit' class='btn btn-xs btn-warning' value='Buy' >
 	                		</form>
+
+					@elseif ( $code == 'BTC' ) 
+
+							<form method='post' action=''>
+	                		{{csrf_field()}}
+	                		<input type='hidden' name='action' value='buy'>
+	                		<input type='hidden' name='coin_2' value='{{ $code }}' />
+	                		<select name='coin_1' >
+	                		 	@foreach($balances as $mycode=>$mybalance)
+	                		 		@if( $mycode != "BTC") <option value='{{ $mycode }}'>{{ $mycode }}</option> @endif
+	                		 	@endforeach
+	                		 </select>
+
+	                		<input type='number' name='volume' value='{{ $balance }}' step='any' />
+	                		<input type='submit' class='btn btn-xs btn-warning' value='Buy' >
+	                		</form>
+
 
                 		@else
                 		

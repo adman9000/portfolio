@@ -17,6 +17,11 @@
 
                 <div class="panel-body">
 
+ 						<div class='form-group'>
+						<label>Exchange (kraken/bittrex)</label>
+						<input type='text' name='exchange' class='form-control' value='{{ $coin->exchange }}' />
+					</div>
+
 					 <div class='form-group'>
 						<label>Coin Code</label>
 						<input type='text' name='code' class='form-control' value='{{ $coin->code }}' />

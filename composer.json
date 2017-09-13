@@ -11,6 +11,7 @@
         "doctrine/dbal": "^2.5@dev",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
+        "pepijnolivier/laravel-bittrex": "dev-master",
         "pusher/pusher-php-server": "^3.0@dev"
     },
     "require-dev": {

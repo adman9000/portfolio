@@ -13,6 +13,7 @@
 use App\Coin;
 use adman9000\kraken\KrakenAPIFacade;
 use App\CoinPrice;
+use Pepijnolivier\Bittrex\Bittrex;
 
 Route::get('/', function () {
     return view('welcome');
@@ -26,10 +27,25 @@ Route::get('/pusher', function() {
    
     $coins = Coin::where("code", "!=", "EUR")->get();
     foreach($coins as $coin) {
-        //Get latest price from kraken
-        $info = KrakenAPIFacade::getTicker(array($coin->code, "EUR"));
-        $result = reset($info['result']);
-        $latest = $result['a'][0];
+
+        //Get latest price from kraken (EUROS)
+        if($coin->exchange == "kraken") {
+            if($coin->code == "XBT") {
+                $info = KrakenAPIFacade::getTicker(array($coin->code, "EUR"));
+
+            }
+            else {
+                 $info = KrakenAPIFacade::getTicker(array($coin->code, "XBT"));
+                }
+                 $result = reset($info['result']);
+                $latest = $result['a'][0];
+            
+        }
+        //Get latest price from bittrex (BITCOIN)
+        else if($coin->exchange == "bittrex"){
+            $info = Bittrex::getTicker("BTC-".$coin->code);
+            $latest = $info['result']['Last'];
+        }
 
         $price = new CoinPrice();
         $price->coin_id = $coin->id;
@@ -76,3 +92,6 @@ Route::delete('/transactions/{transaction}', 'TransactionController@destroy'); /
 
 Route::get('/exchanges', 'ExchangeController@index')->name('exchanges'); //view all
 Route::post('/exchanges', 'ExchangeController@index'); //view all
+
+Route::get('/exchanges/bittrex', 'ExchangeController@bittrex')->name('bittrex'); //view all
+Route::post('/exchanges/bittrex', 'ExchangeController@bittrex'); //view all

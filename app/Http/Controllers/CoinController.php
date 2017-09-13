@@ -8,6 +8,8 @@ use App\CoinPrice;
 use App\Events\PusherEvent;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Pepijnolivier\Bittrex\Bittrex;
+use Carbon\Carbon;
 
 class CoinController extends Controller
 {
@@ -42,6 +44,13 @@ class CoinController extends Controller
                 if($coin->id == $coin_id) $coins[$c]->amount_owned = $amount;
             }
         }
+
+        foreach($coins as $c=>$coin) {
+            if($coin->code == "XBT") {
+                $data['XBT'] = $coin;
+                unset($coins[$c]);
+            }
+        }
         $data['coins'] = $coins;
 
         return view('coins.index', $data);
@@ -62,11 +71,59 @@ class CoinController extends Controller
                      $yesterday = date("Y-m-d G:i:s", time()-(60*60*24));
                     $query->where('coin_prices.created_at', '>=', $yesterday);
                 }])->where("code", "!=","EUR")->get();
+
+
+                    $yesterday = new Carbon("24 hours ago");
             }
             else {
                 $coins = Coin::where("code", "!=","EUR")->get();
-}
+                $yesterday = Carbon::createFromDate(2001, 01, 01);
+            }
             $data['coins'] = $coins;
+
+
+
+            $result = Bittrex::getChartData("BTC-GNT", 'hour');
+
+            $gnt = new Coin();
+            $gnt->id = 99;
+            $gnt->code = "GNT";
+            foreach($result['result'] as $tick) {
+                $price = new CoinPrice();
+                $price->created_at = new Carbon($tick['T']);
+
+                $price->current_price = $tick['L'];
+                if($price->created_at->gt($yesterday)) $gnt->coinprices[] = $price;
+            }
+            $data['coins'][] = $gnt;
+
+
+            $result = Bittrex::getChartData("BTC-ARK", 'hour');
+
+            $gnt = new Coin();
+            $gnt->id = 100;
+            $gnt->code = "ARK";
+            foreach($result['result'] as $tick) {
+                $price = new CoinPrice();
+                $price->created_at = new Carbon($tick['T']);
+                $price->current_price = $tick['L'];
+                if($price->created_at->gt($yesterday)) $gnt->coinprices[] = $price;
+            }
+            $data['coins'][] = $gnt;
+
+         $result = Bittrex::getChartData("BTC-OMG", 'hour');
+
+            $gnt = new Coin();
+            $gnt->id = 101;
+            $gnt->code = "OMG";
+            foreach($result['result'] as $tick) {
+                $price = new CoinPrice();
+                $price->created_at = new Carbon($tick['T']);
+                $price->current_price = $tick['L'];
+                if($price->created_at->gt($yesterday)) $gnt->coinprices[] = $price;
+            }
+            $data['coins'][] = $gnt;
+
 
             return view('coins.charts', $data);
         }
