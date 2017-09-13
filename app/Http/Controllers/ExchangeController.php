@@ -1,10 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
+
+use App\Coin;
+use App\CoinPrice;
 use adman9000\kraken\KrakenAPIFacade;
 use adman9000\Bittrex\Bittrex;
+use App\Repositories\Exchanges;
 
 class ExchangeController extends Controller
 {
@@ -13,10 +16,20 @@ class ExchangeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index() {
+
+        return view('exchanges.index');
+    
+    }
+
+    public function kraken()
     {
 
+        $data = array();
+        $data['exchange'] = "Kraken";
+        
         $post = request()->all();
+
 
         if(isset($post['action'])) {
 
@@ -81,7 +94,10 @@ class ExchangeController extends Controller
      */
     public function bittrex()
     {
-        //
+        //create data array
+        $data = array();
+        $data['exchange'] = "Bittrex";
+
         $post = request()->all();
          if(isset($post['action'])) {
 
@@ -141,69 +157,14 @@ class ExchangeController extends Controller
     }
 
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+   
+    /** getPrices
+    * Get latest prices for all my coins from relevant exchanges
+    **/
+    public function getPrices(Exchanges $exchanges) {
+
+        $exchanges->getPrices();
+
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

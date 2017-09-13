@@ -11,8 +11,8 @@
 |
 */
 use App\Coin;
-use adman9000\kraken\KrakenAPIFacade;
 use App\CoinPrice;
+use adman9000\kraken\KrakenAPIFacade;
 use adman9000\Bittrex\Bittrex;
 
 Route::get('/', function () {
@@ -23,54 +23,6 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/pusher', function() {
-   
-    $coins = Coin::where("code", "!=", "EUR")->get();
-    foreach($coins as $coin) {
-        $latest = false;
-        //Get latest price from kraken (EUROS)
-        if($coin->exchange == "kraken") {
-            if($coin->code == "XBT") {
-                $info = KrakenAPIFacade::getTicker(array($coin->code, "EUR"));
-
-            }
-            else {
-                 $info = KrakenAPIFacade::getTicker(array($coin->code, "XBT"));
-                }
-                if((is_array($info)) && (isset($info['result']))) {
-                    $result = reset($info['result']);
-                    $latest = $result['a'][0];
-                }
-            
-        }
-        //Get latest price from bittrex (BITCOIN)
-        else if($coin->exchange == "bittrex"){
-            $info = Bittrex::getTicker("BTC-".$coin->code);
-            if((is_array($info)) && (isset($info['result']))) $latest = $info['result']['Last'];
-        }
-
-        if($latest) {
-            $price = new CoinPrice();
-            $price->coin_id = $coin->id;
-            $price->current_price = $latest;
-            $price->save();
-            $price->coin_code = $coin->code;
-            $latest_prices[] = $price;
-        }
-    }
-
-    //send pusher event informing of latest coin prices
-    $data = array();
-    foreach($latest_prices as $price) {
-    	$data[$price->coin_code] = new StdClass();
-        $data[$price->coin_code]->price = $price->current_price;
-        $data[$price->coin_code]->updated_at = $price->created_at;
-        $data[$price->coin_code]->updated_at_short = $price->created_at->format('D G:i');
-    }
-    broadcast(new App\Events\PusherEvent(json_encode($data)));
-
-    return "Event has been sent!";
-});
 
 //Coins
 Route::get('/coins', 'CoinController@index')->name('coins'); //view all
@@ -97,5 +49,10 @@ Route::delete('/transactions/{transaction}', 'TransactionController@destroy'); /
 Route::get('/exchanges', 'ExchangeController@index')->name('exchanges'); //view all
 Route::post('/exchanges', 'ExchangeController@index'); //view all
 
+Route::get('/exchanges/kraken', 'ExchangeController@kraken')->name('kraken'); //view all
+Route::post('/exchanges/kraken', 'ExchangeController@kraken'); //view all
+
 Route::get('/exchanges/bittrex', 'ExchangeController@bittrex')->name('bittrex'); //view all
 Route::post('/exchanges/bittrex', 'ExchangeController@bittrex'); //view all
+
+Route::get('/exchanges/getprices', 'ExchangeController@getPrices');

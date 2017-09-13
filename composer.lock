@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/adman9000/laravelbittrex.git",
-                "reference": "cc2a27094fe6fa254ebf6455c297bc41c8ed6983"
+                "reference": "f879e41f7fbd38878f7326074a7c6651a57e6566"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/adman9000/laravelbittrex/zipball/cc2a27094fe6fa254ebf6455c297bc41c8ed6983",
-                "reference": "cc2a27094fe6fa254ebf6455c297bc41c8ed6983",
+                "url": "https://api.github.com/repos/adman9000/laravelbittrex/zipball/f879e41f7fbd38878f7326074a7c6651a57e6566",
+                "reference": "f879e41f7fbd38878f7326074a7c6651a57e6566",
                 "shasum": ""
             },
             "require": {
@@ -42,7 +42,7 @@
                 }
             ],
             "description": "Bittrex API wrapper for Laravel",
-            "time": "2017-09-13T00:43:44+00:00"
+            "time": "2017-09-13T00:55:10+00:00"
         },
         {
             "name": "adman9000/laravelkraken",

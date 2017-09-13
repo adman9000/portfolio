@@ -9,7 +9,7 @@
 
     
 
-                <div class="panel-heading">Kraken</div>
+                <div class="panel-heading">{{ $exchange }}</div>
 
                 <div class="panel-body">
 
@@ -32,7 +32,7 @@
 
 	                @endif
 
-                <p>Buy & sell crypto with Euros on Kraken</p>
+                <p>Buy & sell crypto on {{ $exchange }}</p>
 
                 <table class='table table-bordered'>
                 <thead><tr><th>Code</th><th>Balance</th><th>Buy / Sell</th></tr></thead>
