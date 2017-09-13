@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use adman9000\kraken\KrakenAPIFacade;
-use Pepijnolivier\Bittrex\Bittrex;
+use adman9000\Bittrex\Bittrex;
 
 class ExchangeController extends Controller
 {
