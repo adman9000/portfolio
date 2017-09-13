@@ -178,7 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         adman9000\kraken\KrakenServiceProvider::class,
-        Pepijnolivier\Bittrex\BittrexServiceProvider::class,
+        adman9000\Bittrex\BittrexServiceProvider::class,
 
     ],
 
@@ -231,7 +231,7 @@ return [
         
         'Kraken' => adman9000\kraken\KrakenAPIFacade::class,
         'Pusher' => Pusher\Pusher::class,
-    'Bittrex' => Pepijnolivier\Bittrex\Bittrex::class,
+    'Bittrex' => adman9000\Bittrex\Bittrex::class,
 
 
     ],

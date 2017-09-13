@@ -8,7 +8,7 @@ use App\CoinPrice;
 use App\Events\PusherEvent;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Pepijnolivier\Bittrex\Bittrex;
+use adman9000\Bittrex\Bittrex;
 use Carbon\Carbon;
 
 class CoinController extends Controller

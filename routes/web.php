@@ -13,7 +13,7 @@
 use App\Coin;
 use adman9000\kraken\KrakenAPIFacade;
 use App\CoinPrice;
-use Pepijnolivier\Bittrex\Bittrex;
+use adman9000\Bittrex\Bittrex;
 
 Route::get('/', function () {
     return view('welcome');
