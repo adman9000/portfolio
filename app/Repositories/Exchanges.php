@@ -85,7 +85,7 @@ class Exchanges {
     */
     function runTradingRules() {
 
-        $log_file = "../storage/logs/bittrex.log";
+        $log_file = storage_path("logs/bittrex.log");
 
 
         File::append($log_file, "--------------------------------- ".date("d/m/Y G:i")."----------------------------------"."\n");
