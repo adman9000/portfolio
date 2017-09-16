@@ -96,6 +96,12 @@ class Exchanges {
             return false;
         }
 
+        //Get any existing orders first so we dont duplicate
+        $orders = Bittrex::getOpenOrders();
+        foreach($orders->result as $order) {
+            $arr = explode("-", $order['Exchange']);
+            $existing_orders[] = $arr[1];
+        }
 
         //Amount of BTC to spend when buying
         $btc_buy_amount = env('BTC_BUY_AMOUNT');
@@ -117,7 +123,15 @@ class Exchanges {
 
         foreach($coins as $coin) {
 
+
             File::append($log_file, $coin->code."\n");
+
+            if(in_array($coin->code, $existing_orders)) {
+
+                 File::append($log_file, "Order already exists\n");
+                 continue;
+            }
+
 
             //orderok flag
             $order_ok = true;

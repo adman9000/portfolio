@@ -156,10 +156,10 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 			
 			eval("self.current_value_"+key+" = current_value");
 
-
+			current_total += current_value;
 	    })
 
-	    $scope.current_total = current_total;
+	    //$scope.current_total = current_total;
 	    $scope.current_total_xbt = current_total.toFixed(4);
 	    $scope.total_XBT = ($scope.amount_owned_XBT + current_total).toFixed(4);
 	    $scope.current_total_usd =  ($scope.total_XBT*self.xbt_rate).toFixed(2);

@@ -188,4 +188,11 @@ class ExchangeController extends Controller
         dd($exchanges);
     }
 
+    public function getOpenOrders() {
+
+      $orders = Bittrex::getOpenOrders();
+
+      dd($orders);
+    }
+
 }
