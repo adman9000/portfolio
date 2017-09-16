@@ -17,7 +17,7 @@
 
 					 <div class='form-group'>
 						<label>Exchange (kraken/bittrex)</label>
-						<input type='text' name='exchange' class='form-control' />
+						<input type='text' name='exchange' class='form-control' value='bittrex' />
 					</div>
 
 					 <div class='form-group'>

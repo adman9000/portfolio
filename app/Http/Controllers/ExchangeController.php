@@ -147,7 +147,9 @@ class ExchangeController extends Controller
 
         }
 
-        //dd(Bittrex::getMarkets());
+        
+
+
         $balances = Bittrex::getBalances();
         foreach($balances['result'] as $balance) {
             $data['balances'][$balance['Currency']] = $balance['Balance'];
@@ -163,7 +165,10 @@ class ExchangeController extends Controller
     **/
     public function getPrices(Exchanges $exchanges) {
 
-        $exchanges->getPrices();
+var_dump($exchanges);
+
+    //    $exchanges->getBittrexPrices();
+   //     $exchanges->runTradingRules();
 
     }
 

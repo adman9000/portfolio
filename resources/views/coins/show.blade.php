@@ -23,6 +23,13 @@
 						{{ $coin->name }}
 					</div>
 
+          <ul>
+          <li>Buy Point: {{ $coin->buy_point }} </li>
+          <li>Been Bought? {{ $coin->been_bought }}  </li>
+          <li>Sale 1 complete?  {{ $coin->sale_completed_1 }} </li>
+          <li>Sale 2 Triggered?  {{ $coin->sale_trigger_2 }} </li>
+          <li> Highest Price: {{ $coin->highest_price }}</li>
+          </ul>
 
 					<div id="chart_div"></div>
 
@@ -87,7 +94,7 @@
         ]);
 
         // Set chart options
-        chart_options = {'title':'Live Prices',
+        chart_options = {'title':'Live BTC Prices',
                        'width':'90%',
                        height: 400,
            hAxis: { showTextEvery: Math.round(num_results/5) }

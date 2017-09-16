@@ -45,12 +45,10 @@ class CoinController extends Controller
             }
         }
 
-        foreach($coins as $c=>$coin) {
-            if($coin->code == "XBT") {
-                $data['XBT'] = $coin;
-                unset($coins[$c]);
-            }
-        }
+       
+        $data['btc_additional_amount'] = 1;
+        $data['btc_euro_rate'] = 1;
+                
         $data['coins'] = $coins;
 
         return view('coins.index', $data);
@@ -151,7 +149,7 @@ class CoinController extends Controller
     {
          //Validate input
     	$this->validate(request(), [
-    		'code' => 'required|min:2|max:4',
+    		'code' => 'required|min:2|max:8',
     		'name' => 'required']
     		);
 
@@ -197,7 +195,7 @@ class CoinController extends Controller
         //
          //Validate input
     	$this->validate(request(), [
-    		'code' => 'required|min:2|max:4',
+    		'code' => 'required|min:2|max:8',
     		'name' => 'required']
     		);
 
