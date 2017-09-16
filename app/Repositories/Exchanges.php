@@ -128,7 +128,7 @@ class Exchanges {
 
             if(in_array($coin->code, $existing_orders)) {
 
-                 File::append($log_file, "Order already exists\n");
+                 File::append($log_file, "Order already exists\n\n");
                  continue;
             }
 

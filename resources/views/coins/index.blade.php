@@ -7,11 +7,11 @@
 
 
 	    <div class="row">
-	        <div class="col-md-10 col-md-offset-1">
+	        <div class="col-md-12">
 	            <div class="panel panel-default">
 
 					<table class='table table-bordered table-striped table-condensed'>
-						<thead><tr><th></th><th>Code</th><th>Name</th><th>Amount Owned</th><th>XBT Exchange Rate</th><th>XBT Value</th><th>Buy price</th><th width=200></th></tr></thead>
+						<thead><tr><th></th><th>Code</th><th>Name</th><th>Buy price</th><th>Amount Owned</th><th>BTC Price</th><th>BTC Value</th><th width=200></th></tr></thead>
 						<tbody>
 
 							@foreach ($coins as $i=>$coin)
@@ -20,10 +20,11 @@
 									<tr class="" ng-class='class_{{ $coin->code }}' ><td><?=$i+1?></td>
 									<td> {{ $coin->code }} </td> 
 									<td > {{ $coin->name }} </td> 
+									<td >{{ $coin->buy_point }}</td>
 									<td ng-bind='amount_owned_{{ $coin->code }}'></td>
 									<td ng-bind='current_price_{{ $coin->code }}'></td> 
 									<td ng-bind='current_value_{{ $coin->code }}'></td> 
-									<td >{{ $coin->buy_point }}</td>
+									
 									<td align=right> <a class='btn btn-info btn-xs' href='/coins/{{ $coin->id }}'>View</a> <a class='btn btn-info btn-xs' href='/coins/{{ $coin->id }}/edit'>Edit</a>
 									<form method='post' action='/coins/{{$coin->id}}' class='pull-right' style='margin-left:5px;'>
 										{{ csrf_field() }}
@@ -40,15 +41,19 @@
 						<tfoot><tr><th></th><th></th><th></th><th></th><th></th><th ng-bind='current_total_xbt'></th><th></th><th></th></tr></tfoot>
 					</table>
 
-					<p>Additional XBT held: <b><span ng-bind='amount_owned_XBT'></span></b></p>
-					<p>Total XBT: <b><span ng-bind='total_XBT'></span></b></p>
-					<p>XBT/USD Rate: <b><span ng-bind='xbt_rate'></span></b></p>
+					<p>Additional BTC held: <b><span ng-bind='amount_owned_XBT'></span></b></p>
+					<p>Total BTC: <b><span ng-bind='total_XBT'></span></b></p>
+					<p>BTC/USD Rate: <b><span ng-bind='xbt_rate'></span></b></p>
 					<p>Total USD value: <b>$<span ng-bind='current_total_usd'></span></b></p>
 					<p>USD/GBP Rate: <b><span ng-bind='usd_gbp_rate'></span></b></p>
 					<p>Total GBP value: <b>£<span ng-bind='current_total_gbp'></span></b></p>
 
+<hr />
+<p>Starting BTC amount: 0.39515752</p>
+<p>Approx starting GBP Value: £1071.15</p>
 					<br />
 					<a href='/coins/create' class='btn btn-info'>Add Coin</a>
+					<br />
 				</div>
 			</div>
 		</div>
@@ -82,7 +87,7 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 
 		@if($coin->latestCoinPrice)
 
-			$scope.current_price_{{$coin->code}} = "{{ $coin->latestCoinPrice->current_price }}";
+			$scope.current_price_{{$coin->code}} = {{ $coin->latestCoinPrice->current_price }}.toFixed(4);
 
 		@else
 
@@ -92,7 +97,7 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 
 		@if($coin->amount_owned) 
 
-			$scope.amount_owned_{{$coin->code}} = "{{ $coin->amount_owned }}";
+			$scope.amount_owned_{{$coin->code}} = {{ $coin->amount_owned }}.toFixed(4);
 
 		@else
 
@@ -148,13 +153,13 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 			//get old price
 			var old_price = eval("self.current_price_"+key);
 
-			eval("self.current_price_"+key+" = '"+price+"'");
+			eval("self.current_price_"+key+" = "+price+".toFixed(4)");
 			//console.log("self.current_price_"+key+" = '"+price+"'");
 
 			eval("current_value = parseFloat(self.current_price_"+key+") * parseFloat(self.amount_owned_"+key+")");
 			//console.log("self.current_value_"+key+" = parseFloat(self.current_price_"+key+") * parseFloat(self.amount_owned_"+key+")");
 			
-			eval("self.current_value_"+key+" = current_value");
+			eval("self.current_value_"+key+" = current_value.toFixed(4)");
 
 			current_total += current_value;
 	    })
