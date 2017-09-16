@@ -38,7 +38,7 @@
 
 						</tbody>
 
-						<tfoot><tr><th></th><th></th><th></th><th></th><th></th><th ng-bind='current_total_xbt'></th><th></th><th></th></tr></tfoot>
+						<tfoot><tr><th></th><th></th><th></th><th></th><th></th><th></th><th ng-bind='current_total_xbt'></th><th></th></tr></tfoot>
 					</table>
 
 					<p>Additional BTC held: <b><span ng-bind='amount_owned_XBT'></span></b></p>
@@ -87,7 +87,7 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 
 		@if($coin->latestCoinPrice)
 
-			$scope.current_price_{{$coin->code}} = {{ $coin->latestCoinPrice->current_price }}.toFixed(4);
+			$scope.current_price_{{$coin->code}} = {{ $coin->latestCoinPrice->current_price }};
 
 		@else
 
@@ -97,7 +97,7 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 
 		@if($coin->amount_owned) 
 
-			$scope.amount_owned_{{$coin->code}} = {{ $coin->amount_owned }}.toFixed(4);
+			$scope.amount_owned_{{$coin->code}} = {{ $coin->amount_owned }};
 
 		@else
 
@@ -111,6 +111,9 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 
 
 		current_value  = parseFloat($scope.current_price_{{$coin->code}}) * parseFloat($scope.amount_owned_{{$coin->code}});
+
+		$scope.current_price_{{$coin->code}} = parseFloat($scope.current_price_{{$coin->code}}).toFixed(4);
+		$scope.amount_owned_{{$coin->code}} = parseFloat($scope.amount_owned_{{$coin->code}}).toFixed(4);
 		
 		$scope.current_value_{{$coin->code}} = current_value.toFixed(4);
 
@@ -167,9 +170,9 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 	    //$scope.current_total = current_total;
 	    $scope.current_total_xbt = current_total.toFixed(4);
 	    $scope.total_XBT = ($scope.amount_owned_XBT + current_total).toFixed(4);
-	    $scope.current_total_usd =  ($scope.total_XBT*self.xbt_rate).toFixed(2);
+	    $scope.current_total_usd =  (($scope.amount_owned_XBT + current_total)*self.xbt_rate).toFixed(2);
 
-	    $scope.current_total_gbp = ($scope.current_total_usd / $scope.usd_gbp_rate).toFixed(2) ;
+	    $scope.current_total_gbp = ((($scope.amount_owned_XBT + current_total)*self.xbt_rate) / $scope.usd_gbp_rate).toFixed(2) ;
 
 	    $scope.last_updated = "Last Update: " + dt;
 	});
