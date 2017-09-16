@@ -25,10 +25,14 @@
 
           <ul>
           <li>Buy Point: {{ $coin->buy_point }} </li>
+          <li>Highest Price: {{ $coin->highest_price }}</li>
+          <li>Current Price: {{ $coin->latestCoinprice->current_price }}</li>
           <li>Been Bought? {{ $coin->been_bought }}  </li>
+          <li>Sell Price 1: {{ $coin->sell_point_1 }}</li>
+          <li>Sell Trigger 2: {{ $coin->sell_trigger_2 }}</li>
+          <li>Minimum Sell Price 2: {{ $coin->sell_point_2 }}</li>
           <li>Sale 1 complete?  {{ $coin->sale_completed_1 }} </li>
           <li>Sale 2 Triggered?  {{ $coin->sale_trigger_2 }} </li>
-          <li> Highest Price: {{ $coin->highest_price }}</li>
           </ul>
 
 					<div id="chart_div"></div>

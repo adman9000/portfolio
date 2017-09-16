@@ -14,16 +14,19 @@ class PusherEvent implements ShouldBroadcast
     use SerializesModels;
 
      public $message;
+
+    protected $broadcast_as;
      
     /**
      * Create a new event instance. 
      *
      * @return void
      */
-    public function __construct($message)
+    public function __construct($message, $broadcast_as='portfolio\\prices')
     {
         //  
         $this->message = $message;
+        $this->broadcast_as = $broadcast_as;
     }
 
     /**
@@ -34,6 +37,11 @@ class PusherEvent implements ShouldBroadcast
     public function broadcastOn()
     {
         return new Channel('kraken');
+    }
+
+      public function broadCastAs() {
+
+        return $this->broadcast_as;
     }
     
 }

@@ -165,11 +165,27 @@ class ExchangeController extends Controller
     **/
     public function getPrices(Exchanges $exchanges) {
 
-var_dump($exchanges);
+        $exchanges->getBittrexPrices();
 
-    //    $exchanges->getBittrexPrices();
-   //     $exchanges->runTradingRules();
 
+    }
+
+  public function runTradingRules(Exchanges $exchanges) {
+
+      $exchanges->runTradingRules();
+
+    }
+
+    public function resetCoins(Exchanges $exchanges) {
+
+
+        //$exchanges->getBittrexPrices();
+
+       $exchanges->resetCoins();
+
+      // $exchanges->runTradingRules();
+
+        dd($exchanges);
     }
 
 }

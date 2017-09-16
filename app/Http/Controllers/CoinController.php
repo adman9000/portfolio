@@ -45,11 +45,17 @@ class CoinController extends Controller
             }
         }
 
+        //Do we need this on every page load?
+        $btc_market = Bittrex::getMarketSummary("USDT-BTC");
+
+        $btc_balance = Bittrex::getBalance("BTC");
        
-        $data['btc_additional_amount'] = 1;
-        $data['btc_euro_rate'] = 1;
-                
+        $data['btc_additional_amount'] = $btc_balance['result']['Balance'];
+        $data['btc_usd_rate'] = $btc_market['result'][0]['Last'];
+        $data['usd_gbp_rate']  = env("USD_GBP_RATE");       
+
         $data['coins'] = $coins;
+
 
         return view('coins.index', $data);
     }
@@ -168,6 +174,15 @@ class CoinController extends Controller
     public function show(Coin $coin)
     {
         //
+        $btc_buy_amount = env('BTC_BUY_AMOUNT');
+        $sell_point_1_multiplier = env('SELL_POINT_1');
+        $sell_point_2_multiplier = env('SELL_POINT_2');
+        $sell_drop_2_percentage = env('SELL_DROP_2');
+        
+        $coin->sell_point_1 = $coin->buy_point * $sell_point_1_multiplier;
+        $coin->sell_trigger_2 = $coin->buy_point * $sell_point_2_multiplier;
+        $coin->sell_point_2 = $coin->sell_trigger_2 - (( $coin->highest_price*$sell_drop_2_percentage)/100);
+
         return view("coins.show", array("coin" => $coin));
     }
 
