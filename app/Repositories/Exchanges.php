@@ -98,7 +98,7 @@ class Exchanges {
 
         //Get any existing orders first so we dont duplicate
         $orders = Bittrex::getOpenOrders();
-        foreach($orders->result as $order) {
+        foreach($orders['result'] as $order) {
             $arr = explode("-", $order['Exchange']);
             $existing_orders[] = $arr[1];
         }
