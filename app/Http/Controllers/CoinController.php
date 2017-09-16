@@ -28,22 +28,21 @@ class CoinController extends Controller
 
         //Get transaction for this user - probably better way to do this!
         $user = Auth::user();
-        $transactions = $user->transactions;
+        //$transactions = $user->transactions;
 
         $amount_owned = array();
 
-        foreach($transactions as $transaction) {
-            if(!isset($amount_owned[$transaction->coin_bought_id])) $amount_owned[$transaction->coin_bought_id] = 0;
-            if(!isset($amount_owned[$transaction->coin_sold_id])) $amount_owned[$transaction->coin_sold_id] = 0;
-            $amount_owned[$transaction->coin_bought_id] += $transaction->amount_bought;
-            $amount_owned[$transaction->coin_sold_id] -= $transaction->amount_sold;
-        }
-       
-        foreach($amount_owned as $coin_id=>$amount) {
+        //Use Bittrex figures, not transactions
+
+         $balances = Bittrex::getBalances();
+
+        $my_balances = array();
+        foreach($balances['result'] as $balance) {
             foreach($coins as $c=>$coin) {
-                if($coin->id == $coin_id) $coins[$c]->amount_owned = $amount;
+                if($coin->code == $balance['Currency']) $coins[$c]->amount_owned= $balance['Balance'];
             }
         }
+
 
         //Do we need this on every page load?
         $btc_market = Bittrex::getMarketSummary("USDT-BTC");

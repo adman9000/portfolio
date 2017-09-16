@@ -26,6 +26,10 @@
 <li>Set new buy in price to 2x original. Repeat.</li>
 </ol>
 
+<hr />
+<p>Starting BTC amount: 0.39515752</p>
+<p>Approx GBP Value: £1071.15</p>
+
                 </div>
             </div>
         </div>
