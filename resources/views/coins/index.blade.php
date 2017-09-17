@@ -172,7 +172,7 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 			eval("self.current_price_"+key+" = "+price+".toFixed(7)");
 			//console.log("self.current_price_"+key+" = '"+price+"'");
 
-			eval("current_value = parseFloat(price * parseFloat(self.amount_owned_"+key+")");
+			eval("current_value = parseFloat(price) * parseFloat(self.amount_owned_"+key+")");
 			//console.log("self.current_value_"+key+" = parseFloat(self.current_price_"+key+") * parseFloat(self.amount_owned_"+key+")");
 			
 			eval("self.current_value_"+key+" = current_value.toFixed(7)");
