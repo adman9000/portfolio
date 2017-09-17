@@ -11,18 +11,19 @@
 	            <div class="panel panel-default">
 
 					<table class='table table-bordered table-striped table-condensed'>
-						<thead><tr><th></th><th>Code</th><th>Name</th><th>Buy price</th><th>Amount Owned</th><th>BTC Price</th><th>BTC Value</th><th width=200></th></tr></thead>
+						<thead><tr><th></th><th>Code</th><th>Name</th><th>Buy price</th><th>BTC Price</th><th>+ / -</th><?php /*<th>Amount Owned</th>*/ ?><th>BTC Value</th><th width=200></th></tr></thead>
 						<tbody>
 
 							@foreach ($coins as $i=>$coin)
 
 
-									<tr class="" ng-class='class_{{ $coin->code }}' ><td><?=$i+1?></td>
+									<tr><td ng-class='class_{{ $coin->code }}'><?=$i+1?></td>
 									<td> {{ $coin->code }} </td> 
 									<td > {{ $coin->name }} </td> 
 									<td >{{ $coin->buy_point }}</td>
-									<td ng-bind='amount_owned_{{ $coin->code }}'></td>
 									<td ng-bind='current_price_{{ $coin->code }}'></td> 
+									<td ng-bind='current_diff_{{ $coin->code }}' ng-class='current_diff_class_{{ $coin->code }}'></td> 
+									<?php /*<td ng-bind='amount_owned_{{ $coin->code }}'></td>*/ ?>
 									<td ng-bind='current_value_{{ $coin->code }}'></td> 
 									
 									<td align=right> <a class='btn btn-info btn-xs' href='/coins/{{ $coin->id }}'>View</a> <a class='btn btn-info btn-xs' href='/coins/{{ $coin->id }}/edit'>Edit</a>
@@ -38,7 +39,7 @@
 
 						</tbody>
 
-						<tfoot><tr><th></th><th></th><th></th><th></th><th></th><th></th><th ng-bind='current_total_xbt'></th><th></th></tr></tfoot>
+						<tfoot><tr><th></th><th></th><th></th><th></th><th></th><?php /*<th></th>*/?><th></th><th ng-bind='current_total_xbt'></th><th></th></tr></tfoot>
 					</table>
 
 					<p>Additional BTC held: <b><span ng-bind='amount_owned_XBT'></span></b></p>
@@ -112,29 +113,41 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 
 		current_value  = parseFloat($scope.current_price_{{$coin->code}}) * parseFloat($scope.amount_owned_{{$coin->code}});
 
-		$scope.current_price_{{$coin->code}} = parseFloat($scope.current_price_{{$coin->code}}).toFixed(4);
-		$scope.amount_owned_{{$coin->code}} = parseFloat($scope.amount_owned_{{$coin->code}}).toFixed(4);
+		//Calculate percent diff between buy price & current price
+		diff = ($scope.current_price_{{$coin->code}} / {{ $coin->buy_point }} * 100) - 100;
+
+		$scope.current_diff_{{$coin->code}} = diff.toFixed(2)+"%";
+
+		//set diff class
+		if(diff<0) $scope.current_diff_class_{{$coin->code}} = "text-danger";
+		else if(diff>0) $scope.current_diff_class_{{$coin->code}} = "text-success";
+
+		$scope.current_price_{{$coin->code}} = parseFloat($scope.current_price_{{$coin->code}}).toFixed(7);
+		$scope.amount_owned_{{$coin->code}} = parseFloat($scope.amount_owned_{{$coin->code}}).toFixed(7);
 		
-		$scope.current_value_{{$coin->code}} = current_value.toFixed(4);
+		$scope.current_value_{{$coin->code}} = current_value.toFixed(7);
 
 		$scope.euro_value_{{$coin->code}} = current_value * $scope.xbt_rate;
+
+		
+
 
 		current_total += current_value;
 
 		//Set TR classes
 		if({{ $coin->sale_completed_1 }})
-			$scope.class_{{$coin->code}}='text-warning';
+			$scope.class_{{$coin->code}}='bg-warning';
 		else if({{ $coin->been_bought }})
-		 	$scope.class_{{$coin->code}}='text-success';
+		 	$scope.class_{{$coin->code}}='bg-success';
 		 else
-		 	$scope.class_{{$coin->code}}='text-danger';
+		 	$scope.class_{{$coin->code}}='bg-danger';
 
 
 	@endforeach
 
-	$scope.current_total_xbt = current_total.toFixed(4);
+	$scope.current_total_xbt = current_total.toFixed(7);
 
-	$scope.total_XBT = ({{ $btc_additional_amount }} + current_total).toFixed(4);
+	$scope.total_XBT = ({{ $btc_additional_amount }} + current_total).toFixed(7);
 
     $scope.current_total_usd = $scope.total_XBT * {{ $btc_usd_rate }};
 
@@ -154,28 +167,39 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 			dt = val.updated_at_short;
 
 			//get old price
-			var old_price = eval("self.current_price_"+key);
+			//var old_price = eval("self.current_price_"+key);
 
-			eval("self.current_price_"+key+" = "+price+".toFixed(4)");
+			eval("self.current_price_"+key+" = "+price+".toFixed(7)");
 			//console.log("self.current_price_"+key+" = '"+price+"'");
 
-			eval("current_value = parseFloat(self.current_price_"+key+") * parseFloat(self.amount_owned_"+key+")");
+			eval("current_value = parseFloat(price * parseFloat(self.amount_owned_"+key+")");
 			//console.log("self.current_value_"+key+" = parseFloat(self.current_price_"+key+") * parseFloat(self.amount_owned_"+key+")");
 			
-			eval("self.current_value_"+key+" = current_value.toFixed(4)");
+			eval("self.current_value_"+key+" = current_value.toFixed(7)");
 
 			current_total += current_value;
+
+			//Calculate percent diff between buy price & current price
+			diff = val.diff;
+
+			eval("$scope.current_diff_"+key+" = diff.toFixed(2)+'%'");
+
+			//set diff class
+			if(diff<0) eval("$scope.current_diff_class_"+key+" = 'text-danger'");
+			else if(diff>0) eval("$scope.current_diff_class_"+key+" = 'text-success'");
+
 	    })
 
 	    //$scope.current_total = current_total;
-	    $scope.current_total_xbt = current_total.toFixed(4);
-	    $scope.total_XBT = ($scope.amount_owned_XBT + current_total).toFixed(4);
+	    $scope.current_total_xbt = current_total.toFixed(7);
+	    $scope.total_XBT = ($scope.amount_owned_XBT + current_total).toFixed(7);
 	    $scope.current_total_usd =  (($scope.amount_owned_XBT + current_total)*self.xbt_rate).toFixed(2);
 
 	    $scope.current_total_gbp = ((($scope.amount_owned_XBT + current_total)*self.xbt_rate) / $scope.usd_gbp_rate).toFixed(2) ;
 
 	    $scope.last_updated = "Last Update: " + dt;
 	});
+
 
 	Pusher.subscribe('kraken', 'portfolio\\trades', function (item) {
 		data = angular.fromJson(item);
@@ -194,11 +218,11 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 			console.log("self.amount_owned_"+key+" = '"+val.amount_owned+"'");
 
 			if(val.sale_completed_1)
-				eval("self.class_"+key+"='text-warning'");
+				eval("self.class_"+key+"='bg-warning'");
 			else if(val.been_bought)
-			 	eval("self.class_"+key+"='text-success'");
+			 	eval("self.class_"+key+"='bg-success'");
 			 else
-			 	eval("self.class_"+key+"='text-danger'");
+			 	eval("self.class_"+key+"='bg-danger'");
 	    })
 
 	    $scope.amount_owned_XBT = message.btc_additional_amount;

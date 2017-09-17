@@ -43,6 +43,7 @@ class Exchanges {
                         $price = CoinPrice::create($price_info);
                         //For pusher event
                         $price->coin_code = $coin->code;
+                        $price->buy_point = $coin->buy_point;
                         $latest_prices[] = $price;
                     }
                 }
@@ -56,6 +57,8 @@ class Exchanges {
             $data[$price->coin_code]['price'] = $price->current_price;
             $data[$price->coin_code]['updated_at'] = $price->created_at;
             $data[$price->coin_code]['updated_at_short'] = $price->created_at->format('D G:i');
+            if($price->buy_point) $data[$price->coin_code]['diff'] = (($price->current_price/$price->buy_point) *100) - 100;
+            else $data[$price->coin_code]['diff']  =0;
         }
         broadcast(new \App\Events\PusherEvent(json_encode($data), "portfolio\\prices"));
         
