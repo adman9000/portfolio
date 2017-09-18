@@ -13,26 +13,82 @@ use Illuminate\Support\Facades\File;
 class Exchanges {
 
 
+    /* runSchedule()
+     * Called by cronjob every 5 minutes.
+     * Runs the required functions in order to
+     * 1. Save latest prices from bittrex to DB
+     * 2. Run the trading rules to buy & sell as required
+     * 3. Push Latest Coin prices & amounts via pusher
+     * 4. Push latest BTC price & amount via pusher
+     **/
     function runSchedule() {
 
-        $this->getBittrexPrices();
+        $this->saveBittrexPrices();
         $this->runTradingRules();
+        $this->coinPusher();
+        $this->btcPusher();
 
     }
 
-    /** getBittrexPrices
+    /** btcPusher
+     * Push BTC info
+     */
+    function btcPusher() {
+
+        $data = array();
+
+        //Get BTC balance & exchange rate from bittrex
+        $btc_balance = Bittrex::getBalance("BTC");
+        $btc_market = Bittrex::getMarketSummary("USDT-BTC");
+        $data['btc_additional_amount'] = $btc_balance['result']['Balance'];
+        $data['btc_usd_rate'] = $btc_market['result'][0]['Last'];
+
+        //Pusher
+        broadcast(new \App\Events\PusherEvent(json_encode($data), "portfolio\\btc"));
+    }
+
+      /**coinPusher
+    * Called from /coins page to update it on load
+    * And every 5 minutes to update the page after new prices obtained & trades carried out
     **/
+    function coinPusher() {
 
-    function getBittrexPrices() {
-
-        //Set current prices for my coins
-
-        $markets = Bittrex::getMarketSummaries();
+        //Get an array of all coins in my DB
         $coins = Coin::all();
 
-        //For pusher event
-        $latest_prices = array();
+        //Add extra info to coins
+        $data = array();
 
+        foreach($coins as $c=>$coin) {
+            $datum = array();
+            $datum['code'] = $coin->code;
+            $datum['name'] = $coin->name;
+            $datum['current_price'] = round($coin->latestCoinPrice->current_price, 6);
+            $datum['current_value'] = round($coin->amount_owned * $coin->latestCoinPrice->current_price, 6);
+            $datum['diff'] = round((($coin->latestCoinPrice->current_price / $coin->buy_point) * 100) - 100, 2);
+            $datum['buy_point'] = round($coin->buy_point, 6);
+            $datum['been_bought'] = $coin->been_bought;
+            $datum['sale_completed_1'] = $coin->sale_completed_1;
+            $data[] = $datum;
+        }
+
+        broadcast(new \App\Events\PusherEvent(json_encode($data), "portfolio\\prices"));
+        
+    }
+
+
+    /** getBittrexPrices
+    ** called every 5 mins, saves bittrex prices to DB
+    **/
+    function saveBittrexPrices() {
+
+        //Get latest markets for everythign on bittrex
+        $markets = Bittrex::getMarketSummaries();
+
+        //Get an array of all coins in my DB
+        $coins = Coin::all();
+
+        //Loop through markets, find any of my coins and save the latest price to DB
         foreach($markets['result'] as $market) {
             $arr = explode("-", $market['MarketName']);
             $base = $arr[0];
@@ -50,21 +106,39 @@ class Exchanges {
             }
         }
 
-         //send pusher event informing of latest coin prices
-        $data = array();
-        foreach($latest_prices as $price) {
-            $data[$price->coin_code] = array();
-            $data[$price->coin_code]['price'] = $price->current_price;
-            $data[$price->coin_code]['updated_at'] = $price->created_at;
-            $data[$price->coin_code]['updated_at_short'] = $price->created_at->format('D G:i');
-            if($price->buy_point) $data[$price->coin_code]['diff'] = (($price->current_price/$price->buy_point) *100) - 100;
-            else $data[$price->coin_code]['diff']  =0;
-        }
-        broadcast(new \App\Events\PusherEvent(json_encode($data), "portfolio\\prices"));
-        
     }
 
-    //reset coins to current price, no triggers
+    /**updateCoinBalances
+     * Save current bittrex balances to DB
+     * Not needed that often? Trade function does this anyway
+    **/
+    function updateCoinBalances() {
+    
+        //Get balances of my coins according to Bittrex
+        $balances = Bittrex::getBalances();
+
+        //Get an array of all coins in my DB
+        $coins = Coin::all();
+
+        //For pusher event
+        $latest_prices = array();
+
+        //Put balances into coins array and save balance to DB
+        $my_balances = array();
+        foreach($balances['result'] as $balance) {
+            foreach($coins as $c=>$coin) {
+                if($coin->code == $balance['Currency']) {
+                    $coins[$c]->amount_owned= $balance['Balance'];
+                    $coins[$c]->save();
+                }
+            }
+        }
+    }
+
+
+  
+
+    //reset coins to current price, no triggers, only used on setup
     function resetCoins() {
 
         Coin::where('id', '>', 0)->update([
@@ -84,7 +158,10 @@ class Exchanges {
         }
     }
 
-    /* Should run after we have got latest prices
+
+    /*  runTradingRules
+     * Important function! Does the buying & selling
+    * Runs every 5 minutes after we have got latest prices
     */
     function runTradingRules() {
 
@@ -278,10 +355,12 @@ class Exchanges {
             }
 
             //Save updated coin details
+            $coin->amount_owned = $current_balance;
             $coin->save();
 
             File::append($log_file, "Coin Saved"."\n"."\n");
 
+            /** no?
             //For pusher
             $coin_data = array();
             $coin_data['been_bought'] = $coin->been_bought;
@@ -291,20 +370,24 @@ class Exchanges {
             $coin_data['sale_completed_2'] = $coin->sale_completed_2;
             $coin_data['amount_owned'] = $current_balance;
             $data['coins'][$coin->code] = $coin_data;
+            */
         }
 
         //get current btc balance
-        $btc_balance = Bittrex::getBalance("BTC");
-        $data['btc_additional_amount'] = $btc_balance['result']['Balance'];
+       // $btc_balance = Bittrex::getBalance("BTC");
+       // $data['btc_additional_amount'] = $btc_balance['result']['Balance'];
 
           //send pusher event informing of latest coin trades
-        broadcast(new \App\Events\PusherEvent(json_encode($data), "portfolio\\trades"));
+        //broadcast(new \App\Events\PusherEvent(json_encode($data), "portfolio\\trades"));
         
         
     }
 
 
 
+    /** Buy & Sell functions
+     * Called from the Trade function when required
+    **/
 
     function bittrexSell($coin, $volume, $rate) {
 
@@ -366,6 +449,11 @@ class Exchanges {
             return $volume;
         }
     }
+
+
+
+
+
 
     /********* V1 ***/
 	 /** getPrices

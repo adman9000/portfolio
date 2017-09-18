@@ -10,44 +10,77 @@
 	        <div class="col-md-12">
 	            <div class="panel panel-default">
 
+
+
+<div class='form-group'>
+	<div class="input-group">
+<div class="input-group-addon"><i class="fa fa-search"></i>
+<input type="text" class="form-control" placeholder="Search Coins" ng-model="searchCoins">
+</div></div></div>
 					<table class='table table-bordered table-striped table-condensed'>
-						<thead><tr><th></th><th>Code</th><th>Name</th><th>Buy price</th><th>BTC Price</th><th>+ / -</th><?php /*<th>Amount Owned</th>*/ ?><th>BTC Value</th><th width=200></th></tr></thead>
+						<thead><tr><th>
+							<a href="#" ng-click="sortType = 'i'; sortType == 'i' ? sortReverse = !sortReverse : ''">Num 
+								<span ng-show="sortType == 'i' && !sortReverse" class="glyphicon glyphicon-sort-by-attributes"></span>
+								<span ng-show="sortType == 'i' && sortReverse" class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+							</a>
+						</th>
+
+						<th><a href="#" ng-click="sortType = 'code';  sortType == 'code' ? sortReverse = !sortReverse : ''">Code 
+								<span ng-show="sortType == 'code' && !sortReverse" class="glyphicon glyphicon-sort-by-attributes"></span>
+								<span ng-show="sortType == 'code' && sortReverse" class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+							</span></a></th>
+
+						<th><a href="#" ng-click="sortType = 'name';sortReverse = !sortReverse">Name 
+								<span ng-show="sortType == 'name' && !sortReverse" class="glyphicon glyphicon-sort-by-attributes"></span>
+								<span ng-show="sortType == 'name' && sortReverse" class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+						</a></th>
+
+						<th><a href="#" ng-click="sortType = 'buy_point'; sortReverse = !sortReverse">Buy Point 
+								<span ng-show="sortType == 'buy_point' && !sortReverse" class="glyphicon glyphicon-sort-by-attributes"></span>
+								<span ng-show="sortType == 'buy_point' && sortReverse" class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+						</a></th>
+
+						<th><a href="#" ng-click="sortType = 'current_price'; sortReverse = !sortReverse">BTC Price 
+								<span ng-show="sortType == 'current_price' && !sortReverse" class="glyphicon glyphicon-sort-by-attributes"></span>
+								<span ng-show="sortType == 'current_price' && sortReverse" class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+						</a></th>
+
+						<th><a href="#" ng-click="sortType = 'diff'; sortReverse = !sortReverse">+ / - 
+								<span ng-show="sortType == 'diff' && !sortReverse" class="glyphicon glyphicon-sort-by-attributes"></span>
+								<span ng-show="sortType == 'diff' && sortReverse" class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+						</a></th>
+
+						<th><a href="#" ng-click="sortType = 'current_value'; sortReverse = !sortReverse">BTC Value 
+								<span ng-show="sortType == 'current_value' && !sortReverse" class="glyphicon glyphicon-sort-by-attributes"></span>
+								<span ng-show="sortType == 'current_value' && sortReverse" class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+						</a></th>
+
+						<th width=200></th></tr></thead>
 						<tbody>
 
-							@foreach ($coins as $i=>$coin)
-
-
-									<tr><td ng-class='class_{{ $coin->code }}'><?=$i+1?></td>
-									<td> {{ $coin->code }} </td> 
-									<td > {{ $coin->name }} </td> 
-									<td >{{ $coin->buy_point }}</td>
-									<td ng-bind='current_price_{{ $coin->code }}'></td> 
-									<td ng-bind='current_diff_{{ $coin->code }}' ng-class='current_diff_class_{{ $coin->code }}'></td> 
-									<?php /*<td ng-bind='amount_owned_{{ $coin->code }}'></td>*/ ?>
-									<td ng-bind='current_value_{{ $coin->code }}'></td> 
+							<tr ng-repeat="coin in coins | orderBy:sortType:sortReverse | filter:searchCoins">
+								<td class="[[ coin.row_class ]]">[[ coin.i ]]</td>
+									<td >[[ coin.code ]] </td> 
+									<td >[[ coin.name ]] </td> 
+									<td >[[ coin.buy_point ]]</td>
+									<td >[[ coin.current_price]]</td> 
+									<td class="[[coin.diff_class]]">[[coin.diff]]</td> 
+									<td >[[coin.current_value]]</td> 
 									
-									<td align=right> <a class='btn btn-info btn-xs' href='/coins/{{ $coin->id }}'>View</a> <a class='btn btn-info btn-xs' href='/coins/{{ $coin->id }}/edit'>Edit</a>
-									<form method='post' action='/coins/{{$coin->id}}' class='pull-right' style='margin-left:5px;'>
-										{{ csrf_field() }}
-										{{ method_field('DELETE') }} 
-										<input type='submit' class='btn btn-danger btn-xs' value='X' />
-										</form>
+									<td align=right> 
 									</td></tr>
-
-
-							@endforeach
 
 						</tbody>
 
-						<tfoot><tr><th></th><th></th><th></th><th></th><th></th><?php /*<th></th>*/?><th></th><th ng-bind='current_total_xbt'></th><th></th></tr></tfoot>
+						<tfoot><tr><th></th><th></th><th></th><th></th><th></th><th></th><th ng-bind='current_total_xbt'></th><th></th></tr></tfoot>
 					</table>
 
 					<p>Additional BTC held: <b><span ng-bind='amount_owned_XBT'></span></b></p>
 					<p>Total BTC: <b><span ng-bind='total_XBT'></span></b></p>
 					<p>BTC/USD Rate: <b><span ng-bind='xbt_rate'></span></b></p>
-					<p>Total USD value: <b>$<span ng-bind='current_total_usd'></span></b></p>
+					<p>Total USD value: <b><span ng-bind='current_total_usd | currency'></span></b></p>
 					<p>USD/GBP Rate: <b><span ng-bind='usd_gbp_rate'></span></b></p>
-					<p>Total GBP value: <b>£<span ng-bind='current_total_gbp'></span></b></p>
+					<p>Total GBP value: <b><span ng-bind="current_total_gbp | currency : '£'"></span></b></p>
 
 <hr />
 <p>Starting BTC amount: 0.39515752</p>
@@ -68,168 +101,70 @@
 
 <script>
 
+
 app.controller('myCtrl', function($scope, $http, Pusher) {
 
-	  var self = $scope;
+	$scope.sortType     = 'i'; // set the default sort type
+	$scope.sortReverse  = false;  // set the default sort order
+	$scope.searchCoins   = '';     // set the default search/filter term
 
-	  var current_total = 0;
-	  var current_value = 0;
-	
-	$scope.xbt_rate = {{ $btc_usd_rate }};
-	$scope.usd_gbp_rate = {{ $usd_gbp_rate }};
-
-	$scope.amount_owned_XBT = {{ $btc_additional_amount }};
-
-	  var current_price_class_XBT = "text-danger";
 
 	//Initial setting  
-	@foreach ($coins as $coin)
+	$scope.coins = [];
+	$scope.current_total_xbt = 0;
+	$scope.amount_owned_XBT = 0;
+	$scope.xbt_rate = 0;
 
 
-		@if($coin->latestCoinPrice)
-
-			$scope.current_price_{{$coin->code}} = {{ $coin->latestCoinPrice->current_price }};
-
-		@else
-
-			$scope.current_price_{{$coin->code}} = "0";
-
-		@endif
-
-		@if($coin->amount_owned) 
-
-			$scope.amount_owned_{{$coin->code}} = {{ $coin->amount_owned }};
-
-		@else
-
-			$scope.amount_owned_{{$coin->code}} = "0";
-
-		@endif
-
-		//console.log("{{$coin->code}}");
-		//console.log(parseFloat($scope.current_price_{{$coin->code}}));
-		//console.log(parseFloat($scope.amount_owned_{{$coin->code}}));
-
-
-		current_value  = parseFloat($scope.current_price_{{$coin->code}}) * parseFloat($scope.amount_owned_{{$coin->code}});
-
-		//Calculate percent diff between buy price & current price
-		diff = ($scope.current_price_{{$coin->code}} / {{ $coin->buy_point }} * 100) - 100;
-
-		$scope.current_diff_{{$coin->code}} = diff.toFixed(2)+"%";
-
-		//set diff class
-		if(diff<0) $scope.current_diff_class_{{$coin->code}} = "text-danger";
-		else if(diff>0) $scope.current_diff_class_{{$coin->code}} = "text-success";
-
-		$scope.current_price_{{$coin->code}} = parseFloat($scope.current_price_{{$coin->code}}).toFixed(7);
-		$scope.amount_owned_{{$coin->code}} = parseFloat($scope.amount_owned_{{$coin->code}}).toFixed(7);
-		
-		$scope.current_value_{{$coin->code}} = current_value.toFixed(7);
-
-		$scope.euro_value_{{$coin->code}} = current_value * $scope.xbt_rate;
-
-		
-
-
-		current_total += current_value;
-
-		//Set TR classes
-		if({{ $coin->sale_completed_1 }})
-			$scope.class_{{$coin->code}}='bg-warning';
-		else if({{ $coin->been_bought }})
-		 	$scope.class_{{$coin->code}}='bg-success';
-		 else
-		 	$scope.class_{{$coin->code}}='bg-danger';
-
-
-	@endforeach
-
-	$scope.current_total_xbt = current_total.toFixed(7);
-
-	$scope.total_XBT = ({{ $btc_additional_amount }} + current_total).toFixed(7);
-
-    $scope.current_total_usd = $scope.total_XBT * {{ $btc_usd_rate }};
-
-    $scope.current_total_gbp = $scope.current_total_usd / $scope.usd_gbp_rate ;
-
-    //Deal with pusher events
+	 //Deal with pusher events
 	Pusher.subscribe('kraken', 'portfolio\\prices', function (item) {
 		data = angular.fromJson(item);
 		//console.log(data.message);
 		message = angular.fromJson(data.message);
-		var current_total = 0;
+		$scope.current_total_xbt = 0;
 		var dt;
+
+		$scope.coins = [];
+		self = $scope;
+		var i = 0;
 		angular.forEach(message, function(val, key) {
-			//console.log(key);
-			//console.log(val);
-			price = val.price;
-			dt = val.updated_at_short;
 
-			//get old price
-			//var old_price = eval("self.current_price_"+key);
 
-			eval("self.current_price_"+key+" = "+price+".toFixed(7)");
-			//console.log("self.current_price_"+key+" = '"+price+"'");
+            if(val.diff<0) diff_class="text-danger";
+            else if(val.diff>0) diff_class="text-success";
+            if(val.sale_completed_1) row_class = "bg-warning";
+            else if(val.been_bought) row_class="bg-success";
+            else row_class = "bg-danger";
 
-			eval("current_value = parseFloat(price) * parseFloat(self.amount_owned_"+key+")");
-			//console.log("self.current_value_"+key+" = parseFloat(self.current_price_"+key+") * parseFloat(self.amount_owned_"+key+")");
-			
-			eval("self.current_value_"+key+" = current_value.toFixed(7)");
+			self.coins[i] = { i : i+1, code : val.code, name : val.name, id : val.id, current_price : val.current_price, buy_point : val.buy_point, diff : val.diff, current_value : val.current_value, row_class : row_class, diff_class : diff_class };
+		
+			self.current_total_xbt += val.current_value;
 
-			current_total += current_value;
+			//Calculations
+			$scope.total_XBT = $scope.amount_owned_XBT + $scope.current_total_xbt;
+			$scope.current_total_usd = $scope.total_XBT * $scope.xbt_rate;
+			$scope.usd_gbp_rate = {{$usd_gbp_rate}};
+			$scope.current_total_gbp = $scope.current_total_usd / $scope.usd_gbp_rate;
 
-			//Calculate percent diff between buy price & current price
-			diff = val.diff;
+			i++;
 
-			eval("$scope.current_diff_"+key+" = diff.toFixed(2)+'%'");
+		});
 
-			//set diff class
-			if(diff<0) eval("$scope.current_diff_class_"+key+" = 'text-danger'");
-			else if(diff>0) eval("$scope.current_diff_class_"+key+" = 'text-success'");
 
-	    })
-
-	    //$scope.current_total = current_total;
-	    $scope.current_total_xbt = current_total.toFixed(7);
-	    $scope.total_XBT = ($scope.amount_owned_XBT + current_total).toFixed(7);
-	    $scope.current_total_usd =  (($scope.amount_owned_XBT + current_total)*self.xbt_rate).toFixed(2);
-
-	    $scope.current_total_gbp = ((($scope.amount_owned_XBT + current_total)*self.xbt_rate) / $scope.usd_gbp_rate).toFixed(2) ;
-
-	    $scope.last_updated = "Last Update: " + dt;
 	});
 
-
-	Pusher.subscribe('kraken', 'portfolio\\trades', function (item) {
+	 //Deal with BTCpusher event
+	Pusher.subscribe('kraken', 'portfolio\\btc', function (item) {
 		data = angular.fromJson(item);
 		//console.log(data.message);
 		message = angular.fromJson(data.message);
-		var current_total = 0;
-		var dt;
-
 		console.log(message);
-
-		coins = angular.fromJson(message.coins);
-		angular.forEach(coins, function(val, key) {
-
-			eval("self.amount_owned_"+key+" = '"+val.amount_owned+"'");
-			
-			console.log("self.amount_owned_"+key+" = '"+val.amount_owned+"'");
-
-			if(val.sale_completed_1)
-				eval("self.class_"+key+"='bg-warning'");
-			else if(val.been_bought)
-			 	eval("self.class_"+key+"='bg-success'");
-			 else
-			 	eval("self.class_"+key+"='bg-danger'");
-	    })
-
-	    $scope.amount_owned_XBT = message.btc_additional_amount;
-
-	    console.log(message.sales);
-	    console.log(message.buys);
+		$scope.amount_owned_XBT = message.btc_additional_amount;
+		$scope.xbt_rate = message.btc_usd_rate;
 	});
+
+	//Do an ajax call in order to trigger getting prices etc
+	$http.get('/exchanges/coinpusher')
 
 });
 </script>

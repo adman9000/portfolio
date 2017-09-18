@@ -54,4 +54,5 @@ Route::post('/exchanges/bittrex', 'ExchangeController@bittrex'); //view all
 Route::get('/exchanges/getprices', 'ExchangeController@getPrices');
 Route::get('/exchanges/trade', 'ExchangeController@runTradingRules');
 Route::get('/exchanges/resetCoins', 'ExchangeController@resetCoins');
+Route::get('/exchanges/coinpusher', 'ExchangeController@coinPusher');
 Route::get('/exchanges/getopenorders', 'ExchangeController@getOpenOrders');

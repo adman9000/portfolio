@@ -22,6 +22,52 @@ class ExchangeController extends Controller
     
     }
 
+
+    /** getPrices
+    * Get latest prices for all my coins from relevant exchanges
+    **/
+    public function getPrices(Exchanges $exchanges) {
+
+        $exchanges->updateCoinBalances();
+        $exchanges->saveBittrexPrices();
+
+
+    }
+
+    //Manually run the trading rules - not needed if cronjob is working
+  public function runTradingRules(Exchanges $exchanges) {
+
+      $exchanges->runTradingRules();
+
+    }
+
+    //Send coin info to pusher to be picked up by page
+  public function coinPusher(Exchanges $exchanges) {
+
+      $exchanges->btcPusher();
+      $exchanges->coinPusher();
+
+    }
+
+    //Shouldnt be needed now live
+    public function resetCoins(Exchanges $exchanges) {
+
+      // $exchanges->resetCoins();
+
+    }
+
+    //TODO: Add view for open orders with buttons to close them
+    public function getOpenOrders() {
+
+      $orders = Bittrex::getOpenOrders();
+
+      dd($orders);
+    }
+
+    /** OLD VERSION 
+    * Functions for showing bittrex & kraken pages
+    **/
+
     public function kraken()
     {
 
@@ -159,40 +205,6 @@ class ExchangeController extends Controller
     }
 
 
-   
-    /** getPrices
-    * Get latest prices for all my coins from relevant exchanges
-    **/
-    public function getPrices(Exchanges $exchanges) {
 
-        $exchanges->getBittrexPrices();
-
-
-    }
-
-  public function runTradingRules(Exchanges $exchanges) {
-
-      $exchanges->runTradingRules();
-
-    }
-
-    public function resetCoins(Exchanges $exchanges) {
-
-
-        //$exchanges->getBittrexPrices();
-
-       $exchanges->resetCoins();
-
-      // $exchanges->runTradingRules();
-
-        dd($exchanges);
-    }
-
-    public function getOpenOrders() {
-
-      $orders = Bittrex::getOpenOrders();
-
-      dd($orders);
-    }
 
 }
