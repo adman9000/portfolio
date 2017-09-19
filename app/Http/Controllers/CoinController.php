@@ -23,58 +23,15 @@ class CoinController extends Controller
     {
         $data = array();
 
-        //Include latest prices & exclude Euro
-       // $coins = Coin::with('latestCoinprice')->where("code", "!=","EUR")->get();
-
-        //Get transaction for this user - probably better way to do this!
-       // $user = Auth::user();
-        //$transactions = $user->transactions;
-/*
-        $amount_owned = array();
-
-        //Use Bittrex figures, not transactions
-
-         $balances = Bittrex::getBalances();
-
-        $my_balances = array();
-        foreach($balances['result'] as $balance) {
-            foreach($coins as $c=>$coin) {
-                if($coin->code == $balance['Currency']) $coins[$c]->amount_owned= $balance['Balance'];
-            }
-        }
-
-        //Add extra info to coins
-        foreach($coins as $c=>$coin) {
-            $coins[$c]->current_price = number_format($coin->latestCoinPrice->current_price, 6);
-            $coins[$c]->current_value = number_format($coin->amount_owned * $coin->latestCoinPrice->current_price, 6);
-            $coins[$c]->diff = number_format((($coin->current_price / $coin->buy_point) * 100) - 100, 2);
-            $coins[$c]->buy_point = number_format($coin->buy_point, 6);
-            if($coins[$c]->diff<0) $coins[$c]->diff_class="text-danger";
-            else if($coins[$c]->diff>0) $coins[$c]->diff_class="text-success";
-            if($coin->sale_completed_1) $coins[$c]->row_class = "bg-warning";
-            else if($coin->been_bought) $coins[$c]->row_class="bg-success";
-            else $coins[$c]->row_class = "bg-danger";
-        }
-
-        //Do we need this on every page load?
-        $btc_market = Bittrex::getMarketSummary("USDT-BTC");
-
-        $btc_balance = Bittrex::getBalance("BTC");
-       
-        $data['btc_additional_amount'] = $btc_balance['result']['Balance'];
-        $data['btc_usd_rate'] = $btc_market['result'][0]['Last'];
-              
-
-        $data['coins'] = $coins;
-
-*/
          $data['usd_gbp_rate']  = env("USD_GBP_RATE");
+
+         //Rest of page data is retrieved from pusher
 
         return view('coins.index', $data);
     }
 
 
-    /**
+    /** TODO: recode to show selected charts together
      * Show the price charts.
      *
      * @return \Illuminate\Http\Response

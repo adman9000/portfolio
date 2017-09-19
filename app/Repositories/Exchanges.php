@@ -31,6 +31,7 @@ class Exchanges {
     }
 
     /** btcPusher
+    * TODO: store BTC rate & amount in DB?
      * Push BTC info
      */
     function btcPusher() {
