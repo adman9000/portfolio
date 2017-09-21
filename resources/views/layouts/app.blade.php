@@ -13,7 +13,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body ng-app='myApp' ng-controller='myCtrl'>
+<body >
 
     <div id="app">
         <nav class="navbar navbar-default navbar-static-top">
