@@ -11,12 +11,11 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 Auth::routes();
 
+Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
 
 
@@ -27,9 +26,23 @@ Route::get('/coins/charts', 'CoinController@charts')->name('charts'); // charts
 Route::get('/coins/charts/{time}', 'CoinController@charts')->name("charts24"); // charts
 Route::get('/coins/{coin}/edit', 'CoinController@edit'); //edit form
 Route::get('/coins/{coin}', 'CoinController@show'); //view
+Route::post('/coins/tobtc/{coin}', 'CoinController@tobtc'); // convert to btc
+Route::get('/coins/tobtc/{coin}', 'CoinController@tobtc'); // convert to btc
 Route::post('/coins', 'CoinController@store'); //Submit new
 Route::patch('/coins/{coin}', 'CoinController@update'); //Submit edit
 Route::delete('/coins/{coin}', 'CoinController@destroy'); //Submit delete
+
+//Schemes
+Route::get('/schemes', 'SchemeController@index')->name('schemes'); //view all
+Route::get('/schemes/{scheme}/edit', 'SchemeController@edit'); //edit form
+Route::get('/schemes/{scheme}/orders', 'SchemeController@orders'); //view orders/transaction records for this scheme
+Route::get('/schemes/{scheme}', 'SchemeController@show'); //view
+Route::get('/schemes/create', 'SchemeController@create'); // create form
+Route::post('/schemes', 'SchemeController@store'); //Submit new
+Route::patch('/schemes/{scheme}', 'SchemeController@update'); //Submit edit
+Route::delete('/schemes/{scheme}', 'SchemeController@destroy'); //Submit delete
+Route::patch('/schemes/{scheme}/enable', 'SchemeController@enable'); //Submit enable.disable form
+
 
 //Transactions
 Route::get('/transactions', 'TransactionController@index')->name('transactions'); //view all

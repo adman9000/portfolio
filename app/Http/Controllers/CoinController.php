@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Coin;
 use App\CoinPrice;
+use App\Transaction;
 use App\Events\PusherEvent;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -22,10 +23,47 @@ class CoinController extends Controller
      public function index()
     {
         $data = array();
+        $btc_value = 0;
 
          $data['usd_gbp_rate']  = env("USD_GBP_RATE");
 
-         //Rest of page data is retrieved from pusher
+        $data['coins'] = Coin::with('latestCoinprice')->get();
+
+
+        //Get balances of my coins according to Bittrex
+        $balances = Bittrex::getBalances();
+
+        //Get latest markets for everythign on bittrex - BECAUSE WE ARE NOT UP TO DATE ON DEV. TODO: REMOVE
+        $markets = Bittrex::getMarketSummaries();
+
+        foreach($data['coins'] as $c=>$coin) {
+
+            foreach($markets['result'] as $market) {
+
+                if($market['MarketName'] == 'BTC-'.$coin->code) {
+                    $data['coins'][$c]->latestCoinprice->current_price = $market['Last'];
+                }
+
+            }
+
+        }
+
+
+        foreach($data['coins'] as $c=>$coin) {
+
+            foreach($balances['result'] as $balance) {
+
+                if($balance['Currency'] == $coin->code) {
+                    $data['coins'][$c]->balance = $balance['Balance'];
+                    $data['coins'][$c]->btc_value = $data['coins'][$c]->balance * $data['coins'][$c]->latestCoinprice->current_price;
+
+                    $btc_value += $data['coins'][$c]->btc_value;
+                    break;
+                }
+            }
+        }
+
+        $data['btc_value'] = $btc_value;
 
         return view('coins.index', $data);
     }
@@ -101,6 +139,45 @@ class CoinController extends Controller
 
             return view('coins.charts', $data);
         }
+
+
+    /* Quick functions to convert coins **/
+
+    function toBTC(Coin $coin) {
+        //Convert all of this coin to BTC in Bittrex
+        $result = Bittrex::getBalance($coin->code);
+        $volume = $result['result']['Balance'];
+
+        $result = Bittrex::getMarketSummary("BTC-".$coin->code);
+        $rate = $result['result'][0]['Last'];
+
+        //Place order
+        $order = Bittrex::sellLimit("BTC-".$coin->code, $volume, $rate);
+
+        if(!$order['success']) {
+            //Order failed, alert me somehow
+            var_dump($order);
+            return "Order Failed";
+        }
+        else {
+             //Order successful, save transaction to DB
+            $transaction_info = array(
+                "coin_bought_id" => 0,
+                "coin_sold_id" => $coin->id,
+                "amount_sold" => $volume,
+                "amount_bought" => $volume*$rate,
+                "exchange_rate" => $rate,
+                'fees' => 0,
+                'user_id' => 1,
+                'scheme_id' => false
+                );
+            Transaction::create($transaction_info);
+
+            return "Order Successful";
+        }
+
+    }
+
 
 
 

@@ -6,6 +6,7 @@ namespace App\Repositories;
 use App\Coin;
 use App\CoinPrice;
 use App\Transaction;
+use App\Scheme;
 use adman9000\kraken\KrakenAPIFacade;
 use adman9000\Bittrex\Bittrex;
 use Illuminate\Support\Facades\File;
@@ -55,26 +56,33 @@ class Exchanges {
     function coinPusher() {
 
         //Get an array of all coins in my DB
-        $coins = Coin::all();
+       // $coins = Coin::all();
 
-        //Add extra info to coins
-        $data = array();
+        //Loop through all live schemes and broadcast current prices and amounts of all coins held
+        $schemes = Scheme::where("enabled", true)->get();
 
-        foreach($coins as $c=>$coin) {
-            $datum = array();
-            $datum['code'] = $coin->code;
-            $datum['name'] = $coin->name;
-            $datum['current_price'] = round($coin->latestCoinPrice->current_price, 6);
-            $datum['current_value'] = round($coin->amount_owned * $coin->latestCoinPrice->current_price, 6);
-            $datum['diff'] = round((($coin->latestCoinPrice->current_price / $coin->buy_point) * 100) - 100, 2);
-            $datum['buy_point'] = round($coin->buy_point, 6);
-            $datum['been_bought'] = $coin->been_bought;
-            $datum['sale_completed_1'] = $coin->sale_completed_1;
-            $data[] = $datum;
+        foreach($schemes as $scheme) {
+
+            //Add extra info to coins
+            $data = array();
+
+            foreach($scheme->coins as $c=>$coin) {
+                $datum = array();
+                $datum['id'] = $coin->id;
+                $datum['code'] = $coin->code;
+                $datum['name'] = $coin->name;
+                $datum['current_price'] = round($coin->latestCoinPrice->current_price, 6);
+                $datum['current_value'] = round($coin->pivot->amount_held * $coin->latestCoinPrice->current_price, 6);
+                $datum['diff'] = round((($coin->latestCoinPrice->current_price / $coin->pivot->set_price) * 100) - 100, 2);
+                $datum['set_price'] = round($coin->pivot->set_price, 6);
+                $datum['been_bought'] = $coin->pivot->been_bought;
+                $datum['sale_completed_1'] = $coin->pivot->sale_completed_1;
+                $data[] = $datum;
+            }
+
+            broadcast(new \App\Events\PusherEvent(json_encode($data), "portfolio\\prices\\".$scheme->id));
         }
 
-        broadcast(new \App\Events\PusherEvent(json_encode($data), "portfolio\\prices"));
-        
     }
 
 
@@ -98,10 +106,6 @@ class Exchanges {
                     if($coin->code == $arr[1]) {
                         $price_info = array("coin_id"=>$coin->id, "current_price"=>$market['Last']);
                         $price = CoinPrice::create($price_info);
-                        //For pusher event
-                        $price->coin_code = $coin->code;
-                        $price->buy_point = $coin->buy_point;
-                        $latest_prices[] = $price;
                     }
                 }
             }
@@ -177,6 +181,10 @@ class Exchanges {
             return false;
         }
 
+
+       $this->checkForCompletedOrders();
+
+
         //Get any existing orders first so we dont duplicate
         $orders = Bittrex::getOpenOrders();
         foreach($orders['result'] as $order) {
@@ -184,204 +192,238 @@ class Exchanges {
             $existing_orders[] = $arr[1];
         }
 
-        //Amount of BTC to spend when buying
-        $btc_buy_amount = env('BTC_BUY_AMOUNT');
-        $sell_point_1_multiplier = env('SELL_POINT_1');
-        $sell_point_2_multiplier = env('SELL_POINT_2');
-        $sell_drop_2_percentage = env('SELL_DROP_2');
-
-        //used by pusher
-        $data = array();
-
-        $coins = Coin::with('latestCoinprice')->get();
-
-        $balances = Bittrex::getBalances();
-
-        $my_balances = array();
-        foreach($balances['result'] as $balance) {
-            $my_balances[$balance['Currency']] = $balance['Balance'];
-        }
-
-        foreach($coins as $coin) {
+        //Get all DB coins with latest prices
+       // $coins = Coin::with('latestCoinprice')->get();
 
 
-            File::append($log_file, $coin->code."\n");
+       // $balances = Bittrex::getBalances();
 
-            if(in_array($coin->code, $existing_orders)) {
+        //Get all enabled schemes
+        $schemes = scheme::where("enabled", true)->get();
 
-                 File::append($log_file, "Order already exists\n\n");
-                 continue;
-            }
+        foreach($schemes as $scheme) {
 
+            File::append($log_file, "\nScheme Running: ".$scheme->title."\n");
 
-            //orderok flag
-            $order_ok = true;
+            foreach($scheme->coins as $coin) {
 
-            //Get current price
-            $current_price = $coin->latestCoinPrice->current_price;
+                File::append($log_file, "\n".$coin->code."\n");
 
-            //Get current balance
-            $current_balance =  isset($my_balances[$coin->code]) ? $my_balances[$coin->code] : 0;
+                //Probably a better way to do this with relationships??
+                $mycoin = Coin::with('latestCoinprice')->find($coin->id);
+                $latest_price = $mycoin->latestCoinprice;
 
+                $baseline_price = $coin->pivot->set_price;
 
-            File::append($log_file, "Current Price: ".$current_price."\n");
-            File::append($log_file, "Current Balance: ".$current_balance."\n");
+                $next_baseline_price = $scheme->price_increase_percent ?  $baseline_price * $scheme->price_increase_percent/100 : $baseline_price;
 
-            //Only attempt to sell if balance > 0
-            if($current_balance > 0) {
+                $current_price = $latest_price->current_price;
 
-                //Always update highest price point if current price is higher
-                $coin->highest_price = max($coin->highest_price, $current_price);
+                $amount_held = $coin->pivot->amount_held;
 
-                 File::append($log_file, "Highest Price: ".$coin->highest_price."\n");
+                $highest_price = max($current_price, $coin->highest_price);
 
-                //Those with a current price at least that of $sale_point_1 sell 50% for BTC
+                $buy_point = $baseline_price - ($baseline_price*$scheme->buy_drop_percent/100);
 
-                //Calculate the first sell point
-                $sell_point_1 = $coin->buy_point * $sell_point_1_multiplier;
+                $btc_buy_amount = $scheme->buy_amount;
 
-                File::append($log_file, "Sell Point 1: ".$sell_point_1."\n");
+                $coin_buy_amount = $scheme->buy_amount / $current_price;
 
-                if($coin->sale_completed_1) File::append($log_file, "Sale 1 previously completed\n");
-                
-                if(($current_price >= $sell_point_1) && (!$coin->sale_completed_1)) {
+                $sale_1_trigger = $baseline_price + ($baseline_price*$scheme->sell_1_gain_percent/100);
+
+                $sale_1_point = $scheme->sell_1_drop_percent==0 ? false : $highest_price - ($highest_price*$scheme->sell_1_drop_percent/100);
+
+                $sale_2_trigger = $baseline_price + ($baseline_price*$scheme->sell_2_gain_percent/100);
+
+                $sale_2_point = $scheme->sell_2_drop_percent==0 ? false : $highest_price - ($highest_price*$scheme->sell_2_drop_percent/100);
+
+                $sale_1_amount = $amount_held*$scheme->sell_1_sell_percent/100;
+
+                $sale_2_amount = $amount_held*$scheme->sell_2_sell_percent/100;
+
+                File::append($log_file, "Baseline Price: ".$baseline_price."\n");
+                File::append($log_file, "Next Baseline Price: ".$next_baseline_price."\n");
+                File::append($log_file, "Current Price: ".$current_price."\n");
+                File::append($log_file, "High Price: ".$highest_price."\n");
+                File::append($log_file, "Buy Point: ".$buy_point."\n");
+                File::append($log_file, "Coin Buy Amount: ".$coin_buy_amount."\n");
+                File::append($log_file, "Sale 1 Trigger: ".$sale_1_trigger."\n");
+                File::append($log_file, "Sale 1 Price: ".$sale_1_point."\n");
+                File::append($log_file, "Sale 2 Trigger: ".$sale_2_trigger."\n");
+                File::append($log_file, "Sale 2 Price: ".$sale_2_point."\n");
+                File::append($log_file, "Amount Held: ".$amount_held."\n");
+                File::append($log_file, "Sale 1 Amount: ".$sale_1_amount."\n");
+                File::append($log_file, "Sale 2 Amount: ".$sale_2_amount."\n");
+
+                if($coin->pivot->been_bought) {
+                    
+                    //We own some of this coin in this scheme, so deal with it!
                    
-                    //Sell first 50%
-                    File::append($log_file, "Selling first 50%"."\n");
+                    File::append($log_file, "Testing Sell Points:" .$coin->pivot->sale_1_completed."\n");
 
-                    if($this->bittrexSell($coin, $current_balance/2, $current_price)) {
+                    if($coin->pivot->sale_1_completed==0) {
 
-                        //Set sale_completed=1
-                         $coin->sale_completed_1 = true;
-                         $current_balance = $current_balance/2;
-                         $data['sales'][] = "50% ".$coin->code." Sold";
+                        File::append($log_file, "Sale 1 not completed"."\n");
 
-                        File::append($log_file, "Sale successful"."\n");
+                        //Handle sale 1 level
+                        if($current_price >= $sale_1_trigger) {
 
-                    }
-                }
+                            //Current price has reached trigger point 1
+                            $coin->pivot->sale_1_triggered = true;
+
+                            File::append($log_file, "Sale 1 triggered"."\n");
+
+                        }
+
+                        if($coin->pivot->sale_1_triggered) {
+
+                            File::append($log_file, "Sale 1 already triggered"."\n");
+
+                            //We have reached the trigger point for sale 1. Sell once we reach the sell point
+
+                            if(!($coin->pivot->sale_1_completed) && ((!$sale_1_point) || ($current_price <= $sale_1_point))) {
+
+                                //SELL SELL SELL!
+                                File::append($log_file, "SALE 1 - SELLING ".$sale_1_amount."\n");
+
+                                 if($this->bittrexSell($coin, $sale_1_amount, $current_price, $scheme->id)) {
+
+                                    //Set sale_completed=1
+                                     $coin->pivot->sale_1_completed = true;
+                                    $coin->pivot->amount_held -= $sale_1_amount;
+
+                                    File::append($log_file, "Sale successful"."\n");
+
+                                    //If sale 1 is for 100%, reset triggers
+                                    if($coin->pivot->amount_held == 0) {
+                                        //Reset triggers, update baseline price
+                                        $coin->pivot->been_bought = false;
+                                        $coin->pivot->sale_1_triggered = false;
+                                        $coin->pivot->sale_1_completed = false;
+                                        $coin->pivot->sale_2_triggered = false;
+                                        $coin->pivot->set_price = $next_baseline_price;
+                                        $coin->pivot->amount_held -= $sale_2_amount;
+                                        $highest_price = 0;
+
+                                        File::append($log_file, "Sold out. Triggers reset"."\n");
+
+                                    }
 
 
-                //Those with a current price at least that of $sale_point_2 set the $sale_trigger_2 variable and record current price in $price_high if higher than current $price_high
-                
-                //Calculate second sell point
-                $sell_trigger_2 = $coin->buy_point * $sell_point_2_multiplier;
-                $sell_point_2 = $coin->highest_price - (( $coin->highest_price*$sell_drop_2_percentage)/100);
-                
+                                }
 
-                 File::append($log_file, "Sell Trigger 2: ".$sell_trigger_2."\n");
-                 File::append($log_file, "Sell Point 2: ".$sell_point_2."\n");
-
-                if($current_price >= $sell_trigger_2) {
-
-                    if(!$coin->sale_trigger_2) {
-                        //Set trigger to sell when price drops 5%
-                        $coin->sale_trigger_2 = 1;
-
-                        File::append($log_file, "Trigger Set"."\n");
-
-                    }
-                    else {
-                         //Those with $sale_trigger_2 set, check if current price is 5% lower than $price_high. If so sell remaining stock and double the buy in price.
-                        //Check for 5% price drop from highest point
-                        if($current_price <= $sell_point_2) {
-
-                            //Sell remainder
-                                File::append($log_file, "Selling Remainder"."\n");
-                            if($this->bittrexSell($coin, $current_balance, $current_price)) {
-
-                                //Reset triggers, double buy in price
-                                $coin->sale_trigger_2 = 0;
-                                $coin->sale_completed_1 = 0;
-                                $coin->buy_point = $coin->buy_point * $sell_point_1_multiplier;
-                                $current_balance = 0;
-                                $data['sales'][] = "Remaining ".$coin->code." Sold";
-
-                                File::append($log_file, "Sale successful"."\n");
 
                             }
+
+                            //Current price not yet dropped enough to sell
+
+                        }
+
+                    }
+                    
+                    if(!$coin->pivot->sale_2_completed) {
+
+                        File::append($log_file, "Sale 2 not completed"."\n");
+
+                        //Handle sale 2 level
+                        if($current_price >= $sale_2_trigger) {
+
+                            $coin->pivot->sale_2_triggered = true;
+
+                            File::append($log_file, "Sale 2 triggered"."\n");
+
+                        }
+
+                        if($coin->pivot->sale_2_triggered) {
+
+                            //We have reached the trigger point for sale 1. Sell once we reach the sell point
+
+                            if((!$sale_2_point) || ($current_price <= $sale_2_point)) {
+
+                                //SELL SELL SELL!
+
+                                File::append($log_file, "SALE 2 - SELLING ".$sale_2_amount);
+
+                                 if($this->bittrexSell($coin, $sale_2_amount, $current_price, $scheme->id)) {
+
+                                    //Reset triggers, update baseline price
+                                    $coin->pivot->been_bought = false;
+                                    $coin->pivot->sale_1_triggered = false;
+                                    $coin->pivot->sale_1_completed = false;
+                                    $coin->pivot->sale_2_triggered = false;
+                                    $coin->pivot->set_price = $next_baseline_price;
+                                    $coin->pivot->amount_held -= $sale_2_amount;
+                                    $highest_price = 0;
+
+                                    File::append($log_file, "Sale successful"."\n");
+
+                                }
+
+                            }
+
+                            //Current price not yet dropped enough to sell
+
                         }
                     }
                 }
 
-            }
-            else {
-                $coin->been_bought=0; //make sure coins with no balance are set to 'not bought'
+                else {
 
-                File::append($log_file, "Zero Balance Detected"."\n");
-            }
+                    //Handle buying the coin
 
+                    File::append($log_file, "Testing Buy Point"."\n");
 
-            File::append($log_file, "Buy Point: ".$coin->buy_point."\n");
+                    if($current_price <= $buy_point) {
 
-            File::append($log_file, "Been Bought: ".$coin->been_bought."\n");
+                        //TODO: Add trigger percent to avoid buying during crash
 
-            //Coins that have dropped below the buy point and have not yet been bought, can be bought
+                        //Buy it
+                        File::append($log_file, "BUYING ".$coin_buy_amount." with ".$btc_buy_amount." BTC"."\n");
 
-            if( ($current_price <= $coin->buy_point) && (!$coin->been_bought) ) {
+                        if( $volume = $this->bittrexBuy($coin, $btc_buy_amount, $current_price, $scheme->id)) {
 
+                            //St the bought flag
+                            $coin->pivot->been_bought = 1;
 
-                File::append($log_file, "Buying full amount"."\n");
+                            $coin->pivot->amount_held += $volume;
+                            
+                            File::append($log_file, "Buy successful"."\n");
 
-                if( $volume = $this->bittrexBuy($coin, $btc_buy_amount, $current_price)) {
+                        }
 
-                    //St the bought flag
-                    $coin->been_bought = 1;
-
-                    $current_balance += $volume;
-                    
-                    $data['sales'][] = "Full amount of ".$coin->code." Bought";
-
-                    File::append($log_file, "Buy successful"."\n");
+                    }
 
                 }
-            }
 
-            //Coins that have dropped below the buy point and have had 50% sold can be bought again (50%)
-             if( ($current_price <= $coin->buy_point) && ($coin->been_bought) && ($coin->sale_completed_1) ) {
 
-                File::append($log_file, "Buying 50%"."\n");
+                 File::append($log_file, "Amount Held: ".$coin->pivot->amount_held."\n");
+                //Save the coin_scheme data
+                $coin->pivot->highest_price = $highest_price;
+                $coin->pivot->save();
 
-                if( $volume = $this->bittrexBuy($coin, $btc_buy_amount/2, $current_price)) {
+            } //end foreach coin
+ 
 
-                     //unset the sale_completed_1 flag
-                    $coin->sale_completed_1 = 0;
 
-                    $current_balance += $volume;
-
-                    $data['sales'][] = "50% ".$coin->code." Bought";
-
-                    File::append($log_file, "Buy successful"."\n");
-                }
-            }
-
-            //Save updated coin details
-            $coin->amount_owned = $current_balance;
-            $coin->save();
-
-            File::append($log_file, "Coin Saved"."\n"."\n");
-
-            /** no?
-            //For pusher
-            $coin_data = array();
-            $coin_data['been_bought'] = $coin->been_bought;
-            $coin_data['sale_trigger_2'] = $coin->sale_trigger_2;
-            $coin_data['sale_trigger_1'] = $coin->sale_trigger_1;
-            $coin_data['sale_completed_1'] = $coin->sale_completed_1;
-            $coin_data['sale_completed_2'] = $coin->sale_completed_2;
-            $coin_data['amount_owned'] = $current_balance;
-            $data['coins'][$coin->code] = $coin_data;
-            */
         }
 
-        //get current btc balance
-       // $btc_balance = Bittrex::getBalance("BTC");
-       // $data['btc_additional_amount'] = $btc_balance['result']['Balance'];
+        
+    }
 
-          //send pusher event informing of latest coin trades
-        //broadcast(new \App\Events\PusherEvent(json_encode($data), "portfolio\\trades"));
-        
-        
+
+    /** checkIncompleteOrders
+    * Check incomplete transactions against orders in bittrex to mark as comlete
+    */
+    function checkIncompleteOrders() {
+     //Get all incomplete transactions and check against orders on bittrex to see if they have been completed
+        $transactions = Transaction::where("status", "incomplete")->get();
+        foreach($transactions as $transaction) {
+            $order = Bittrex::getOrder($transaction->uuid);
+            if($order['result']['Closed'] == true) {
+                $transaction->status='complete';
+                $transaction->save();
+            }
+        }
     }
 
 
@@ -390,12 +432,21 @@ class Exchanges {
      * Called from the Trade function when required
     **/
 
-    function bittrexSell($coin, $volume, $rate) {
+    /** bittrexSell()
+     * @param $coin - the coin being bought
+     * @param $volume - the amount of that coin being sold (for BTC)
+     * @param $rate - the limiting rate of exchange
+     **/
+    function bittrexSell($coin, $volume, $rate, $scheme_id=false) {
 
-        //$order['success'] =  true;//TESTING
-
-        //Place order
-        $order = Bittrex::sellLimit("BTC-".$coin->code, $amount, $rate);
+        if(env("AUTOTRADE_ENABLED") == "test") {
+            $order['success'] =  true;//TESTING
+            return true;
+        }
+        else {
+            //Place order
+            $order = Bittrex::sellLimit("BTC-".$coin->code, $volume, $rate);
+        }
 
         if(!$order['success']) {
             //Order failed, alert me somehow
@@ -411,7 +462,8 @@ class Exchanges {
                 "amount_bought" => $volume*$rate,
                 "exchange_rate" => $rate,
                 'fees' => 0,
-                'user_id' => 1
+                'user_id' => 1,
+                'scheme_id' => $scheme_id
                 );
             Transaction::create($transaction_info);
 
@@ -419,15 +471,24 @@ class Exchanges {
         }
     }
 
-    function bittrexBuy($coin, $amount, $rate) {
+    /** bittrexBuy()
+     * @param $coin - the coin being bought
+     * @param $amount - the amount of BTC being spent
+     * @param $rate - the limiting rate of exchange
+     **/
+    function bittrexBuy($coin, $amount, $rate, $scheme_id=false) {
         
-         // $order['success'] =  true;//TESTING
-
-        //Calculate volume being bought from the amount of BTC being sold, the rate, and bittrex fees (0.25%)
+         //Calculate volume being bought from the amount of BTC being sold, the rate, and bittrex fees (0.25%)
         $volume = ($amount - ($amount*0.0025))/$rate; 
-        
-        //Place order
-        $order = Bittrex::buyLimit("BTC-".$coin->code, $volume, $rate);
+
+         if(env("AUTOTRADE_ENABLED") == "test") {
+            $order['success'] =  true;//TESTING
+        }
+        else {
+            
+            //Place order
+            $order = Bittrex::buyLimit("BTC-".$coin->code, $volume, $rate);
+        }
 
         if(!$order['success']) {
             //Order failed, alert me somehow
@@ -443,7 +504,10 @@ class Exchanges {
                 "amount_bought" => $volume,
                 "exchange_rate" => $rate,
                 'fees' => 0,
-                'user_id' => 1
+                'user_id' => 1,
+                "status" => "unconfirmed",
+                "uuid" => $order['result']['uuid'],
+                'scheme_id' => $scheme_id
                 );
             $transaction = Transaction::create($transaction_info);
 

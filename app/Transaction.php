@@ -15,11 +15,15 @@ class  Transaction extends Model
     	return $this->belongsTo('App\User');
     }
 
+    public function scheme() {
+        return $this->belongsTo('App\Scheme');
+    }
 
     public function coinSold(){
     	return $this->belongsTo('App\Coin', 'coin_sold_id');
     }
-      public function coinBought(){
+    
+    public function coinBought(){
     	return $this->belongsTo('App\Coin', 'coin_bought_id');
     }
 }

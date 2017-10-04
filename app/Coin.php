@@ -14,6 +14,14 @@ class Coin extends Model
 
     //Relationships
 
+    //relationships
+    public function schemes() {
+
+        return $this->belongsToMany('App\Scheme');
+
+    }
+
+
     //Latest price record for this coin
 	public function latestCoinprice()
 	{

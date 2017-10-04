@@ -14,17 +14,38 @@
                         </div>
                     @endif
 
+                      @if (Auth::check())
+                       
+                       Hi {{Auth::user()->name}}
+
+                   
+
+
                     You are logged in!
-<br />
-                    <p><b>AutoTrader Plan</b></p>
-                    <ol>
-                    <li>Get 0.3 BTC (approx £1000) on bittrex</li>
-<li>Select 50 altcoins - set a ‘buy in’ price to purchase 0.06 BTC worth (£20)</li>
-<li>Sell 50% at 2x buy in price</li>
-<li>Buy 50% back if drops back down to buy in price</li>
-<li>Sell remainder at 5x buy in price (after 5% drop to avoid selling during increase)</li>
-<li>Set new buy in price to 2x original. Repeat.</li>
-</ol>
+                    <br />
+                    <hr /><br />
+
+                    <table class='table table-bordered'>
+                        <tr><th>Total value in BTC of all coins on bittrex</th><td>{{ $btc_value }}</td></tr>
+                        <tr><th>Total value in USD of all coins on bittrex</th><td>${{ $usd_value }}</td></tr>
+                        <tr><th>Total value in GBP of all coins on bittrex</th><td>£{{ $gbp_value }}</td></tr>
+                        <tr><th>Number of different coins owned</th><td>{{ $num_coins }}</td></tr>
+                    </table>
+
+
+                     @else
+
+                        
+                        <p><b>AutoTrader Site</b></p>
+                    <p>Set up multiple schemes to run on bittrex. Monitor progress, cancel or modify schemes at any time. Place additional orders without affecting schemes or add/remove coins from schemes.</p>
+
+                    <p>Each scheme allows you to set a baseline price for each coin (defaults to current price). You then set a % drop at which to buy the coin and 2 sell points in order to stage sell</p> 
+
+                    <p><b>NOT YET READY FOR PUBLIC USE</b></p>
+
+                        <a href="{{ url('/login') }}">Login</a> or <a href="{{ url('/register') }}">Register</a>
+                                
+                    @endif
 
 
                 </div>

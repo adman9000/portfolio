@@ -40,6 +40,7 @@
                  @if (Auth::user())
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
+                        <li><a href="{{ route('schemes') }}">Schemes</a></li>
                         <li><a href="{{ route('coins') }}">Coins</a></li>
                         <li><a href="{{ route('transactions') }}">Transactions</a></li>
                         <li><a href="{{ route('exchanges') }}">Exchanges</a></li>

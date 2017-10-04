@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use adman9000\Bittrex\Bittrex;
 
 class HomeController extends Controller
 {
@@ -23,6 +24,42 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+
+        //Get balances of my coins according to Bittrex
+        $balances = Bittrex::getBalances();
+
+        $btc_market = Bittrex::getMarketSummary("USDT-BTC");
+
+        //Get latest markets for everythign on bittrex
+        $markets = Bittrex::getMarketSummaries();
+
+        $subtotal = 0;
+
+        foreach($balances['result'] as $balance) {
+
+            foreach($markets['result'] as $market) {
+
+                if($market['MarketName'] == 'BTC-'.$balance['Currency']) {
+
+
+                    $value = $balance['Balance'] * $market['Last'];
+
+                    $subtotal += $value;
+
+                    $data[$balance['Currency']] = $value;
+                    break;
+
+                }
+            }
+        }
+
+        $data['num_coins'] = sizeof($balances['results']);
+        $data['usd_gbp_rate']  = env("USD_GBP_RATE");
+        $data['btc_value'] = $subtotal;
+        $data['usd_value'] = $subtotal * $btc_market['result'][0]['Last'];
+        $data['gbp_value'] = $data['usd_value'] / $data['usd_gbp_rate'];
+
+
+        return view('home', $data);
     }
 }
