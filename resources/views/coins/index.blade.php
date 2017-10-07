@@ -35,14 +35,24 @@
 								<span ng-show="sortType == 'name' && sortReverse" class="glyphicon glyphicon-sort-by-attributes-alt"></span>
 						</a></th>
 
-						<th><a href="#" ng-click="sortType = 'balance';  sortType == 'code' ? sortReverse = !sortReverse : ''">Balance 
+						<th><a href="#" ng-click="sortType = 'balance';  sortType == 'balance' ? sortReverse = !sortReverse : ''">Balance 
 								<span ng-show="sortType == 'balance' && !sortReverse" class="glyphicon glyphicon-sort-by-attributes"></span>
 								<span ng-show="sortType == 'balance' && sortReverse" class="glyphicon glyphicon-sort-by-attributes-alt"></span>
 							</span></a></th>
 						
+						<th><a href="#" ng-click="sortType = 'buy_point'; sortReverse = !sortReverse">Bought At 
+								<span ng-show="sortType == 'buy_point' && !sortReverse" class="glyphicon glyphicon-sort-by-attributes"></span>
+								<span ng-show="sortType == 'buy_point' && sortReverse" class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+						</a></th>
+
 						<th><a href="#" ng-click="sortType = 'current_price'; sortReverse = !sortReverse">BTC Price 
 								<span ng-show="sortType == 'current_price' && !sortReverse" class="glyphicon glyphicon-sort-by-attributes"></span>
 								<span ng-show="sortType == 'current_price' && sortReverse" class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+						</a></th>
+
+						<th><a href="#" ng-click="sortType = 'diff'; sortReverse = !sortReverse">Diff
+								<span ng-show="sortType == 'diff' && !sortReverse" class="glyphicon glyphicon-sort-by-attributes"></span>
+								<span ng-show="sortType == 'diff' && sortReverse" class="glyphicon glyphicon-sort-by-attributes-alt"></span>
 						</a></th>
 
 						
@@ -59,7 +69,9 @@
 									<td >[[ coin.code ]] </td> 
 									<td >[[ coin.name ]] </td> 
 									<td >[[ coin.balance ]] </td> 
+									<td >[[ coin.buy_point ]] </td> 
 									<td >[[ coin.current_price]]</td> 
+									<td >[[ coin.diff]]</td> 
 									<td >[[ coin.btc_value]]</td> 
 									
 									<td align=right> 
@@ -111,7 +123,7 @@ app.controller('myCtrl', function($scope, $http) {
 	var i=0;
 	$scope.coins = [
 		@foreach($coins as $c=>$coin)
-			{i: {{$c+1}}, id : "{{$coin->id}}", code : "{{$coin->code}}", name : "{{$coin->name}}", balance : "{{$coin->balance}}",current_price : "{{$coin->latestCoinprice->current_price}}", btc_value : "{{ $coin->btc_value }}"},
+			{i: {{$c+1}}, id : "{{$coin->id}}", code : "{{$coin->code}}", name : "{{$coin->name}}", balance : "{{$coin->balance}}",buy_point : "{{$coin->buy_point}}",current_price : "{{$coin->latestCoinprice->current_price}}", diff : "{{$coin->diff}}", btc_value : "{{ $coin->btc_value }}"},
 		@endforeach
 		];
 	});

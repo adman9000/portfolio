@@ -61,6 +61,9 @@ class CoinController extends Controller
                     break;
                 }
             }
+
+            //echo $coin->code." : ".$coin->latestCoinPrice->current_price." / ".$coin->buy_point." = ".($coin->latestCoinPrice->current_price/$coin->buy_point)."<br />";
+            $data['coins'][$c]->diff = round((($data['coins'][$c]->latestCoinPrice->current_price / $coin->buy_point) * 100) - 100, 2)."%";
         }
 
         $data['btc_value'] = $btc_value;
