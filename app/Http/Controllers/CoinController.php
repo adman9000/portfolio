@@ -27,12 +27,15 @@ class CoinController extends Controller
 
          $data['usd_gbp_rate']  = env("USD_GBP_RATE");
 
+
         $data['coins'] = Coin::with('latestCoinprice')->get();
+
+
 
 
         //Get balances of my coins according to Bittrex
         $balances = Bittrex::getBalances();
-
+/*
         //Get latest markets for everythign on bittrex - BECAUSE WE ARE NOT UP TO DATE ON DEV. TODO: REMOVE
         $markets = Bittrex::getMarketSummaries();
 
@@ -41,21 +44,23 @@ class CoinController extends Controller
             foreach($markets['result'] as $market) {
 
                 if($market['MarketName'] == 'BTC-'.$coin->code) {
-                    $data['coins'][$c]->latestCoinprice->current_price = $market['Last'];
+                   $data['coins'][$c]->latestCoinprice->current_price = $market['Last'];
                 }
 
             }
 
         }
-
+*/
 
         foreach($data['coins'] as $c=>$coin) {
+
+            if($data['coins'][$c]->latestCoinprice) $current_price = $data['coins'][$c]->latestCoinprice->current_price; else  $current_price = 0;
 
             foreach($balances['result'] as $balance) {
 
                 if($balance['Currency'] == $coin->code) {
                     $data['coins'][$c]->balance = $balance['Balance'];
-                    $data['coins'][$c]->btc_value = $data['coins'][$c]->balance * $data['coins'][$c]->latestCoinprice->current_price;
+                    $data['coins'][$c]->btc_value = $data['coins'][$c]->balance * $current_price;
 
                     $btc_value += $data['coins'][$c]->btc_value;
                     break;
@@ -63,7 +68,7 @@ class CoinController extends Controller
             }
 
             //echo $coin->code." : ".$coin->latestCoinPrice->current_price." / ".$coin->buy_point." = ".($coin->latestCoinPrice->current_price/$coin->buy_point)."<br />";
-            $data['coins'][$c]->diff = round((($data['coins'][$c]->latestCoinPrice->current_price / $coin->buy_point) * 100) - 100, 2)."%";
+            $data['coins'][$c]->diff = round((($current_price / $coin->buy_point) * 100) - 100, 2)."%";
         }
 
         $data['btc_value'] = $btc_value;

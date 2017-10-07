@@ -53,7 +53,7 @@ class HomeController extends Controller
             }
         }
 
-        $data['num_coins'] = sizeof($balances['results']);
+        $data['num_coins'] = sizeof($balances['result']);
         $data['usd_gbp_rate']  = env("USD_GBP_RATE");
         $data['btc_value'] = $subtotal;
         $data['usd_value'] = $subtotal * $btc_market['result'][0]['Last'];
