@@ -10,7 +10,11 @@
 	        <div class="col-md-12">
 	            <div class="panel panel-default">
 
-<p>Remove bought at & Diff once initial coins are sold</p>
+	            	<div class='panel-heading'><h3 class='panel-title'>Coin List</h3></div>
+
+	            	<div class='panel-body'>
+
+	            	<p>Full list of all coins currently available for use in schemes. Displaying live balance on Bittrex, latest BTC price and value</p>
 
 <div class='form-group'>
 	<div class="input-group">
@@ -81,6 +85,7 @@
 				</div>
 			</div>
 		</div>
+	</div>
 	</div>
 
 @endsection

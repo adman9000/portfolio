@@ -71,10 +71,10 @@ class Exchanges {
                 $datum['id'] = $coin->id;
                 $datum['code'] = $coin->code;
                 $datum['name'] = $coin->name;
-                $datum['current_price'] = round($coin->latestCoinPrice->current_price, 6);
-                $datum['current_value'] = round($coin->pivot->amount_held * $coin->latestCoinPrice->current_price, 6);
+                $datum['current_price'] = round($coin->latestCoinPrice->current_price, 7);
+                $datum['current_value'] = round($coin->pivot->amount_held * $coin->latestCoinPrice->current_price, 7);
                 $datum['diff'] = round((($coin->latestCoinPrice->current_price / $coin->pivot->set_price) * 100) - 100, 2);
-                $datum['set_price'] = round($coin->pivot->set_price, 6);
+                $datum['set_price'] = round($coin->pivot->set_price, 7);
                 $datum['been_bought'] = $coin->pivot->been_bought;
                 $datum['sale_completed_1'] = $coin->pivot->sale_completed_1;
                 $data[] = $datum;

@@ -10,6 +10,11 @@
 	            <div class="panel panel-default">
 
 
+	            	<div class='panel-heading'><h3 class='panel-title'>Coin List</h3></div>
+
+	            	<div class='panel-body'>
+
+	            		<p>All coins currently included in this scheme, with current price, baseline price & BTC value</p>
 
 <div class='form-group'>
 	<div class="input-group">
@@ -106,6 +111,7 @@
 
 				</div>
 			</div>
+		</div>
 		</div>
 	</div>
 

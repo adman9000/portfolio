@@ -32,6 +32,17 @@
                         <tr><th>Number of different coins owned</th><td>{{ $num_coins }}</td></tr>
                     </table>
 
+                    <p><b>TODO:</b></p>
+
+                    <ul>
+                        <li>Move /schemes/edit to /schemes/coins and create proper edit scheme page</li>
+                        <li>Modal view for coins on /schemes/1 to see buy/sell prices</li>
+                        <li>Coin view chart to do 24hr/1 week/1 month/1 year</li>
+                        <li>Chart to have zero baseline, show % changes for better view of swing sizes</li>
+                        <li>Add coins to the 2 main schemes</li>
+                        <li>Ensure transactions are recorded against schemes & orders pages work</li>
+                        <li>Tidy up scheme view footer. Clearer comparison of invested vs current value</li>
+                    </ul>
 
                      @else
 
@@ -46,6 +57,7 @@
                         <a href="{{ url('/login') }}">Login</a> or <a href="{{ url('/register') }}">Register</a>
                                 
                     @endif
+
 
 
                 </div>
