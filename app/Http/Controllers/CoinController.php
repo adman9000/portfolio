@@ -72,6 +72,7 @@ class CoinController extends Controller
             $data['coins'][$c]->diff = round((($current_price / $coin->buy_point) * 100) - 100, 2)."%";
         }
 
+/*
          //one-off setup of existing coins on scheme
         foreach($data['coins'] as $coin) {
 
@@ -88,7 +89,7 @@ class CoinController extends Controller
                 DB::table('coin_scheme')->insert($scheme_info);
             }
         }
-
+*/
 
         $data['btc_value'] = $btc_value;
 

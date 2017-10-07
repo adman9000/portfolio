@@ -40,21 +40,14 @@
 								<span ng-show="sortType == 'balance' && sortReverse" class="glyphicon glyphicon-sort-by-attributes-alt"></span>
 							</span></a></th>
 						
-						<th><a href="#" ng-click="sortType = 'buy_point'; sortReverse = !sortReverse">Bought At 
-								<span ng-show="sortType == 'buy_point' && !sortReverse" class="glyphicon glyphicon-sort-by-attributes"></span>
-								<span ng-show="sortType == 'buy_point' && sortReverse" class="glyphicon glyphicon-sort-by-attributes-alt"></span>
-						</a></th>
+						
 
 						<th><a href="#" ng-click="sortType = 'current_price'; sortReverse = !sortReverse">BTC Price 
 								<span ng-show="sortType == 'current_price' && !sortReverse" class="glyphicon glyphicon-sort-by-attributes"></span>
 								<span ng-show="sortType == 'current_price' && sortReverse" class="glyphicon glyphicon-sort-by-attributes-alt"></span>
 						</a></th>
 
-						<th><a href="#" ng-click="sortType = 'diff'; sortReverse = !sortReverse">Diff
-								<span ng-show="sortType == 'diff' && !sortReverse" class="glyphicon glyphicon-sort-by-attributes"></span>
-								<span ng-show="sortType == 'diff' && sortReverse" class="glyphicon glyphicon-sort-by-attributes-alt"></span>
-						</a></th>
-
+						
 						
 						<th><a href="#" ng-click="sortType = 'btc_value'; sortReverse = !sortReverse">BTC Value 
 								<span ng-show="sortType == 'btc_value' && !sortReverse" class="glyphicon glyphicon-sort-by-attributes"></span>
@@ -69,18 +62,16 @@
 									<td >[[ coin.code ]] </td> 
 									<td >[[ coin.name ]] </td> 
 									<td >[[ coin.balance ]] </td> 
-									<td >[[ coin.buy_point ]] </td> 
 									<td >[[ coin.current_price]]</td> 
-									<td >[[ coin.diff]]</td> 
 									<td >[[ coin.btc_value]]</td> 
 									
 									<td align=right> 
-										<a href='#[[ coin.id ]]' class='btn btn-danger btn-xs convert-btc'>Sell for BTC</a> 
+										<!--<a href='#[[ coin.id ]]' class='btn btn-danger btn-xs convert-btc'>Sell for BTC</a> !-->
 									</td></tr>
 
 						</tbody>
 
-						<tfoot><tr><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th>{{ $btc_value }}</th><th></th></tr></tfoot>
+						<tfoot><tr><th></th><th></th><th></th><th></th><th></th><th>{{ $btc_value }}</th><th></th></tr></tfoot>
 
 					</table>
 
