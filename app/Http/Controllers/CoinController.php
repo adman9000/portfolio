@@ -33,6 +33,7 @@ class CoinController extends Controller
 
 
 
+
         //Get balances of my coins according to Bittrex
         $balances = Bittrex::getBalances();
 /*
@@ -70,6 +71,24 @@ class CoinController extends Controller
             //echo $coin->code." : ".$coin->latestCoinPrice->current_price." / ".$coin->buy_point." = ".($coin->latestCoinPrice->current_price/$coin->buy_point)."<br />";
             $data['coins'][$c]->diff = round((($current_price / $coin->buy_point) * 100) - 100, 2)."%";
         }
+
+         //one-off setup of existing coins on scheme
+        foreach($data['coins'] as $coin) {
+
+            if($coin->balance>0) {
+                $scheme_info = [
+                    'coin_id' => $coin->id,
+                    'scheme_id' => 3,
+                    'set_price' => $coin->buy_point,
+                    'amount_held' => $coin->balance,
+                    'been_bought' => 1,
+                    'highest_price' => $coin->buy_point
+                ];
+
+                DB::table('coin_scheme')->insert($scheme_info);
+            }
+        }
+
 
         $data['btc_value'] = $btc_value;
 

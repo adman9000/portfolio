@@ -163,7 +163,7 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 	            else if(val.been_bought) row_class="bg-success";
 	            else row_class = "bg-danger";
 
-				self.coins[i] = { i : i+1, code : val.code, name : val.name, id : val.id, current_price : val.current_price, buy_point : val.buy_point, diff : val.diff, current_value : val.current_value, row_class : row_class, diff_class : diff_class };
+				self.coins[i] = { i : i+1, code : val.code, name : val.name, id : val.id, current_price : val.current_price, set_price : val.set_price, diff : val.diff, current_value : val.current_value, row_class : row_class, diff_class : diff_class };
 			
 				self.current_total_xbt += val.current_value;
 

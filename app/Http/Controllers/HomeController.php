@@ -37,18 +37,28 @@ class HomeController extends Controller
 
         foreach($balances['result'] as $balance) {
 
-            foreach($markets['result'] as $market) {
+            //include BTC
+            if($balance['Currency'] == "BTC") {
 
-                if($market['MarketName'] == 'BTC-'.$balance['Currency']) {
+                $subtotal += $balance['Balance'];
+
+            }
+            else {
 
 
-                    $value = $balance['Balance'] * $market['Last'];
+                foreach($markets['result'] as $market) {
 
-                    $subtotal += $value;
+                    if($market['MarketName'] == 'BTC-'.$balance['Currency']) {
 
-                    $data[$balance['Currency']] = $value;
-                    break;
 
+                        $value = $balance['Balance'] * $market['Last'];
+
+                        $subtotal += $value;
+
+                        $data[$balance['Currency']] = $value;
+                        break;
+
+                    }
                 }
             }
         }

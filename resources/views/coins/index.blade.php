@@ -10,7 +10,7 @@
 	        <div class="col-md-12">
 	            <div class="panel panel-default">
 
-
+<p>Remove bought at & Diff once initial coins are sold</p>
 
 <div class='form-group'>
 	<div class="input-group">
@@ -80,7 +80,7 @@
 
 						</tbody>
 
-						<tfoot><tr><th></th><th></th><th></th><th></th><th></th><th>{{ $btc_value }}</th><th></th></tr></tfoot>
+						<tfoot><tr><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th>{{ $btc_value }}</th><th></th></tr></tfoot>
 
 					</table>
 
