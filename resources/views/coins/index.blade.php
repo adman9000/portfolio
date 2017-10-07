@@ -14,7 +14,7 @@
 
 	            	<div class='panel-body'>
 
-	            	<p>Full list of all coins currently available for use in schemes. Displaying live balance on Bittrex, latest BTC price and value</p>
+	            	<p>Full list of all coins currently available for use in schemes. Displaying balance, latest BTC price and value based on data downloaded from Bittrex every 5 minutes. Not auto-updating.</p>
 
 <div class='form-group'>
 	<div class="input-group">

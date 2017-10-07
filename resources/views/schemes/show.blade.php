@@ -10,11 +10,19 @@
 	            <div class="panel panel-default">
 
 
-	            	<div class='panel-heading'><h3 class='panel-title'>Coin List</h3></div>
+	            	<div class='panel-heading'><h3 class='panel-title'>{{ $scheme->title }} Coin List</h3></div>
 
 	            	<div class='panel-body'>
 
-	            		<p>All coins currently included in this scheme, with current price, baseline price & BTC value</p>
+	            		<p>Displays all coins currently included in this scheme, with current price, baseline price & BTC value using data downloaded from Bittrex every 5 minutes. Auto-updates.</p>
+
+	            		<p>Buy {{ $scheme->buy_amount }} BTC value at {{ $scheme->buy_drop_percent }}% below baseline. <br />
+	            			Sell {{ $scheme->sell_1_sell_percent }}% after gaining at least {{ $scheme->sell_1_gain_percent }}% and then dropping {{ $scheme->sell_1_drop_percent }}. <br />
+	            			@if($scheme->sell_2_gain_percent)
+	            				Sell {{ $scheme->sell_2_sell_percent }}% of the remainder after gaining at least {{ $scheme->sell_2_gain_percent }}% and then dropping {{ $scheme->sell_2_drop_percent }}. <br />
+	            			@endif
+	            			Increase the baseline price by {{ $scheme->price_increase_percent }}% and repeat.
+	            		</p>
 
 <div class='form-group'>
 	<div class="input-group">

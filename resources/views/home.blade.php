@@ -18,10 +18,7 @@
                        
                        Hi {{Auth::user()->name}}
 
-                   
-
-
-                    You are logged in!
+                   <p>This page uses live data from bittrex for market values and coin balances. The coin list & scheme pages use data stored in the database & updated every 5 minutes from Bittrex.</p>
                     <br />
                     <hr /><br />
 
@@ -30,6 +27,16 @@
                         <tr><th>Total value in USD of all coins on bittrex</th><td>${{ $usd_value }}</td></tr>
                         <tr><th>Total value in GBP of all coins on bittrex</th><td>£{{ $gbp_value }}</td></tr>
                         <tr><th>Number of different coins owned</th><td>{{ $num_coins }}</td></tr>
+                    </table>
+
+                    <hr />
+                    <p><b>Status as of 07/10/2017</b> (start date)</p>
+
+                     <table class='table table-bordered'>
+                        <tr><th>Total value in BTC of all coins on bittrex</th><td>0.26829055892199</td></tr>
+                        <tr><th>Total value in USD of all coins on bittrex</th><td>$1161.6981201322</td></tr>
+                        <tr><th>Total value in GBP of all coins on bittrex</th><td>£854.18979421487</td></tr>
+                        <tr><th>Number of different coins owned</th><td>50</td></tr>
                     </table>
 
                     <p><b>TODO:</b></p>

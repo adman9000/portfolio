@@ -55,6 +55,11 @@ class Exchanges {
     **/
     function coinPusher() {
 
+
+        $log_file = storage_path("logs/bittrex.log");
+        File::append($log_file, "--------------------------------- ".date("d/m/Y G:i")."----------------------------------"."\n");
+        File::append($log_file, "--------------------------------- coinPusher() ----------------------------------"."\n");
+
         //Get an array of all coins in my DB
        // $coins = Coin::all();
 
@@ -62,6 +67,9 @@ class Exchanges {
         $schemes = Scheme::where("enabled", true)->get();
 
         foreach($schemes as $scheme) {
+
+
+            File::append($log_file, "\nScheme pushing: ".$scheme->title."\n");
 
             //Add extra info to coins
             $data = array();
@@ -91,6 +99,11 @@ class Exchanges {
     **/
     function saveBittrexPrices() {
 
+
+        $log_file = storage_path("logs/bittrex.log");
+        File::append($log_file, "--------------------------------- ".date("d/m/Y G:i")."----------------------------------"."\n");
+        File::append($log_file, "--------------------------------- saveBittrexPrices() ----------------------------------"."\n");
+
         //Get latest markets for everythign on bittrex
         $markets = Bittrex::getMarketSummaries();
 
@@ -106,6 +119,8 @@ class Exchanges {
                     if($coin->code == $arr[1]) {
                         $price_info = array("coin_id"=>$coin->id, "current_price"=>$market['Last']);
                         $price = CoinPrice::create($price_info);
+
+                        File::append($log_file, "Price saved for ".$coin->code);
                     }
                 }
             }
@@ -171,9 +186,8 @@ class Exchanges {
     function runTradingRules() {
 
         $log_file = storage_path("logs/bittrex.log");
-
-
         File::append($log_file, "--------------------------------- ".date("d/m/Y G:i")."----------------------------------"."\n");
+        File::append($log_file, "--------------------------------- runTradingRules() ----------------------------------"."\n");
 
         if(!env("AUTOTRADE_ENABLED")) {
 
@@ -414,7 +428,7 @@ class Exchanges {
     /** checkIncompleteOrders
     * Check incomplete transactions against orders in bittrex to mark as comlete
     */
-    function checkIncompleteOrders() {
+    function checkForCompletedOrders() {
      //Get all incomplete transactions and check against orders on bittrex to see if they have been completed
         $transactions = Transaction::where("status", "incomplete")->get();
         foreach($transactions as $transaction) {
