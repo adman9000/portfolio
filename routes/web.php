@@ -36,10 +36,12 @@ Route::delete('/coins/{coin}', 'CoinController@destroy'); //Submit delete
 Route::get('/schemes', 'SchemeController@index')->name('schemes'); //view all
 Route::get('/schemes/create', 'SchemeController@create'); // create form
 Route::get('/schemes/{scheme}/edit', 'SchemeController@edit'); //edit form
+Route::get('/schemes/{scheme}/coins', 'SchemeController@coins'); //edit form
 Route::get('/schemes/{scheme}/orders', 'SchemeController@orders'); //view orders/transaction records for this scheme
 Route::get('/schemes/{scheme}', 'SchemeController@show'); //view
 Route::post('/schemes', 'SchemeController@store'); //Submit new
 Route::patch('/schemes/{scheme}', 'SchemeController@update'); //Submit edit
+Route::patch('/schemes/{scheme}/coins', 'SchemeController@setCoins'); //Set Coins
 Route::delete('/schemes/{scheme}', 'SchemeController@destroy'); //Submit delete
 Route::patch('/schemes/{scheme}/enable', 'SchemeController@enable'); //Submit enable.disable form
 

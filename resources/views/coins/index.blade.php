@@ -71,6 +71,7 @@
 									
 									<td align=right> 
 										<!--<a href='#[[ coin.id ]]' class='btn btn-danger btn-xs convert-btc'>Sell for BTC</a> !-->
+										<a href='/coins/[[ coin.id ]]' class='btn btn-xs btn-info'>View</a>
 									</td></tr>
 
 						</tbody>

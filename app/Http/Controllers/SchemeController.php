@@ -56,7 +56,7 @@ class SchemeController extends Controller
         $data['enabled'] = false;
         Scheme::create($data);
 
-        return $this->index();
+        return redirect('schemes')->with('status-success', 'Scheme Created');
     }
 
     /**
@@ -109,13 +109,36 @@ class SchemeController extends Controller
         return view("schemes.orders", $data);
     }
 
-    /**
+ /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\scheme  $scheme
      * @return \Illuminate\Http\Response
      */
     public function edit(scheme $scheme)
+    {
+        //
+
+        $data['scheme'] = $scheme;
+
+
+       //$orders = Bittrex::getOrderHistory();
+       /*foreach($data['scheme']->transactions as $t=>$transaction) {
+            foreach($orders['result'] as $order) {
+                if($transaction->uuid == $order['OrderUuid']) $data['scheme']->transactions[$t]->_order = $order;
+            }
+       }*/
+
+        return view("schemes.edit", $data);
+    }
+
+    /**
+     * Select coins and set prices
+     *
+     * @param  \App\scheme  $scheme
+     * @return \Illuminate\Http\Response
+     */
+    public function coins(scheme $scheme)
     {
         //
 
@@ -149,8 +172,10 @@ class SchemeController extends Controller
         }
         $data['coins'] = $coins;
 
-        return view("schemes.edit", $data);
+        return view("schemes.coins", $data);
     }
+
+
 
     /**
      * Update the specified resource in storage.
@@ -160,6 +185,30 @@ class SchemeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, scheme $scheme)
+    {
+        //Used for setting enabled coins & baseline prices as well as enabling/disabling scheme
+       
+        //Validate input
+        $this->validate(request(), [
+            'title' => 'required']
+            );
+
+        //only safe if fillable/guarded set
+        $data = request()->all();
+        $scheme->fill($data);
+        $scheme->update();
+
+        return redirect('schemes')->with('status-success', 'Scheme Updated');
+    }
+
+    /**
+     * Set the coins to use in this scheme
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\scheme  $scheme
+     * @return \Illuminate\Http\Response
+     */
+    public function setCoins(Request $request, scheme $scheme)
     {
         //Used for setting enabled coins & baseline prices as well as enabling/disabling scheme
        
@@ -179,7 +228,7 @@ class SchemeController extends Controller
         //Sync this array to the db
         $scheme->coins()->sync($coins);
 
-        return $this->index();
+        return redirect('schemes')->with('status-success', 'Coins Updated');
     }
 
 

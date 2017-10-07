@@ -23,22 +23,40 @@
 						{{ $coin->name }}
 					</div>
 
-          <ul>
-          <li>Buy Point: {{ $coin->buy_point }} </li>
-          <li>Highest Price: {{ $coin->highest_price }}</li>
-          <li>Current Price: {{ $coin->latestCoinprice->current_price }}</li>
-          <li>Been Bought? {{ $coin->been_bought }}  </li>
-          <li>Sell Price 1: {{ $coin->sell_point_1 }}</li>
-          <li>Sell Trigger 2: {{ $coin->sell_trigger_2 }}</li>
-          <li>Minimum Sell Price 2: {{ $coin->sell_point_2 }}</li>
-          <li>Sale 1 complete?  {{ $coin->sale_completed_1 }} </li>
-          <li>Sale 2 Triggered?  {{ $coin->sale_trigger_2 }} </li>
-          </ul>
+         
 
 					<div id="chart_div"></div>
 
-<a class="btn btn-primary" role="button" data-toggle="collapse" href="#collapseTable" aria-expanded="false" aria-controls="collapseExample">
-  Show Table
+          <h3>Schemes containing this coin</h3>
+@foreach($coin->schemes as $scheme)
+
+  <div class='col-xs-6 col-sm-4'>
+      <div class='well'>
+    <h4> {{ $scheme->title }}</h4>
+   <ul>
+          <li>Buy Point: {{ $scheme->pivot->set_price }} </li>
+          <li>Highest Price: {{ $scheme->pivot->highest_price }}</li>
+          <li>Current Price: {{ $coin->latestCoinprice->current_price }}</li>
+          <li>Been Bought? {{ $scheme->pivot->been_bought }}  </li>
+          <li>Sell Trigger 1: {{ $scheme->pivot->sell_trigger_1 }}</li>
+          <li>Min Sell Price 1: {{ $scheme->pivot->sell_point_1 }}</li>
+          <li>Sell Trigger 2: {{ $scheme->pivot->sell_trigger_2 }}</li>
+          <li>Min Sell Price 2: {{ $scheme->pivot->sell_point_2 }}</li>
+          <li>Sale 1 Triggered?  {{ $scheme->pivot->sale_1_triggered }} </li>
+          <li>Sale 1 complete?  {{ $scheme->pivot->sale_1_completed }} </li>
+          <li>Sale 2 complete?  {{ $scheme->pivot->sale_2_completed }} </li>
+          <li>Sale 2 Triggered?  {{ $scheme->pivot->sale_2_triggered }} </li>
+          <li>Sale 1 Percent: {{ $scheme->sell_1_sell_percent }} </li>
+          <li>Sale 2 Percent: {{ $scheme->sell_2_sell_percent }} </li>
+          </ul>
+
+        </div>
+      </div>
+
+    @endforeach
+
+<a class="btn btn-info btn-sm" role="button" data-toggle="collapse" href="#collapseTable" aria-expanded="false" aria-controls="collapseExample">
+  Show Price Table
 </a>
 <div class='collapse' id='collapseTable'>
 					<table class='table table-bordered'>
@@ -73,7 +91,7 @@
     var chart_data = new Array();
     var chart;
     var chart_options;
-    var num_results= <?=sizeof($coin->coinprices)?>;
+    var num_results= <?=sizeof($chart_data)?>;
 
       // Load the Visualization API and the corechart package.
       google.charts.load('current', {'packages':['corechart']});
@@ -90,9 +108,9 @@
         chart_data = new google.visualization.arrayToDataTable([
         	['Date/Time','Price']
 
-			@foreach($coin->coinprices as $price) 
+			@foreach($chart_data as $date=>$price) 
 
-          	,['{{$price->created_at->format('D G:i')}}', {{$price->current_price}}]
+          	,['{{ $date }}', {{ $price }}]
           	
           	@endforeach
         ]);
@@ -101,6 +119,7 @@
         chart_options = {'title':'Live BTC Prices',
                        'width':'90%',
                        height: 400,
+                       interpolateNulls: true,
            hAxis: { showTextEvery: Math.round(num_results/5) }
                    };
 

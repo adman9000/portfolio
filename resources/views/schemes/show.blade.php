@@ -81,6 +81,8 @@
 									
 									<td align=right>
 
+										<a href='/coins/[[ coin.id ]]' class='btn btn-xs btn-info'>View</a>
+										
 									</td></tr>
 
 						</tbody>
@@ -132,9 +134,32 @@
 <script src="{{ asset('js/custom-coins.js') }}"></script>
 
 <script>
+    $("document").ready(function() {
+
+ 		if (! ('Notification' in window)) {
+              alert('Web Notification is not supported');
+              return;
+            }
+
+            Notification.requestPermission().then(function(result) {
+			  if (result === 'denied') {
+			    console.log('Permission wasn\'t granted. Allow a retry.');
+			    return;
+			  }
+			  if (result === 'default') {
+			    console.log('The permission request was dismissed.');
+			    return;
+			  }
+			  // Do something with the granted permission.
+			});
+
+        });
+</script>
+
+<script>
 
 
-app.controller('myCtrl', function($scope, $http, Pusher) {
+app.controller('myCtrl', function($scope, $http, Pusher, $filter) {
 
 	$scope.sortType     = 'i'; // set the default sort type
 	$scope.sortReverse  = false;  // set the default sort order
@@ -150,6 +175,12 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 
 	 //Deal with pusher events
 	Pusher.subscribe('kraken', 'portfolio\\prices\\{{ $scheme->id }}', function (item) {
+
+		var date = new Date();
+        $scope.time = $filter('date')(new Date(), 'HH:mm'); 
+
+  		var notify = new Notification("Bittrex data received at "+$scope.time);
+
 		data = angular.fromJson(item);
 		//console.log(data.message);
 		message = angular.fromJson(data.message);
@@ -200,7 +231,6 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 		data = angular.fromJson(item);
 		//console.log(data.message);
 		message = angular.fromJson(data.message);
-		console.log(message);
 		//$scope.amount_owned_XBT = message.btc_additional_amount;
 		$scope.xbt_rate = message.btc_usd_rate;
 	});

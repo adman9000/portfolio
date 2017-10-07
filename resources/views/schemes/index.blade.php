@@ -23,6 +23,7 @@
 									<a class='btn btn-info btn-xs' href='/schemes/{{ $scheme->id }}'>View</a> 
 									<a class='btn btn-info btn-xs' href='/schemes/{{ $scheme->id }}/orders'>Orders</a> 
 									<a class='btn btn-info btn-xs' href='/schemes/{{ $scheme->id }}/edit'>Edit</a>
+									<a class='btn btn-info btn-xs' href='/schemes/{{ $scheme->id }}/coins'>Coins</a>
 									<form method='post' action='/schemes/{{$scheme->id}}' class='pull-right' style='margin-left:5px;'>
 										{{ csrf_field() }}
 										{{ method_field('DELETE') }} 

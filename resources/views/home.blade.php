@@ -49,6 +49,9 @@
                         <li>Add coins to the 2 main schemes</li>
                         <li>Ensure transactions are recorded against schemes & orders pages work</li>
                         <li>Tidy up scheme view footer. Clearer comparison of invested vs current value</li>
+                        <li>Add a chart to scheme view - BTC invested vs BTC value over time</li>
+                        <li>Market price buy/sell to make sure it gets it? utilise order statuses to check amount bought/sold & rate</li>
+                        <li>Notifications when attempting to buy or sell - email/slack/windows</li>
                     </ul>
 
                      @else

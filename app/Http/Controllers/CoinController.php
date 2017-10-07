@@ -249,16 +249,59 @@ class CoinController extends Controller
     public function show(Coin $coin)
     {
         //
-        $btc_buy_amount = env('BTC_BUY_AMOUNT');
-        $sell_point_1_multiplier = env('SELL_POINT_1');
-        $sell_point_2_multiplier = env('SELL_POINT_2');
-        $sell_drop_2_percentage = env('SELL_DROP_2');
         
-        $coin->sell_point_1 = $coin->buy_point * $sell_point_1_multiplier;
-        $coin->sell_trigger_2 = $coin->buy_point * $sell_point_2_multiplier;
-        $coin->sell_point_2 = $coin->sell_trigger_2 - (( $coin->highest_price*$sell_drop_2_percentage)/100);
 
-        return view("coins.show", array("coin" => $coin));
+        //chart data
+        //start with 1 month chart
+
+        //Get an array of datetimes 5 minutes apart
+        $startTime  = new \DateTime("1 month ago");
+        $timeStep   = 60;
+
+        $startTime->setTime($startTime->format('G'),0);
+        $endTime    = new \DateTime();
+        $timeArray  = array();
+        $high = 0;
+
+        while($startTime <= $endTime)
+        {
+            $timeArray[$startTime->format('Y-m-d H:i')] = "null";
+            $startTime->add(new \DateInterval('PT'.$timeStep.'M'));
+        }
+
+        //Loop through coin prices and add them to the time array where times match
+        foreach($coin->coinprices as $price) {
+            $pricetime = new \DateTime($price->created_at);
+
+            //Get nearest 5 mins
+            $mins = round($pricetime->format('i')/$timeStep) * $timeStep;
+
+            //Remove the seconds and set to nearest 5 mins so we can match to the minute
+            $pricetime->setTime($pricetime->format('G'),$mins, 0);
+
+            //If we have a time set in the price array, give it the price
+            if(isset($timeArray[$pricetime->format('Y-m-d H:i')]))
+                $timeArray[$pricetime->format('Y-m-d H:i')] = $price->current_price;
+
+            //Get the highest point of the chart
+            $high = max($high, $price->current_price);
+        }
+        
+        foreach($coin->schemes as $s=>$scheme) {
+            $coin->schemes[$s]->pivot->sell_trigger_1 =  $scheme->pivot->set_price + ($scheme->pivot->set_price * $scheme->sell_1_gain_percent/100);
+            $coin->schemes[$s]->pivot->sell_trigger_2 = $scheme->pivot->set_price + ($scheme->pivot->set_price * $scheme->sell_2_gain_percent/100);
+            $coin->schemes[$s]->pivot->sell_point_1 = $coin->schemes[$s]->pivot->sell_trigger_1 - ($scheme->pivot->set_price * $scheme->sell_1_drop_percent/100);
+            $coin->schemes[$s]->pivot->sell_point_2 = $coin->schemes[$s]->pivot->sell_trigger_2 - ($scheme->pivot->set_price * $scheme->sell_2_drop_percent/100);
+
+         
+        }
+
+        $data['chart_highest'] = $high;
+        $data['chart_data'] = $timeArray;
+        $data['coin'] = $coin;
+        $data['chart_show_every'] = $timeStep;
+
+        return view("coins.show", $data);
     }
 
     /**
@@ -289,7 +332,7 @@ class CoinController extends Controller
     		'name' => 'required']
     		);
 
-        //TODO: must be better way for editing lots of fields..
+        //TODO: must be better way for editing lots of fields..use fill
     	$coin->code = $request->code;
 		$coin->name = $request->name;
 		$coin->save();

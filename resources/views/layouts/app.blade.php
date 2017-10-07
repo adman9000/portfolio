@@ -88,6 +88,30 @@
             </div>
         </nav>
 
+        @if (session('status-success'))
+    <div class="alert alert-success">
+        {{ session('status-success') }}
+    </div>
+@endif
+
+@if (session('status-danger'))
+    <div class="alert alert-danger">
+        {{ session('status-danger') }}
+    </div>
+@endif
+
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+
+
         @yield('content')
     </div>
 
