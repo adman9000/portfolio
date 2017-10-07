@@ -73,6 +73,16 @@ class SchemeController extends Controller
 
          $data['usd_gbp_rate']  = env("USD_GBP_RATE");
 
+        //Get BTC invested
+        $subtotal = 0;
+        foreach($data['scheme']->transactions as $transaction) {
+
+            if($transaction->coin_sold_id == 0) $subtotal += $transaction->amount_sold;
+            else if($transaction->coin_bought_id == 0) $subtotal -= $transaction->amount_bought;
+
+        }
+        $data['btc_invested'] = $subtotal;
+        
         return view("schemes.show", $data);
     }
 
@@ -87,6 +97,7 @@ class SchemeController extends Controller
         //
 
         $data['scheme'] = $scheme;
+
 
        //$orders = Bittrex::getOrderHistory();
        /*foreach($data['scheme']->transactions as $t=>$transaction) {

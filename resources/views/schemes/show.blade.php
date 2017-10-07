@@ -75,16 +75,14 @@
 						<tfoot><tr><th></th><th></th><th></th><th></th><th></th><th></th><th ng-bind='current_total_xbt'></th><th></th></tr></tfoot>
 					</table>
 
-					<p>Additional BTC held: <b><span ng-bind='amount_owned_XBT'></span></b></p>
-					<p>Total BTC: <b><span ng-bind='total_XBT'></span></b></p>
 					<p>BTC/USD Rate: <b><span ng-bind='xbt_rate'></span></b></p>
-					<p>Total USD value: <b><span ng-bind='current_total_usd | currency'></span></b></p>
+					<p>Scheme USD value: <b><span ng-bind='current_total_usd | currency'></span></b></p>
 					<p>USD/GBP Rate: <b><span ng-bind='usd_gbp_rate'></span></b></p>
-					<p>Total GBP value: <b><span ng-bind="current_total_gbp | currency : '£'"></span></b></p>
+					<p>Scheme GBP value: <b><span ng-bind="current_total_gbp | currency : '£'"></span></b></p>
 
 <hr />
-<p>Starting BTC amount: 0.39515752</p>
-<p>Approx starting GBP Value: £1071.15</p>
+<p>BTC Invested: <b>{{ $btc_invested }}</b></p>
+
 					<br />
 
 					<form method='post' action='/schemes/{{ $scheme->id }}/enable'>
@@ -159,6 +157,8 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 
 	            if(val.diff<0) diff_class="text-danger";
 	            else if(val.diff>0) diff_class="text-success";
+	            else diff_class="text-warning";
+
 	            if(val.sale_completed_1) row_class = "bg-warning";
 	            else if(val.been_bought) row_class="bg-success";
 	            else row_class = "bg-danger";
@@ -187,7 +187,7 @@ app.controller('myCtrl', function($scope, $http, Pusher) {
 		//console.log(data.message);
 		message = angular.fromJson(data.message);
 		console.log(message);
-		$scope.amount_owned_XBT = message.btc_additional_amount;
+		//$scope.amount_owned_XBT = message.btc_additional_amount;
 		$scope.xbt_rate = message.btc_usd_rate;
 	});
 
