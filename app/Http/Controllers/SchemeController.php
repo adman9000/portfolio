@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\scheme;
+use App\Scheme;
 use App\Coin;
 use Illuminate\Http\Request;
 use adman9000\Bittrex\Bittrex;
