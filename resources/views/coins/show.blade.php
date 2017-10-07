@@ -120,7 +120,9 @@
                        'width':'90%',
                        height: 400,
                        interpolateNulls: true,
-           hAxis: { showTextEvery: Math.round(num_results/5) }
+           hAxis: { showTextEvery: Math.round(num_results/5) },
+                  
+          vAxis: { baseline : 0 }
                    };
 
         // Instantiate and draw our chart, passing in some options.
