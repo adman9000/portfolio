@@ -178,8 +178,12 @@ app.controller('myCtrl', function($scope, $http, Pusher, $filter) {
 
 		var date = new Date();
         $scope.time = $filter('date')(new Date(), 'HH:mm'); 
-
-  		if(window.Notification) var notify = new Notification("Bittrex data received at "+$scope.time);
+  		if(typeof(window.Notification)!="undefined") {
+		if (Notification.permission == 'granted') {
+			  var notify = new Notification("Bittrex data received at "+$scope.time);
+			
+			}
+		}
 
 		data = angular.fromJson(item);
 		//console.log(data.message);
