@@ -18,7 +18,6 @@ class TransactionController extends Controller
 
      public function index()
     {
-         $this->middleware('auth');
         $data = array();
         $user = Auth::user();
         $data['transactions'] = $user->transactions;

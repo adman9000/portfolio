@@ -9,6 +9,10 @@ use adman9000\Bittrex\Bittrex;
 
 class SchemeController extends Controller
 {
+
+      public function __construct() {
+         $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +20,6 @@ class SchemeController extends Controller
      */
     public function index()
     {
-         $this->middleware('auth');
         //Show an overview of all schemes
         //Which are enabled?
         //Show profit/loss, start date, amount invested

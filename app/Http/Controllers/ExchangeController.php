@@ -11,13 +11,15 @@ use App\Repositories\Exchanges;
 
 class ExchangeController extends Controller
 {
+    public function __construct() {
+         $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index() {
-         $this->middleware('auth');
 
         return view('exchanges.index');
     
