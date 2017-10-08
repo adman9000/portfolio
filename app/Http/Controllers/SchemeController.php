@@ -16,6 +16,7 @@ class SchemeController extends Controller
      */
     public function index()
     {
+         $this->middleware('auth');
         //Show an overview of all schemes
         //Which are enabled?
         //Show profit/loss, start date, amount invested

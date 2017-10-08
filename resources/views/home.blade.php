@@ -42,11 +42,11 @@
                     <p><b>TODO:</b></p>
 
                     <ul>
-                        <li>Move /schemes/edit to /schemes/coins and create proper edit scheme page</li>
+                        <li class='text-success'>Move /schemes/edit to /schemes/coins and create proper edit scheme page</li>
                         <li>Modal view for coins on /schemes/1 to see buy/sell prices</li>
                         <li>Coin view chart to do 24hr/1 week/1 month/1 year</li>
-                        <li>Chart to have zero baseline, show % changes for better view of swing sizes</li>
-                        <li>Add coins to the 2 main schemes</li>
+                        <li class='text-success'>Chart to have zero baseline, show % changes for better view of swing sizes</li>
+                        <li class='text-success'>Add coins to the 2 main schemes</li>
                         <li>Ensure transactions are recorded against schemes & orders pages work</li>
                         <li>Tidy up scheme view footer. Clearer comparison of invested vs current value</li>
                         <li>Add a chart to scheme view - BTC invested vs BTC value over time</li>
