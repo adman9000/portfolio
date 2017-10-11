@@ -45,6 +45,9 @@ Route::patch('/schemes/{scheme}/coins', 'SchemeController@setCoins'); //Set Coin
 Route::delete('/schemes/{scheme}', 'SchemeController@destroy'); //Submit delete
 Route::patch('/schemes/{scheme}/enable', 'SchemeController@enable'); //Submit enable.disable form
 
+Route::get('/schemes/{scheme}/ajax/{view}/{id}', 'SchemeController@ajaxView'); //All Ajax views
+Route::post('/schemes/{scheme}/ajax', 'SchemeController@ajaxAction'); //All Ajax actions
+Route::post('/schemes/{scheme}/ajax/{action}', 'SchemeController@ajaxAction'); //All Ajax actions
 
 //Transactions
 Route::get('/transactions', 'TransactionController@index')->name('transactions'); //view all

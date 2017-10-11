@@ -7,6 +7,8 @@ use App\Coin;
 use App\CoinPrice;
 use App\Transaction;
 use App\Scheme;
+use App\User;
+use App\Notifications\Trade;
 use adman9000\kraken\KrakenAPIFacade;
 use adman9000\Bittrex\Bittrex;
 use Illuminate\Support\Facades\File;
@@ -54,7 +56,6 @@ class Exchanges {
     * And every 5 minutes to update the page after new prices obtained & trades carried out
     **/
     function coinPusher() {
-
 
         $log_file = storage_path("logs/bittrex.log");
         File::append($log_file, "--------------------------------- ".date("d/m/Y G:i")."----------------------------------"."\n");
@@ -468,6 +469,7 @@ class Exchanges {
             return false;
         }
         else {
+
              //Order successful, save transaction to DB
             $transaction_info = array(
                 "coin_bought_id" => 0,
@@ -480,6 +482,10 @@ class Exchanges {
                 'scheme_id' => $scheme_id
                 );
             Transaction::create($transaction_info);
+
+
+        $user = User::find(1);
+        $user->notify(new Trade());
 
             return $volume;
         }
@@ -525,6 +531,10 @@ class Exchanges {
                 );
             $transaction = Transaction::create($transaction_info);
 
+
+        $user = User::find(1);
+        $user->notify(new Trade());
+        
             return $volume;
         }
     }

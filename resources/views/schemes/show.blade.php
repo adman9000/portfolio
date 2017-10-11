@@ -81,6 +81,8 @@
 									
 									<td align=right>
 
+										<a href='/schemes/{{ $scheme->id }}/ajax/modal-coin/[[ coin.id ]]' data-toggle='modal-ajax' class='btn btn-xs btn-info'>Edit</a>
+
 										<a href='/coins/[[ coin.id ]]' class='btn btn-xs btn-info'>View</a>
 										
 									</td></tr>
@@ -158,6 +160,11 @@
 
 <script>
 
+app.controller('modalCtrl', function($scope, $http) {
+
+	$scope.buy_price = 100;
+	
+});
 
 app.controller('myCtrl', function($scope, $http, Pusher, $filter) {
 

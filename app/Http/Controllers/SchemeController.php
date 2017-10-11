@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Scheme;
 use App\Coin;
+use App\CoinScheme;
 use Illuminate\Http\Request;
 use adman9000\Bittrex\Bittrex;
+use Illuminate\Support\Facades\DB;
 
 class SchemeController extends Controller
 {
@@ -145,6 +147,8 @@ class SchemeController extends Controller
     public function coins(scheme $scheme)
     {
         //
+        //Load scheme coins
+        $scheme->load('coins');
 
         $data['scheme'] = $scheme;
 
@@ -152,14 +156,26 @@ class SchemeController extends Controller
         $markets = Bittrex::getMarketSummaries();
 
         $coins = Coin::all();
-        //Add current prices to coin data
+
+
+        //set baseline prices for coins already in the scheme
+        foreach($data['scheme']->coins as $scheme_coin) {
+
+
+            foreach($coins as $c=>$coin) {
+                if($coin->id == $scheme_coin->id) {
+                    $coins[$c]->baseline_price = $scheme_coin->pivot->set_price;
+                }
+            }
+        }
+        //Add current prices to coin data for coins not already in this scheme
          foreach($markets['result'] as $market) {
             $arr = explode("-", $market['MarketName']);
             $base = $arr[0];
             if($base == "BTC") {
                 foreach($coins as $c=>$coin) {
                     if($coin->code == $arr[1]) {
-                        $coins[$c]->baseline_price = number_format($market['Last'], 10, '.', '');
+                        if(!$coins[$c]->baseline_price) $coins[$c]->baseline_price = number_format($market['Last'], 10, '.', '');
                         break;
                     }
                 }
@@ -255,6 +271,48 @@ class SchemeController extends Controller
 
         return $this->show($scheme);
     }
+
+
+    /**
+     * ajaxView()
+     * Handle all ajax page views & form submissions?
+     **/
+    public function ajaxView(Scheme $scheme, $view, $id) {
+
+        $data = array();
+        $data['scheme'] = $scheme;
+        $data['coin'] = Coin::find($id);
+
+        //pivot data
+        $data['pivot'] = $data['coin']->schemes->find($scheme->id)->pivot;
+
+        return view("schemes.ajax.".$view, $data);
+    }
+
+    /**
+     * ajaxAction()
+     * Handle all ajax page views & form submissions?
+     **/
+    public function ajaxAction(Request $request, Scheme $scheme, $action) {
+
+        $json = array();
+
+        switch($action) {
+
+            case "updatecoin" :
+
+                DB::table('coin_scheme') -> where('id', $request->get('coin_scheme_id')) -> update(array('set_price' => $request->get('set_price')));
+
+                $json['success'] = "Coin Price updated";
+
+                break;
+        }
+
+        return json_encode($json);
+    }
+
+
+
 
     /**
      * Remove the specified resource from storage.
