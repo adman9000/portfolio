@@ -498,9 +498,12 @@ class Exchanges {
      **/
     function bittrexBuy($coin, $amount, $rate, $scheme_id=false) {
         
+        $log_file = storage_path("logs/bittrex.log");
          //Calculate volume being bought from the amount of BTC being sold, the rate, and bittrex fees (0.25%)
         $volume = ($amount - ($amount*0.0025))/$rate; 
 
+			File::append($log_file, "AUTOTRADE_ENABLED: ".env("AUTOTRADE_ENABLED"));
+			
          if(env("AUTOTRADE_ENABLED") == "test") {
             $order['success'] =  true;//TESTING
         }
@@ -510,9 +513,11 @@ class Exchanges {
             $order = Bittrex::buyLimit("BTC-".$coin->code, $volume, $rate);
         }
 
+			File::append($log_file, json_encode($order));
+			
         if(!$order['success']) {
             //Order failed, alert me somehow
-
+	
             return false;
         }
         else {

@@ -24,7 +24,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-
         //Get balances of my coins according to Bittrex
         $balances = Bittrex::getBalances();
 
