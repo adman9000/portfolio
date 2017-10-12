@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use adman9000\Bittrex\Bittrex;
+use App\User;
+use App\Coin;
+use App\Scheme;
+use App\Transaction;
+use App\Notifications\Trade;
 
 class HomeController extends Controller
 {
@@ -24,6 +29,19 @@ class HomeController extends Controller
      */
     public function index()
     {
+
+        $data = array();
+        $data['success'] = true;
+        $data['type'] = "buy";
+        $data['order']['result'] = array();
+        $data['order']['result']['uuid'] = "12345";
+        $data['coin'] = Coin::find(1);
+        $data['transaction'] = Transaction::find(1);
+        $data['scheme'] = Scheme::find(1);
+
+        $user = User::find(1);
+        $user->notify(new Trade($data));
+
         //Get balances of my coins according to Bittrex
         $balances = Bittrex::getBalances();
 

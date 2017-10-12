@@ -301,7 +301,7 @@ class Exchanges {
                                 //SELL SELL SELL!
                                 File::append($log_file, "SALE 1 - SELLING ".$sale_1_amount."\n");
 
-                                 if($this->bittrexSell($coin, $sale_1_amount, $current_price, $scheme->id)) {
+                                 if($this->bittrexSell($coin, $sale_1_amount, $current_price, $scheme)) {
 
                                     //Set sale_completed=1
                                      $coin->pivot->sale_1_completed = true;
@@ -359,7 +359,7 @@ class Exchanges {
 
                                 File::append($log_file, "SALE 2 - SELLING ".$sale_2_amount);
 
-                                 if($this->bittrexSell($coin, $sale_2_amount, $current_price, $scheme->id)) {
+                                 if($this->bittrexSell($coin, $sale_2_amount, $current_price, $scheme)) {
 
                                     //Reset triggers, update baseline price
                                     $coin->pivot->been_bought = false;
@@ -395,7 +395,7 @@ class Exchanges {
                         //Buy it
                         File::append($log_file, "BUYING ".$coin_buy_amount." with ".$btc_buy_amount." BTC"."\n");
 
-                        if( $volume = $this->bittrexBuy($coin, $btc_buy_amount, $current_price, $scheme->id)) {
+                        if( $volume = $this->bittrexBuy($coin, $btc_buy_amount, $current_price, $scheme)) {
 
                             //St the bought flag
                             $coin->pivot->been_bought = 1;
@@ -452,11 +452,14 @@ class Exchanges {
      * @param $volume - the amount of that coin being sold (for BTC)
      * @param $rate - the limiting rate of exchange
      **/
-    function bittrexSell($coin, $volume, $rate, $scheme_id=false) {
+    function bittrexSell($coin, $volume, $rate, $scheme=false) {
+
+        if($scheme) $scheme_id = $scheme->id;
 
         if(env("AUTOTRADE_ENABLED") == "test") {
             $order['success'] =  true;//TESTING
-            return true;
+            $order['result']['uuid'] = "TEST0001";
+            //return true;
         }
         else {
             //Place order
@@ -465,6 +468,10 @@ class Exchanges {
 
         if(!$order['success']) {
             //Order failed, alert me somehow
+
+
+        $user = User::find(1);
+        $user->notify(new Trade(array("type" => "sell", "coin" => $coin, "order" => $order, "scheme" => $scheme, "transaction" => array(), "success" => false)));
 
             return false;
         }
@@ -479,13 +486,15 @@ class Exchanges {
                 "exchange_rate" => $rate,
                 'fees' => 0,
                 'user_id' => 1,
+                "status" => "unconfirmed",
+                "uuid" => $order['result']['uuid'],
                 'scheme_id' => $scheme_id
                 );
-            Transaction::create($transaction_info);
+            $transaction = Transaction::create($transaction_info);
 
 
         $user = User::find(1);
-        $user->notify(new Trade());
+        $user->notify(new Trade(array("type" => "sell", "coin" => $coin, "order" => $order, "scheme" => $scheme, "transaction" => $transaction, "success" => true)));
 
             return $volume;
         }
@@ -496,8 +505,10 @@ class Exchanges {
      * @param $amount - the amount of BTC being spent
      * @param $rate - the limiting rate of exchange
      **/
-    function bittrexBuy($coin, $amount, $rate, $scheme_id=false) {
+    function bittrexBuy($coin, $amount, $rate, $scheme=false) {
         
+        if($scheme) $scheme_id = $scheme->id;
+
         $log_file = storage_path("logs/bittrex.log");
          //Calculate volume being bought from the amount of BTC being sold, the rate, and bittrex fees (0.25%)
         $volume = ($amount - ($amount*0.0025))/$rate; 
@@ -506,6 +517,7 @@ class Exchanges {
 			
          if(env("AUTOTRADE_ENABLED") == "test") {
             $order['success'] =  true;//TESTING
+            $order['result']['uuid'] = "TEST0001";
         }
         else {
             
@@ -518,6 +530,9 @@ class Exchanges {
         if(!$order['success']) {
             //Order failed, alert me somehow
 	
+            $user = User::find(1);
+            $user->notify(new Trade(array("type" => "buy", "coin" => $coin, "order" => $order, "scheme" => $scheme, "transaction" => array(), "success" => false)));
+
             return false;
         }
         else {
@@ -537,8 +552,8 @@ class Exchanges {
             $transaction = Transaction::create($transaction_info);
 
 
-        $user = User::find(1);
-        $user->notify(new Trade());
+            $user = User::find(1);
+            $user->notify(new Trade(array("type" => "buy", "coin" => $coin, "order" => $order, "scheme" => $scheme, "transaction" => $transaction, "success" => true)));
         
             return $volume;
         }

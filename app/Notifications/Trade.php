@@ -11,14 +11,16 @@ class Trade extends Notification
 {
     use Queueable;
 
+    protected $data;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($data)
     {
         //
+        $this->data = $data;
     }
 
     /**
@@ -40,11 +42,13 @@ class Trade extends Notification
      */
     public function toMail($notifiable)
     {
+        //Create data array for email template
+        $data = $this->data;
+        $data['url'] = url('/schemes/'.$this->data['scheme']->id);
+
         return (new MailMessage)
                     ->subject('Trade Submitted')
-                    ->line('A new trade has been submitted to Bittrex.')
-                    ->action('View Details', url('/'))
-                    ->line('Thank you!');
+                    ->markdown('mails.trade.submitted', $data);
     }
 
     /**
