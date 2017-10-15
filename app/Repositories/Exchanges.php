@@ -432,7 +432,6 @@ class Exchanges {
         $transactions = Transaction::where("status", "unconfirmed")->where('uuid', '!=', '')->get();
         foreach($transactions as $transaction) {
             $order = Bittrex::getOrder($transaction->uuid);
-            dd($order);
             if($order['result']['Closed'] == true) {
                 $transaction->amount_bought = $order['result']['Quantity'];
                 $transaction->amount_sold = $order['result']['Price'];
