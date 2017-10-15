@@ -11,6 +11,7 @@
 |
 */
 
+use App\Repositories\Exchanges;
 
 
 Auth::routes();
@@ -74,3 +75,7 @@ Route::get('/exchanges/trade', 'ExchangeController@runTradingRules');
 Route::get('/exchanges/resetCoins', 'ExchangeController@resetCoins');
 Route::get('/exchanges/coinpusher', 'ExchangeController@coinPusher');
 Route::get('/exchanges/getopenorders', 'ExchangeController@getOpenOrders');
+Route::get('/exchanges/checkorders', function(){
+	$exchange = new Exchanges();
+	$exchange->checkForCompletedOrders();
+});

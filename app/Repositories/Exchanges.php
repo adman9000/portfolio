@@ -27,6 +27,7 @@ class Exchanges {
     function runSchedule() {
 
         $this->saveBittrexPrices();
+        $this->checkForCompletedOrders();
         $this->runTradingRules();
         $this->coinPusher();
         $this->btcPusher();
@@ -196,11 +197,7 @@ class Exchanges {
             return false;
         }
 
-
-       $this->checkForCompletedOrders();
-
-
-        //Get any existing orders first so we dont duplicate
+        //Get any existing orders first so we dont duplicate - TODO: Cancel existing orders if not filled?
         $orders = Bittrex::getOpenOrders();
         foreach($orders['result'] as $order) {
             $arr = explode("-", $order['Exchange']);
@@ -303,8 +300,9 @@ class Exchanges {
 
                                  if($this->bittrexSell($coin, $sale_1_amount, $current_price, $scheme)) {
 
+                                    //TODO: Move all this to the order checking function so we only mark coins as bought etc when order has been confirmed?
                                     //Set sale_completed=1
-                                     $coin->pivot->sale_1_completed = true;
+                                    $coin->pivot->sale_1_completed = true;
                                     $coin->pivot->amount_held -= $sale_1_amount;
 
                                     File::append($log_file, "Sale successful"."\n");
@@ -427,15 +425,20 @@ class Exchanges {
 
 
     /** checkIncompleteOrders
-    * Check incomplete transactions against orders in bittrex to mark as comlete
+    * Check incomplete transactions against orders in bittrex to mark the transactions as complete
     */
     function checkForCompletedOrders() {
      //Get all incomplete transactions and check against orders on bittrex to see if they have been completed
-        $transactions = Transaction::where("status", "incomplete")->get();
+        $transactions = Transaction::where("status", "unconfirmed")->where('uuid', '!=', '')->get();
         foreach($transactions as $transaction) {
             $order = Bittrex::getOrder($transaction->uuid);
+            dd($order);
             if($order['result']['Closed'] == true) {
-                $transaction->status='complete';
+                $transaction->amount_bought = $order['result']['Quantity'];
+                $transaction->amount_sold = $order['result']['Price'];
+                $transaction->exchange_rate = $order['result']['PricePerUnit'];
+                $transaction->fees = $order['result']['CommisionPaid'];
+                $transaction->status='confirmed';
                 $transaction->save();
             }
         }

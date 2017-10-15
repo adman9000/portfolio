@@ -26,4 +26,6 @@ class  Transaction extends Model
     public function coinBought(){
     	return $this->belongsTo('App\Coin', 'coin_bought_id');
     }
+
+    //TODO: coinscheme relationships?
 }

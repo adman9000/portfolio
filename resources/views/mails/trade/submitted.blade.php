@@ -3,21 +3,29 @@
 
 # '{{ $type }}'' Trade Submitted for coin '{{ $coin->code }}' on scheme '{{ $scheme->title }} '
 
+@component('mail::panel')
+
 @if( $success )
 
-	<p>Submission Successful</p>
+	Submission Successful
 
 @else
 
-	<p>Submission Failed</p>
+	Submission Failed
 
 @endif
 
-<?php var_dump($order) ?>
+@endcomponent
+
+Amount to buy: <?=$transaction->amount_bought?>
+Amount to sell: <?=$transaction->amount_sold?>
+Exchange rate: <?=$transaction->exchange_rate?>
 
 <hr />
 
-<?php var_dump($transaction) ?>
+
+<?php var_dump($order) ?>
+
 
 
 @component('mail::button', ['url' => $url])

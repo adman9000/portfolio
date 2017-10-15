@@ -10,15 +10,17 @@
 	            <div class="panel panel-default">
 
 					<table class='table table-bordered table-striped'>
-						<thead><tr><th>Coin Bought</th><th>Amount Bought</th><th>Bought At</th><th width=200></th></tr></thead>
+						<thead><tr><th>Date</th><th>Coin Bought</th><th>Coin Sold</th><th>Bought At</th><th>Status</th><th width=200></th></tr></thead>
 						<tbody>
 
 							@foreach ($transactions as $transaction)
 
 									<tr>
-									<td> {{ $transaction->coinBought->code }} </td> 
-									<td > {{ $transaction->amount_bought }} </td> 
+									<td> {{ $transaction->created_at }} </td> 
+									<td> {{ $transaction->amount_bought }} {{$transaction->coinBought ? $transaction->coinBought->code : "BTC" }} </td> 
+									<td> {{ $transaction->amount_sold }} {{$transaction->coinSold ? $transaction->coinSold->code : "BTC" }} </td> 
 									<td > {{ $transaction->exchange_rate }} </td> 
+									<td > {{ $transaction->status }} </td> 
 									<td align=right> 
 									<a class='btn btn-info btn-sm' href='/transactions/{{ $transaction->id }}'>View</a> 
 									<a class='btn btn-info btn-sm' href='/transactions/{{ $transaction->id }}/edit'>Edit</a>

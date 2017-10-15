@@ -19,7 +19,7 @@ class Trade extends Notification
      */
     public function __construct($data)
     {
-        //
+        //$data array contains transaction, scheme, coin, order type & submission status
         $this->data = $data;
     }
 
