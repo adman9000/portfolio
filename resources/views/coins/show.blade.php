@@ -40,6 +40,7 @@
           <li>Buy Price: {{ $scheme->pivot->buy_price }} </li>
           <li>Buy Amount: {{ $scheme->pivot->buy_amount }} </li>
           <li>Been Bought? {{ $scheme->pivot->been_bought }}  </li>
+          <li>Amount Held {{ $scheme->pivot->amount_held }}  </li>
           <li>Sell Trigger 1: {{ $scheme->pivot->sell_trigger_1 }}</li>
           <li>Min Sell Price 1: {{ $scheme->pivot->sell_point_1 }}</li>
           <li>Sell Trigger 2: {{ $scheme->pivot->sell_trigger_2 }}</li>

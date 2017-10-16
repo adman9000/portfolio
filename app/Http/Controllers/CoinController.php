@@ -292,8 +292,8 @@ class CoinController extends Controller
             if($coin->schemes[$s]->pivot->buy_price>0) $coin->schemes[$s]->pivot->buy_amount =  $scheme->buy_amount/$coin->schemes[$s]->pivot->buy_price;
             $coin->schemes[$s]->pivot->sell_trigger_1 =  $scheme->pivot->set_price + ($scheme->pivot->set_price * $scheme->sell_1_gain_percent/100);
             $coin->schemes[$s]->pivot->sell_trigger_2 = $scheme->pivot->set_price + ($scheme->pivot->set_price * $scheme->sell_2_gain_percent/100);
-            $coin->schemes[$s]->pivot->sell_point_1 = $coin->schemes[$s]->pivot->sell_trigger_1 - ($scheme->pivot->set_price * $scheme->sell_1_drop_percent/100);
-            $coin->schemes[$s]->pivot->sell_point_2 = $coin->schemes[$s]->pivot->sell_trigger_2 - ($scheme->pivot->set_price * $scheme->sell_2_drop_percent/100);
+            $coin->schemes[$s]->pivot->sell_point_1 = max($coin->schemes[$s]->pivot->sell_trigger_1, $coin->schemes[$s]->pivot->highest_price) - (max($scheme->pivot->set_price, $coin->schemes[$s]->pivot->highest_price) * $scheme->sell_1_drop_percent/100);
+            $coin->schemes[$s]->pivot->sell_point_2 = max($coin->schemes[$s]->pivot->sell_trigger_2, $coin->schemes[$s]->pivot->highest_price) - (max($scheme->pivot->set_price, $coin->schemes[$s]->pivot->highest_price) * $scheme->sell_2_drop_percent/100);
 
          
         }

@@ -20,6 +20,11 @@
 		</div>
 
 		<div class='form-group'>
+			<label>Amount Held</label>
+			<p class='form-control-static'> {{ $pivot->amount_held }} </p>
+		</div>
+		
+		<div class='form-group'>
 			<label>Baseline Price</label>
 			<input type='text' class='form-control' name='set_price' value='{{$pivot->set_price}}' id='modal-set-price' />
 		</div>
