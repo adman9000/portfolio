@@ -436,7 +436,7 @@ class Exchanges {
                 $transaction->amount_bought = $order['result']['Quantity'];
                 $transaction->amount_sold = $order['result']['Price'];
                 $transaction->exchange_rate = $order['result']['PricePerUnit'];
-                $transaction->fees = $order['result']['CommisionPaid'];
+                $transaction->fees = $order['result']['CommissionPaid'];
                 $transaction->status='confirmed';
                 $transaction->save();
             }
