@@ -23,6 +23,8 @@
                     <hr /><br />
 
                     <table class='table table-bordered'>
+                        <tr><th>Total value of BTC on bittrex</th><td>{{ $btc_balance }}</td></tr>
+                        <tr><th>Total value in BTC of altcoins on bittrex</th><td>{{ $btc_value-$btc_balance }}</td></tr>
                         <tr><th>Total value in BTC of all coins on bittrex</th><td>{{ $btc_value }}</td></tr>
                         <tr><th>Total value in USD of all coins on bittrex</th><td>${{ $usd_value }}</td></tr>
                         <tr><th>Total value in GBP of all coins on bittrex</th><td>£{{ $gbp_value }}</td></tr>

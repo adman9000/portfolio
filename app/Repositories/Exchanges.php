@@ -233,7 +233,7 @@ class Exchanges {
 
                 $amount_held = $coin->pivot->amount_held;
 
-                $highest_price = max($current_price, $coin->highest_price);
+                $highest_price = max($current_price, $coin->pivot->highest_price);
 
                 $buy_point = $baseline_price - ($baseline_price*$scheme->buy_drop_percent/100);
 

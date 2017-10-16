@@ -46,6 +46,7 @@ class HomeController extends Controller
             if($balance['Currency'] == "BTC") {
 
                 $subtotal += $balance['Balance'];
+                $data['btc_balance'] =  $balance['Balance'];
 
             }
             else {
