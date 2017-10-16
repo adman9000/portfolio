@@ -9,32 +9,39 @@
 
     
 
-                <div class="panel-heading">View Coin</div>
+                <div class="panel-heading">View Transaction</div>
 
                 <div class="panel-body">
 
 					 <div class='form-group'>
-						<label>Coin Code</label>
-						{{ $coin->code }}
+						<label>Date</label>
+						{{ $transaction->created_at }} 
 					</div>
 
 					 <div class='form-group'>
-						<label>Coin Name</label>
-						{{ $coin->name }}
+						<label>Bought</label>
+						{{ $transaction->amount_bought }} {{$transaction->coinBought ? $transaction->coinBought->code : "BTC" }}
 					</div>
 
+					<div class='form-group'>
+						<label>Sold</label>
+						{{ $transaction->amount_sold }} {{$transaction->coinSold ? $transaction->coinSold->code : "BTC" }}
+					</div>
 
-					<table class='table table-bordered'>
+					<div class='form-group'>
+						<label>Rate</label>
+						{ $transaction->exchange_rate }} 
+					</div>
 
-						<tr><th>Date/Time</th><th>Price</th></tr>
+					<div class='form-group'>
+						<label>Status</label>
+						{{ $transaction->status }}
+					</div>
 
-						@foreach($coin->coinprices as $price) 
-
-							<tr><td>{{ $price->created_at->toDayDateTimeString() }}</td><td>&euro;{{ $price->getFormattedPrice() }}</td></tr>
-
-						@endforeach
-
-					</table>
+					<div class='form-group'>
+						<label>Scheme</label>
+						<a href='/schemes/{{ $transaction->scheme->id }}'>{{ $transaction->scheme->title }}</a>
+					</div>
 
 				</div>
 

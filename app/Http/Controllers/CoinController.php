@@ -288,6 +288,8 @@ class CoinController extends Controller
         }
         
         foreach($coin->schemes as $s=>$scheme) {
+            $coin->schemes[$s]->pivot->buy_price =  $scheme->pivot->set_price - ($scheme->pivot->set_price * $scheme->buy_drop_percent/100);
+            if($coin->schemes[$s]->pivot->buy_price>0) $coin->schemes[$s]->pivot->buy_amount =  $scheme->buy_amount/$coin->schemes[$s]->pivot->buy_price;
             $coin->schemes[$s]->pivot->sell_trigger_1 =  $scheme->pivot->set_price + ($scheme->pivot->set_price * $scheme->sell_1_gain_percent/100);
             $coin->schemes[$s]->pivot->sell_trigger_2 = $scheme->pivot->set_price + ($scheme->pivot->set_price * $scheme->sell_2_gain_percent/100);
             $coin->schemes[$s]->pivot->sell_point_1 = $coin->schemes[$s]->pivot->sell_trigger_1 - ($scheme->pivot->set_price * $scheme->sell_1_drop_percent/100);
@@ -295,7 +297,6 @@ class CoinController extends Controller
 
          
         }
-
         $data['chart_highest'] = $high;
         $data['chart_data'] = $timeArray;
         $data['coin'] = $coin;

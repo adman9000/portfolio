@@ -30,13 +30,15 @@
           <h3>Schemes containing this coin</h3>
 @foreach($coin->schemes as $scheme)
 
-  <div class='col-xs-6 col-sm-4'>
+  <div class='col-sm-6 col-md-4'>
       <div class='well'>
     <h4> {{ $scheme->title }}</h4>
    <ul>
-          <li>Buy Point: {{ $scheme->pivot->set_price }} </li>
+          <li>Baseline Price: {{ $scheme->pivot->set_price }} </li>
           <li>Highest Price: {{ $scheme->pivot->highest_price }}</li>
           <li>Current Price: {{ $coin->latestCoinprice->current_price }}</li>
+          <li>Buy Price: {{ $scheme->pivot->buy_price }} </li>
+          <li>Buy Amount: {{ $scheme->pivot->buy_amount }} </li>
           <li>Been Bought? {{ $scheme->pivot->been_bought }}  </li>
           <li>Sell Trigger 1: {{ $scheme->pivot->sell_trigger_1 }}</li>
           <li>Min Sell Price 1: {{ $scheme->pivot->sell_point_1 }}</li>
@@ -49,7 +51,9 @@
           <li>Sale 1 Percent: {{ $scheme->sell_1_sell_percent }} </li>
           <li>Sale 2 Percent: {{ $scheme->sell_2_sell_percent }} </li>
           </ul>
-
+          <p>
+            <a href='/schemes/{{ $scheme->id }}'>View Scheme</a>
+          </p>
         </div>
       </div>
 
