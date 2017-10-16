@@ -6,38 +6,56 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-
-    
-
-                <div class="panel-heading">View Coin</div>
+			
+                <div class="panel-heading">View Transaction</div>
 
                 <div class="panel-body">
-
+	
+					<div class='form-group' >
+						<label>Scheme</label>
+						<p class='form-control-static'>{{ $transaction->scheme->title }} </p>
+					</div>
+					
 					 <div class='form-group'>
-						<label>Coin Code</label>
-						{{ $coin->code }}
+						<label>Transaction ID</label>
+						<p class='form-control-static'>{{ $transaction->uuid }}</p>
 					</div>
 
 					 <div class='form-group'>
-						<label>Coin Name</label>
-						{{ $coin->name }}
+						<label>Created At</label>
+						<p class='form-control-static'>{{ $transaction->created_at }}</p>
 					</div>
 
+					<div class='form-group'>
+						<label>Coin Sold</label>
+						<p class='form-control-static'>
+						{{ $transaction->amount_sold }}
+						@if($transaction->coinSold)
+							{{ $transaction->coinSold->code }}
+						@else
+							BTC
+						@endif
+						</p>
+					</div>
 
-					<table class='table table-bordered'>
-
-						<tr><th>Date/Time</th><th>Price</th></tr>
-
-						@foreach($coin->coinprices as $price) 
-
-							<tr><td>{{ $price->created_at->toDayDateTimeString() }}</td><td>&euro;{{ $price->getFormattedPrice() }}</td></tr>
-
-						@endforeach
-
-					</table>
-
+					<div class='form-group'>
+						<label>Coin Bought</label>
+						<p class='form-control-static'>
+						{{ $transaction->amount_bought }}
+						@if($transaction->coinBought)
+							{{ $transaction->coinBought->code }}
+						@else
+							BTC
+						@endif
+						</p>
+					</div>
+					
+					<div class='form-group'>
+						<label>Rate</label>
+						<p class='form-control-static'>{{ $transaction->exchange_rate }}</p>
+					</div>
+					
 				</div>
-
 
 			</div>
 		</div>

@@ -71,6 +71,7 @@ class TransactionController extends Controller
     public function show(Transaction $transaction)
     {
         //
+		$transaction->load('coinSold', 'coinBought', 'scheme');
         return view("transactions.show", array("transaction" => $transaction));
     }
 

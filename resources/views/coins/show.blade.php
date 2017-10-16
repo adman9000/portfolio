@@ -38,6 +38,7 @@
           <li>Highest Price: {{ $scheme->pivot->highest_price }}</li>
           <li>Current Price: {{ $coin->latestCoinprice->current_price }}</li>
           <li>Been Bought? {{ $scheme->pivot->been_bought }}  </li>
+          <li>Amount Held {{ $scheme->pivot->amount_held }}  </li>
           <li>Sell Trigger 1: {{ $scheme->pivot->sell_trigger_1 }}</li>
           <li>Min Sell Price 1: {{ $scheme->pivot->sell_point_1 }}</li>
           <li>Sell Trigger 2: {{ $scheme->pivot->sell_trigger_2 }}</li>
