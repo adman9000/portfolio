@@ -120,7 +120,7 @@ app.controller('myCtrl', function($scope, $http) {
 	var i=0;
 	$scope.coins = [
 		@foreach($coins as $c=>$coin)
-			{i: {{$c+1}}, id : "{{$coin->id}}", code : "{{$coin->code}}", name : "{{$coin->name}}", balance : "{{$coin->balance}}",buy_point : "{{$coin->buy_point}}",current_price : "{{$coin->latestCoinprice->current_price}}", diff : "{{$coin->diff}}", btc_value : "{{ $coin->btc_value }}"},
+			{i: {{$c+1}}, id : "{{$coin->id}}", code : "{{$coin->code}}", name : "{{$coin->name}}", balance : "{{$coin->balance}}",buy_point : "{{$coin->buy_point}}",current_price : "{{$coin->latestCoinprice ? $coin->latestCoinprice->current_price : 0}}", diff : "{{$coin->diff}}", btc_value : "{{ $coin->btc_value }}"},
 		@endforeach
 		];
 	});
