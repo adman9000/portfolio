@@ -60,6 +60,7 @@
 
     @endforeach
 
+<? /** No good, too big!
 <a class="btn btn-info btn-sm" role="button" data-toggle="collapse" href="#collapseTable" aria-expanded="false" aria-controls="collapseExample">
   Show Price Table
 </a>
@@ -76,6 +77,8 @@
 
 					</table>
 </div>
+**/ ?>
+
 				</div>
 
 
