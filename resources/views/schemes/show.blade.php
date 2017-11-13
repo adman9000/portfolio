@@ -81,6 +81,8 @@
 									
 									<td align=right>
 
+										<a href='/schemes/{{ $scheme->id }}/ajax/modal-coin-sell/[[ coin.id ]]' data-toggle='modal-ajax' class='btn btn-xs btn-warning'>Sell</a>
+
 										<a href='/schemes/{{ $scheme->id }}/ajax/modal-coin/[[ coin.id ]]' data-toggle='modal-ajax' class='btn btn-xs btn-info'>Edit</a>
 
 										<a href='/coins/[[ coin.id ]]' class='btn btn-xs btn-info'>View</a>

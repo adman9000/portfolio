@@ -8,6 +8,7 @@ use App\CoinScheme;
 use Illuminate\Http\Request;
 use adman9000\Bittrex\Bittrex;
 use Illuminate\Support\Facades\DB;
+use App\Repositories\Exchanges;
 
 class SchemeController extends Controller
 {
@@ -305,6 +306,41 @@ class SchemeController extends Controller
 
                 $json['success'] = "Coin Price updated";
 
+                break;
+
+            case "sellcoin" :
+
+                $exchanges = new Exchanges();
+
+                //Selling up a specified coin for this scheme
+                $coinscheme = CoinScheme::find($request->get('coin_scheme_id'));
+
+                $market = Bittrex::getMarketSummary("BTC-".$coinscheme->coin->code);
+                $last = $market['result'][0]['Last'];
+                $volume = $exchanges->bittrexSell($coinscheme->coin, $coinscheme->amount_held, $last, $coinscheme->scheme);
+
+                //If sale worked, mark as sold on scheme
+                if($volume) {
+                    if($request->get('delete'))
+                        $coinscheme->delete();
+                    else {
+
+                        $attributes = [
+                            'amount_held' => 0,
+                            'been_bought' => 0,
+                            'sale_1_completed' => 0,
+                            'sale_2_completed' => 0,
+                            'sale_1_triggered' => 0,
+                            'sale_2_triggered' => 0,
+                        ];
+                        $coinscheme->scheme->coins()->updateExistingPivot($coinscheme->coin->id, $attributes);
+
+                    }
+                }
+
+                //message response
+                if($volume) $json['success'] = $volume." ".$coinscheme->coin->code." sold";
+                else $json['danger'] = "Sale Failed";
                 break;
         }
 
