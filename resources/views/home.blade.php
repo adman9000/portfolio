@@ -22,26 +22,22 @@
                     <br />
                     <hr /><br />
 
-                    <table class='table table-bordered'>
-                        <tr><th>Total value of BTC on bittrex</th><td>{{ $btc_balance }}</td></tr>
-                        <tr><th>Total value in BTC of altcoins on bittrex</th><td>{{ $btc_value-$btc_balance }}</td></tr>
-                        <tr><th>Total value in BTC of all coins on bittrex</th><td>{{ $btc_value }}</td></tr>
-                        <tr><th>Total value in USD of all coins on bittrex</th><td>${{ $usd_value }}</td></tr>
-                        <tr><th>Total value in GBP of all coins on bittrex</th><td>£{{ $gbp_value }}</td></tr>
-                        <tr><th>Number of different coins owned</th><td>{{ $num_coins }}</td></tr>
-                    </table>
+                    <ul>
+                        <li>BTC VALUE: {{ $btc_value }}</li>
+                        <li>USD VALUE: ${{ $usd_value }}</li>
+                        <li>GBP VALUE: £{{ $gbp_value }}</li>
+                    </ul>
 
-                    <hr />
-                    <p><b>Status as of 07/10/2017</b> (start date)</p>
+                    <p><b>TRADING ASSISTANT TODO:</b></p>
 
-                     <table class='table table-bordered'>
-                        <tr><th>Total value in BTC of all coins on bittrex</th><td>0.26829055892199</td></tr>
-                        <tr><th>Total value in USD of all coins on bittrex</th><td>$1161.6981201322</td></tr>
-                        <tr><th>Total value in GBP of all coins on bittrex</th><td>£854.18979421487</td></tr>
-                        <tr><th>Number of different coins owned</th><td>50</td></tr>
-                    </table>
+                    <ul>
+                        <li>Exchanges class to then call bittrex, binance, kraken classes which return standardised data using APIS</li>
+                        <li>Show overview on homepage - Total BTC value on each exchange, approx GBP value, plus coins</li>
+                        <li>Quick links for buying & selling</li>
+                        <li>Email alerts</li>
+                    </ul>
 
-                    <p><b>TODO:</b></p>
+                    <p><b>AUTOTRADER TODO:</b></p>
 
                     <ul>
                         <li class='text-success'>Move /schemes/edit to /schemes/coins and create proper edit scheme page</li>

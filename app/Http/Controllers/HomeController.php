@@ -3,12 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use adman9000\Bittrex\Bittrex;
-use App\User;
-use App\Coin;
-use App\Scheme;
-use App\Transaction;
-use App\Notifications\Trade;
+use App\Repositories\Exchanges;
 
 class HomeController extends Controller
 {
@@ -30,50 +25,18 @@ class HomeController extends Controller
     public function index()
     {
 
-        //Get balances of my coins according to Bittrex
-        $balances = Bittrex::getBalances();
+        //Get all our account stats from the different exchanges we use
 
-        $btc_market = Bittrex::getMarketSummary("USDT-BTC");
+        $exchange = new Exchanges();
 
-        //Get latest markets for everythign on bittrex
-        $markets = Bittrex::getMarketSummaries();
-
-        $subtotal = 0;
-
-        foreach($balances['result'] as $balance) {
-
-            //include BTC
-            if($balance['Currency'] == "BTC") {
-
-                $subtotal += $balance['Balance'];
-                $data['btc_balance'] =  $balance['Balance'];
-
-            }
-            else {
+        $data['stats'] = $exchange->getAccountStats();
 
 
-                foreach($markets['result'] as $market) {
-
-                    if($market['MarketName'] == 'BTC-'.$balance['Currency']) {
-
-
-                        $value = $balance['Balance'] * $market['Last'];
-
-                        $subtotal += $value;
-
-                        $data[$balance['Currency']] = $value;
-                        break;
-
-                    }
-                }
-            }
-        }
-
-        $data['num_coins'] = sizeof($balances['result']);
+        //Add the GBP value to the data array
         $data['usd_gbp_rate']  = env("USD_GBP_RATE");
-        $data['btc_value'] = $subtotal;
-        $data['usd_value'] = $subtotal * $btc_market['result'][0]['Last'];
-        $data['gbp_value'] = $data['usd_value'] / $data['usd_gbp_rate'];
+        $data['btc_value'] = $data['stats']['total']['btc_value'];
+        $data['usd_value'] = number_format($data['stats']['total']['usd_value'], 2);
+        $data['gbp_value'] = number_format(($data['stats']['total']['usd_value'] / $data['usd_gbp_rate']), 2);
 
 
         return view('home', $data);

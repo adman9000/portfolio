@@ -64,11 +64,8 @@ Route::delete('/transactions/{transaction}', 'TransactionController@destroy'); /
 Route::get('/exchanges', 'ExchangeController@index')->name('exchanges'); //view all
 Route::post('/exchanges', 'ExchangeController@index'); //view all
 
-Route::get('/exchanges/kraken', 'ExchangeController@kraken')->name('kraken'); //view all
-Route::post('/exchanges/kraken', 'ExchangeController@kraken'); //view all
+Route::any('/exchanges/{name}', 'ExchangeController@show'); //view all
 
-Route::get('/exchanges/bittrex', 'ExchangeController@bittrex')->name('bittrex'); //view all
-Route::post('/exchanges/bittrex', 'ExchangeController@bittrex'); //view all
 
 Route::get('/exchanges/getprices', 'ExchangeController@getPrices');
 Route::get('/exchanges/trade', 'ExchangeController@runTradingRules');

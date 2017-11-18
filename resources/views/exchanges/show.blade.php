@@ -38,41 +38,41 @@
                 <thead><tr><th>Code</th><th>Balance</th><th>Buy / Sell</th></tr></thead>
                 <tbody>
 
-                @foreach($balances as $code=>$balance)
+                @foreach($balances as $asset)
 
-                	<tr><td> {{ $code }} </td><td>{{ $balance }}</td>
+                	<tr><td> {{ $asset['code'] }} </td><td>{{ $asset['balance'] }}</td>
 
-                	<td>
+					<td>
 
-                		@if ( $code == 'ZEUR' ) 
+                		@if ( $asset['code'] == 'ZEUR' ) 
 
 							<form method='post' action=''>
 	                		{{csrf_field()}}
 	                		<input type='hidden' name='action' value='buy'>
-	                		<input type='hidden' name='coin_2' value='{{ $code }}' />
+	                		<input type='hidden' name='coin_2' value='{{ $asset['code'] }}' />
 	                		<select name='coin_1' >
-	                		 	@foreach($balances as $mycode=>$mybalance)
-	                		 		@if( $mycode != "ZEUR") <option value='{{ $mycode }}'>{{ $mycode }}</option> @endif
+	                		 	@foreach($balances as $myasset)
+	                		 		@if( $myasset['code'] != "ZEUR") <option value='{{ $myasset.code }}'>{{ $myasset['code'] }}</option> @endif
 	                		 	@endforeach
 	                		 </select>
 
-	                		<input type='number' name='volume' value='{{ $balance }}' step='any' />
+	                		<input type='number' name='volume' value='{{ $myasset['balance'] }}' step='any' />
 	                		<input type='submit' class='btn btn-xs btn-warning' value='Buy' >
 	                		</form>
 
-					@elseif ( $code == 'BTC' ) 
+					@elseif ( $asset['code'] == 'BTC' ) 
 
 							<form method='post' action=''>
 	                		{{csrf_field()}}
 	                		<input type='hidden' name='action' value='buy'>
-	                		<input type='hidden' name='coin_2' value='{{ $code }}' />
+	                		<input type='hidden' name='coin_2' value='{{ $asset['code'] }}' />
 	                		<select name='coin_1' >
-	                		 	@foreach($balances as $mycode=>$mybalance)
-	                		 		@if( $mycode != "BTC") <option value='{{ $mycode }}'>{{ $mycode }}</option> @endif
+	                		 	@foreach($balances as $myasset)
+	                		 		@if( $myasset['code'] != "BTC") <option value='{{ $myasset['code'] }}'>{{ $myasset['code'] }}</option> @endif
 	                		 	@endforeach
 	                		 </select>
 
-	                		<input type='number' name='volume' value='{{ $balance }}' step='any' />
+	                		<input type='number' name='volume' value='{{ $asset['balance'] }}' step='any' />
 	                		<input type='submit' class='btn btn-xs btn-warning' value='Buy' >
 	                		</form>
 
@@ -82,15 +82,17 @@
 	                		<form method='post' action=''>
 	                		{{csrf_field()}}
 	                		<input type='hidden' name='action' value='sell'>
-	                		<input type='hidden' name='coin_1' value='{{ $code }}' />
+	                		<input type='hidden' name='coin_1' value='{{ $asset['code'] }}' />
 	                		<input type='hidden' name='coin_2' value='ZEUR' />
-	                		<input type='number' name='volume' value='{{ $balance }}' step='any' />
+	                		<input type='number' name='volume' value='{{ $asset['balance'] }}' step='any' />
 	                		<input type='submit' class='btn btn-xs btn-warning' value='Sell'>
 	                		</form>
 
 	                	@endif
 
-                	</td></tr>
+                	</td>
+
+                	</tr>
 
                @endforeach
 

@@ -21,10 +21,33 @@ class ExchangeController extends Controller
      */
     public function index() {
 
-        return view('exchanges.index');
+
+        $exchange = new Exchanges();
+
+        $data['stats'] = $exchange->getAccountStats();
+
+
+        //Add the GBP value to the data array
+        $data['usd_gbp_rate']  = env("USD_GBP_RATE");
+        $data['btc_value'] = $data['stats']['total']['btc_value'];
+        $data['usd_value'] = number_format($data['stats']['total']['usd_value'], 2);
+        $data['gbp_value'] = number_format(($data['stats']['total']['usd_value'] / $data['usd_gbp_rate']), 2);
+
+        return view('exchanges.index', $data);
     
     }
 
+
+    public function show($name, Request $request) {
+
+      $exchanges = new Exchanges($name);
+
+      $data = array();
+      $data['exchange'] = $name;
+      $data['balances'] = $exchanges->getBalances(false);
+
+      return view("exchanges.show", $data);
+    }
 
     /** getPrices
     * Get latest prices for all my coins from relevant exchanges

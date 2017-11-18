@@ -13,7 +13,102 @@ use adman9000\kraken\KrakenAPIFacade;
 use adman9000\Bittrex\Bittrex;
 use Illuminate\Support\Facades\File;
 
+
 class Exchanges {
+
+    protected $exchange;
+
+    //Construct function sets the exchange we are working with
+    function __construct($exchange=false) {
+        $this->exchange = $exchange;
+    }
+
+    function setExchange($exchange=false) {
+        $this->exchange = $exchange;
+    }
+
+    function getExchange() {
+        return $this->exchange;
+    }
+
+    function getExchangeClass() {
+         switch($this->exchange) {
+
+              case "bittrex" :
+                return new BittrexExchange();
+                break;
+
+            case "binance" :
+                return new BinanceExchange();
+                break;
+                
+            case "kraken" :
+                return new KrakenExchange();
+                break;
+
+        }
+        return false;
+    }
+
+    /* getAccountStats()
+     * @param exchange name
+     * @return array of stats for users account on given exchange (or all if no params passed)
+    **/
+    public function getAccountStats($exchange=false) {
+
+        if($exchange) $this->setExchange($exchange);
+
+        switch($this->exchange) {
+
+            case false :
+                $exchange = new BittrexExchange();
+                $stats['bittrex'] = $exchange->getAccountStats();
+
+                $exchange = new BinanceExchange();
+                $stats['binance'] = $exchange->getAccountStats();
+
+                $exchange = new KrakenExchange();
+                $stats['kraken'] = $exchange->getAccountStats();
+
+                //We can also add in some overall stats
+                $stats['total']['btc_value'] = $stats['bittrex']['total_btc_value'] + $stats['binance']['total_btc_value'] + $stats['kraken']['total_btc_value'] ;
+                $stats['total']['usd_value'] = $stats['bittrex']['total_usd_value'] + $stats['binance']['total_usd_value'] + $stats['kraken']['total_usd_value'] ;
+
+                return $stats;
+                break;
+
+            default :
+
+                $class = $this->getExchangeClass();
+                if($class) return $class->getAccountStats();
+                else return false;
+                break;
+
+        }
+
+        
+
+    }
+
+
+    /** getBalances()
+     * return coin balances for the given exchange in consistent format
+    **/
+    public function getBalances($inc_zero=true) {
+
+        //Must be an exchange selected
+        if(!$class = $this->getExchangeClass()) return false;
+        else {
+            return $class->getBalances($inc_zero);
+        }
+
+    }
+
+
+
+
+//REFACTOR BELOW FUNCTIONS
+
 
 
     /* runSchedule()
