@@ -7,14 +7,15 @@
     "minimum-stability" : "dev",
     "require": {
         "php": ">=5.6.4",
+        "adman9000/laravel-binance": "dev-master",
         "adman9000/laravelbittrex": "dev-master",
         "adman9000/laravelkraken": "dev-master",
-        "adman9000/laravel-binance": "dev-master",
         "doctrine/dbal": "^2.5@dev",
         "laravel/framework": "5.5.*",
         "laravel/passport": "^4.0@dev",
         "laravel/tinker": "~1.0",
-        "pusher/pusher-php-server": "^3.0@dev"
+        "pusher/pusher-php-server": "^3.0@dev",
+        "spatie/laravel-permission": "^2.6"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -29,6 +30,17 @@
         "psr-4": {
             "App\\": "app/",
             "Tests\\": "tests/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": [
+            ]
         }
     },
     "scripts": {

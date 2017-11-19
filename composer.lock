@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "8f2afd98f531d8543edcfc7c15249686",
+    "content-hash": "3d2cb9eb0313eb08805a3e07b2083279",
     "packages": [
         {
             "name": "adman9000/laravel-binance",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/adman9000/laravel-binance.git",
-                "reference": "dfaa444277dbc7366ba13a2617f6a0b5f713ae51"
+                "reference": "4d5b05503206d48d3691da2e004fa563e03eafa8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/adman9000/laravel-binance/zipball/dfaa444277dbc7366ba13a2617f6a0b5f713ae51",
-                "reference": "dfaa444277dbc7366ba13a2617f6a0b5f713ae51",
+                "url": "https://api.github.com/repos/adman9000/laravel-binance/zipball/4d5b05503206d48d3691da2e004fa563e03eafa8",
+                "reference": "4d5b05503206d48d3691da2e004fa563e03eafa8",
                 "shasum": ""
             },
             "require": {
@@ -52,7 +52,7 @@
                 }
             ],
             "description": "Implementation of Binance trading API for Laravel",
-            "time": "2017-11-18T11:53:09+00:00"
+            "time": "2017-11-18T16:56:06+00:00"
         },
         {
             "name": "adman9000/laravelbittrex",
@@ -230,12 +230,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/annotations.git",
-                "reference": "c3873818edef9c745cb8621489a1ab25556964ff"
+                "reference": "bb1225949534a8e94272eee387d3d8ff9fcf43d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/annotations/zipball/c3873818edef9c745cb8621489a1ab25556964ff",
-                "reference": "c3873818edef9c745cb8621489a1ab25556964ff",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/bb1225949534a8e94272eee387d3d8ff9fcf43d9",
+                "reference": "bb1225949534a8e94272eee387d3d8ff9fcf43d9",
                 "shasum": ""
             },
             "require": {
@@ -244,7 +244,7 @@
             },
             "require-dev": {
                 "doctrine/cache": "1.*",
-                "phpunit/phpunit": "^5.7"
+                "phpunit/phpunit": "^6.4"
             },
             "type": "library",
             "extra": {
@@ -290,7 +290,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2017-11-13T06:22:38+00:00"
+            "time": "2017-11-18T13:47:02+00:00"
         },
         {
             "name": "doctrine/cache",
@@ -521,12 +521,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "09e072dee1457bcdf3cae4be60b18854f8829992"
+                "reference": "edfbda159792a5215043b28c11ae256a45a88d82"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/09e072dee1457bcdf3cae4be60b18854f8829992",
-                "reference": "09e072dee1457bcdf3cae4be60b18854f8829992",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/edfbda159792a5215043b28c11ae256a45a88d82",
+                "reference": "edfbda159792a5215043b28c11ae256a45a88d82",
                 "shasum": ""
             },
             "require": {
@@ -588,7 +588,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2017-10-19T12:53:54+00:00"
+            "time": "2017-11-19T04:41:31+00:00"
         },
         {
             "name": "doctrine/inflector",
@@ -1130,12 +1130,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "57d31b1a209b3ac74959d93b79612c96a4d58386"
+                "reference": "c3a01f2d78a28c5f9576af4838b6bf497fdc817d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/57d31b1a209b3ac74959d93b79612c96a4d58386",
-                "reference": "57d31b1a209b3ac74959d93b79612c96a4d58386",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/c3a01f2d78a28c5f9576af4838b6bf497fdc817d",
+                "reference": "c3a01f2d78a28c5f9576af4838b6bf497fdc817d",
                 "shasum": ""
             },
             "require": {
@@ -1255,7 +1255,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2017-11-17T22:16:23+00:00"
+            "time": "2017-11-18T17:48:26+00:00"
         },
         {
             "name": "laravel/passport",
@@ -2418,17 +2418,82 @@
             "time": "2017-11-09T03:25:25+00:00"
         },
         {
+            "name": "spatie/laravel-permission",
+            "version": "2.7.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-permission.git",
+                "reference": "02d22e415ee5b2c73de19f2cd8331bb9980b3094"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/02d22e415ee5b2c73de19f2cd8331bb9980b3094",
+                "reference": "02d22e415ee5b2c73de19f2cd8331bb9980b3094",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/auth": "~5.3.0|~5.4.0|~5.5.0",
+                "illuminate/container": "~5.3.0|~5.4.0|~5.5.0",
+                "illuminate/contracts": "~5.3.0|~5.4.0|~5.5.0",
+                "illuminate/database": "~5.4.0|~5.5.0",
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "monolog/monolog": "^1.22",
+                "orchestra/testbench": "~3.3.0|~3.4.2|~3.5.0",
+                "phpunit/phpunit": "^5.7|6.2"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spatie\\Permission\\PermissionServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\Permission\\": "src"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Permission handling for Laravel 5.4 and up",
+            "homepage": "https://github.com/spatie/laravel-permission",
+            "keywords": [
+                "acl",
+                "laravel",
+                "permission",
+                "security",
+                "spatie"
+            ],
+            "time": "2017-10-26T13:38:53+00:00"
+        },
+        {
             "name": "swiftmailer/swiftmailer",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "ca780797dbd027c394a926a2607bca441ce2607e"
+                "reference": "0dbb301100b3312e4c2570f1a6ed70760b8c5e76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/ca780797dbd027c394a926a2607bca441ce2607e",
-                "reference": "ca780797dbd027c394a926a2607bca441ce2607e",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/0dbb301100b3312e4c2570f1a6ed70760b8c5e76",
+                "reference": "0dbb301100b3312e4c2570f1a6ed70760b8c5e76",
                 "shasum": ""
             },
             "require": {
@@ -2470,7 +2535,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2017-11-08T00:14:48+00:00"
+            "time": "2017-11-19T08:49:26+00:00"
         },
         {
             "name": "symfony/console",
@@ -3399,12 +3464,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/phpdotenv.git",
-                "reference": "849d8a1092b91b4356e1a9605f0fdd48f093be6e"
+                "reference": "fa9d523a4979028c3d8536fcdcf84f00940edc74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/849d8a1092b91b4356e1a9605f0fdd48f093be6e",
-                "reference": "849d8a1092b91b4356e1a9605f0fdd48f093be6e",
+                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/fa9d523a4979028c3d8536fcdcf84f00940edc74",
+                "reference": "fa9d523a4979028c3d8536fcdcf84f00940edc74",
                 "shasum": ""
             },
             "require": {
@@ -3441,7 +3506,7 @@
                 "env",
                 "environment"
             ],
-            "time": "2017-11-17T16:22:15+00:00"
+            "time": "2017-11-18T18:27:11+00:00"
         },
         {
             "name": "zendframework/zend-diactoros",
@@ -5181,9 +5246,9 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "adman9000/laravel-binance": 20,
         "adman9000/laravelbittrex": 20,
         "adman9000/laravelkraken": 20,
-        "adman9000/laravel-binance": 20,
         "doctrine/dbal": 20,
         "laravel/passport": 20,
         "pusher/pusher-php-server": 20

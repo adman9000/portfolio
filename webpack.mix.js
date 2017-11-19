@@ -1,4 +1,4 @@
-const { mix } = require('laravel-mix');
+let mix = require('laravel-mix');
 
 /*
  |--------------------------------------------------------------------------
@@ -11,5 +11,17 @@ const { mix } = require('laravel-mix');
  |
  */
 
-mix.js('resources/assets/js/app.js', 'public/js')
-   .sass('resources/assets/sass/app.scss', 'public/css');
+mix.scripts([
+'resources/assets/vendor/jquery/jquery-3.1.1.min.js',
+'resources/assets/vendor/bootstrap/js/bootstrap.js',
+'resources/assets/vendor/metisMenu/jquery.metisMenu.js',
+'resources/assets/vendor/pace/pace.js',
+'resources/assets/vendor/slimscroll/jquery.slimscroll.min.js',
+'resources/assets/js/app.js'
+], 'public/js/app.js')
+   .sass('resources/assets/sass/app.scss', 'public/css')
+   .sass('resources/assets/sass/inspinia.scss', 'public/css')
+   .sass('resources/assets/sass/admin.scss', 'public/css')
+.js('resources/assets/js/frontend.js', 'public/js')
+.js('resources/assets/js/admin.js', 'public/js')
+   .sass('resources/assets/sass/frontend.scss', 'public/css');

@@ -12,9 +12,45 @@
 */
 
 use App\Repositories\Exchanges;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 
 Auth::routes();
+
+Route::get("/test", function() { 
+
+	//Role::create(['name' => 'administrator']);
+	//Role::create(['name' => 'member']);
+	Permission::create(['name' => 'edit users']);
+
+         $user = Auth::user();
+
+         //$user->assignRole('member', 'administrator');
+         $user->givePermissionTo('edit users');
+
+	echo "OK";
+	dd($user->hasRole("member"));
+	die();
+
+});
+
+//ADMIN ROUTES
+Route::get("/admin", "Admin\AdminController@index")->name("admin");
+
+Route::prefix('admin')->group(function() {
+
+
+	Route::any("/home", "Admin\AdminController@run");
+
+	Route::get("/users", "Admin\UserController@index")->name('users');
+	Route::any("/users/{view?}/{user?}", "Admin\UserController@run");
+
+	Route::get("/content", "Admin\ContentController@index")->name('content');
+	Route::any("/content/{view?}/{content?}", "Admin\ContentController@run");
+});
+
 
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
