@@ -59,7 +59,7 @@ class BinanceExchange {
              //include BTC
             if($wallet['asset'] == "BTC") {
 
-                $btc_balance +=  $wallet['free'];
+                $btc_balance +=  $wallet['free']+ $wallet['locked'];
 
             }
             else {
@@ -70,7 +70,7 @@ class BinanceExchange {
                     if($market['symbol'] == $wallet['asset']."BTC") {
 
                     	//Calculate the BTC value of this coin and add it to the balance
-                        $value = $wallet['free'] * $market['price'];
+                        $value = ($wallet['free'] + $wallet['locked']) * $market['price'];
 
                         $alts_btc_value += $value;
 
