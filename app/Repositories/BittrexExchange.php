@@ -8,9 +8,17 @@
 namespace App\Repositories;
 
 use adman9000\Bittrex\Bittrex;
+use adman9000\Bittrex\Client;
 
 class BittrexExchange {
 
+
+    function __construct($key=false, $secret=false) {
+
+        $this->api_key = $key;
+        $this->api_secret = $secret;
+
+    }
 
 	/** getAccountStats()
 	 * Returns an array of account stats for Binance
@@ -26,15 +34,20 @@ class BittrexExchange {
 		//Adding up the BTC value of altcoins
 		$alts_btc_value = 0;
 
+
+        //Get what we need from the API
+        $bapi = new Client(config("bittrex.auth"), config("bittrex.urls"));
+        $bapi->setAPI($this->api_key, $this->api_secret);
+
 		 //Get balances of my coins
-        $balances = Bittrex::getBalances();
+        $balances = $bapi->getBalances();
 
         //Get the BTC-USD rate
-        $btc_market = Bittrex::getMarketSummary("USDT-BTC");
+        $btc_market = $bapi->getMarketSummary("USDT-BTC");
         $btc_usd = $btc_market['result'][0]['Last'];
 
         //Get latest markets for everythign on bittrex
-        $markets = Bittrex::getMarketSummaries();
+        $markets = $bapi->getMarketSummaries();
 
 
         foreach($balances['result'] as $balance) {
@@ -94,8 +107,26 @@ class BittrexExchange {
 	 **/
 	function getBalances($inc_zero=true) {
 
-		 //Get balances of my coins
-        $balances = Bittrex::getBalances();
+		//Actual amount of BTC held at this exchange
+        $btc_balance = 0;
+
+        //Adding up the BTC value of altcoins
+        $alts_btc_value = 0;
+
+
+        //Get what we need from the API
+        $bapi = new Client(config("bittrex.auth"), config("bittrex.urls"));
+        $bapi->setAPI($this->api_key, $this->api_secret);
+
+         //Get balances of my coins
+        $balances = $bapi->getBalances();
+
+        //Get the BTC-USD rate
+        $btc_market = $bapi->getMarketSummary("USDT-BTC");
+        $btc_usd = $btc_market['result'][0]['Last'];
+
+        //Get latest markets for everythign on bittrex
+        $ticker = $bapi->getMarketSummaries();
 
         //The standardised array I'm going to return
         $return = array();
@@ -103,14 +134,51 @@ class BittrexExchange {
         if(!$balances['result']) return false;
         else {
 
-        	foreach($balances['result'] as $balance) {
-        		if(($inc_zero) || ($balance['Balance']>0)) {
-        			$asset['code'] = $balance['Currency'];
-        			$asset['balance'] = $balance['Balance'];
-        			$asset['available'] = $balance['available'];
-        			$return[] = $asset;
-        		}
-        	}
+            foreach($balances['result'] as $wallet) {
+
+                 //include BTC
+                if($wallet['Currency'] == "BTC") {
+
+                    $btc_balance +=  $wallet['Balance'];
+
+                }
+                else {
+
+
+                    foreach($ticker['result'] as $market) {
+
+                        if($market['MarketName'] == "BTC-".$wallet['Currency']) {
+
+                            $total = $wallet['Balance'];
+
+                            //Calculate the BTC value of this coin and add it to the balance
+                            $value = $total * $market['Last'];
+
+                            $alts_btc_value += $value;
+
+                            //Set the amount of this altcoin held, plus its BTC value if amount is >0
+                            if($inc_zero || $value > 0.0001) {
+
+                                $asset = array();
+                                $asset['code'] = $wallet['Currency'];
+                                $asset['balance'] = $total;
+                                $asset['available'] = $wallet['Available'];
+                                $asset['locked'] = $wallet['Pending'];
+                                $asset['btc_value'] = round($value, 8);
+                                $asset['usd_value'] = $value * $btc_usd;
+                                $asset['gbp_value'] = number_format($asset['usd_value'] / env("USD_GBP_RATE"), 2);
+                                $return['assets'][] = $asset;
+
+                            }
+
+                            break;
+
+                        }
+                    }
+                }
+                
+            }
+
         	
         }
 

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Coin;
-use App\CoinPrice;
-use App\Transaction;
+use App\Modules\Portfolio\Coin;
+use App\Modules\Portfolio\CoinPrice;
+use App\Modules\Portfolio\Transaction;
 use App\Events\PusherEvent;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;

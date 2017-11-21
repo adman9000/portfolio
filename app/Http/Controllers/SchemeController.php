@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Scheme;
-use App\Coin;
-use App\CoinScheme;
+use App\Modules\Portfolio\Scheme;
+use App\Modules\Portfolio\Coin;
+use App\Modules\Portfolio\CoinScheme;
 use Illuminate\Http\Request;
 use adman9000\Bittrex\Bittrex;
 use Illuminate\Support\Facades\DB;

@@ -47,11 +47,16 @@ class User extends Authenticatable
     //relationships
     public function coins() {
 
-        return $this->belongsToMany('App\Coin');
+        return $this->belongsToMany('App\Modules\Portfolio\Coin');
 
     }
 
     public function transactions() {
-        return $this->hasMany('App\Transaction');
+        return $this->hasMany('App\Modules\Portfolio\Transaction');
+    }
+
+    public function exchanges() {
+
+        return $this->hasMany('App\Modules\Portfolio\UserExchange');
     }
 }

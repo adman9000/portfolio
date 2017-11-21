@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\Exchanges;
+use App\Modules\Portfolio\UserExchange;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -27,10 +29,21 @@ class HomeController extends Controller
 
         //Get all our account stats from the different exchanges we use
 
-        $exchange = new Exchanges();
+       $user = Auth::user();
 
-        $data['stats'] = $exchange->getAccountStats();
+       $data = array();
+       $data['stats'] = array();
+       $data['stats']['total'] = array();
+       $data['stats']['total']['btc_value'] = 0;
+       $data['stats']['total']['usd_value'] = 0;
 
+       foreach($user->exchanges as $exchange) {
+
+            $data['stats'][$exchange->exchange->slug] = $exchange->getAccountStats();
+            $data['stats']['total']['btc_value'] += $data['stats'][$exchange->exchange->slug]['total_btc_value'];
+            $data['stats']['total']['usd_value'] += $data['stats'][$exchange->exchange->slug]['total_usd_value'];
+
+        }
 
         //Add the GBP value to the data array
         $data['usd_gbp_rate']  = env("USD_GBP_RATE");

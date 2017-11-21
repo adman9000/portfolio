@@ -12,6 +12,13 @@ use adman9000\kraken\KrakenAPIFacade;
 class KrakenExchange {
 
 
+        function __construct($key=false, $secret=false) {
+
+                $this->api_key = $key;
+                $this->api_secret = $secret;
+
+        }
+
 	/** getAccountStats()
 	 * Returns an array of account stats for Binance
 	 * btc balance, alts btc value, btc to usd exchange rate, array of altcoins held

@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
-use App\Coin;
-use App\CoinPrice;
+use App\Modules\Portfolio\Exchange;
+use App\Modules\Portfolio\Coin;
+use App\Modules\Portfolio\CoinPrice;
 use adman9000\kraken\KrakenAPIFacade;
 use adman9000\Bittrex\Bittrex;
 use App\Repositories\Exchanges;
+use Illuminate\Support\Facades\Auth;
 
 class ExchangeController extends Controller
 {
@@ -22,10 +24,24 @@ class ExchangeController extends Controller
     public function index() {
 
 
-        $exchange = new Exchanges();
+        //TODO: Combine exhanges in DB with APIs somehow?
 
-        $data['stats'] = $exchange->getAccountStats();
+       $user = Auth::user();
 
+       $data = array();
+       $data['stats'] = array();
+       $data['stats']['total'] = array();
+       $data['stats']['total']['btc_value'] = 0;
+       $data['stats']['total']['usd_value'] = 0;
+
+
+       foreach($user->exchanges as $exchange) {
+
+            $data['stats'][$exchange->exchange->slug] = $exchange->getAccountStats();
+            $data['stats']['total']['btc_value'] += $data['stats'][$exchange->exchange->slug]['total_btc_value'];
+            $data['stats']['total']['usd_value'] += $data['stats'][$exchange->exchange->slug]['total_usd_value'];
+
+        }
 
         //Add the GBP value to the data array
         $data['usd_gbp_rate']  = env("USD_GBP_RATE");
@@ -40,11 +56,15 @@ class ExchangeController extends Controller
 
     public function show($name, Request $request) {
 
-      $exchanges = new Exchanges($name);
-
       $data = array();
-      $data['exchange'] = $name;
-      $data['balances'] = $exchanges->getBalances(false);
+      $data['exchange'] = Exchange::where("slug", "=", $name)->first();
+
+      $user = Auth::user();
+
+      //get the user exchange model
+      $user_exchange = $user->exchanges->where("exchange_id", "=", $data['exchange']->id)->first();
+
+      $data['stats'] = $user_exchange->getBalances(false);
 
       return view("exchanges.show", $data);
     }

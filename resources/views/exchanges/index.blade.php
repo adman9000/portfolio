@@ -9,7 +9,7 @@
 
     
 
-                <div class="panel-heading">Kraken</div>
+                <div class="panel-heading">Your Exchanges</div>
 
                 <div class="panel-body">
 

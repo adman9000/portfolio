@@ -7,10 +7,21 @@
 
 namespace App\Repositories;
 
+use adman9000\binance\BinanceAPI;
 use adman9000\binance\BinanceAPIFacade;
 
 class BinanceExchange {
 
+
+    protected $api_key;
+    protected $api_secret;
+
+    function __construct($key=false, $secret=false) {
+
+        $this->api_key = $key;
+        $this->api_secret = $secret;
+
+    }
 
 	/** getAccountStats()
 	 * Returns an array of account stats for Binance
@@ -28,8 +39,11 @@ class BinanceExchange {
 		$alts_btc_value = 0;
 
 		//Get what we need from the API
-		$ticker = BinanceAPIFacade::getTicker();
-        $balances = BinanceAPIFacade::getBalances();
+        $bapi = new BinanceAPI();
+        $bapi->setAPI($this->api_key, $this->api_secret);
+
+		$ticker = $bapi->getTicker();
+        $balances = $bapi->getBalances();
 
         //Convert it to consistent data format
 
@@ -62,7 +76,7 @@ class BinanceExchange {
 
                         //Set the amount of this altcoin held, plus its BTC value if amount is >0
                         if($wallet['free'] > 0) {
-	                        $data[$wallet['asset']]['btc_value']['balance'] = $wallet['free'] ;
+	                        $data[$wallet['asset']]['btc_value']['balance'] = $wallet['free'] + $wallet['locked'];
 	                        $data[$wallet['asset']]['btc_value'] = $value;
 	                        $data[$wallet['asset']]['usd_value'] = $value * $btc_usd;
 	                    }
@@ -98,8 +112,20 @@ class BinanceExchange {
 	 **/
 	function getBalances($inc_zero=true) {
 
+
+
+        //Actual amount of BTC held at this exchange
+        $btc_balance = 0;
+
+        //Adding up the BTC value of altcoins
+        $alts_btc_value = 0;
+
 		 //Get balances of my coins
-        $balances = BinanceAPIFacade::getBalances();
+         $bapi = new BinanceAPI();
+        $bapi->setAPI($this->api_key, $this->api_secret);
+
+        $ticker = $bapi->getTicker();
+        $balances = $bapi->getBalances();
 
         //The standardised array I'm going to return
         $return = array();
@@ -108,16 +134,57 @@ class BinanceExchange {
         if(!$balances) return false;
         else {
 
-        	foreach($balances as $balance) {
-        		$total = $balance['free'] + $balance['locked'];
-        		if(($inc_zero) || ($total>0)) {
-        			$asset['code'] = $balance['asset'];
-        			$asset['balance'] = $total;
-        			$asset['available'] = $balance['free'];
-        			$return[] = $asset;
-        		}
-        	}
-        	
+             //find the BTCUSD ticker
+            foreach($ticker as $market) {
+                if($market['symbol'] == "BTCUSDT") {
+                    $btc_usd = $market['price'];
+                }
+            }
+
+            foreach($balances as $wallet) {
+
+                 //include BTC
+                if($wallet['asset'] == "BTC") {
+
+                    $btc_balance +=  $wallet['free'];
+
+                }
+                else {
+
+
+                    foreach($ticker as $market) {
+
+                        if($market['symbol'] == $wallet['asset']."BTC") {
+
+                            $total = $wallet['free'] + $wallet['locked'];
+
+                            //Calculate the BTC value of this coin and add it to the balance
+                            $value = $total * $market['price'];
+
+                            $alts_btc_value += $value;
+
+                            //Set the amount of this altcoin held, plus its BTC value if amount is >0
+                            if($inc_zero || $value > 0.0001) {
+
+                                $asset = array();
+                                $asset['code'] = $wallet['asset'];
+                                $asset['balance'] = $total;
+                                $asset['available'] = $wallet['free'];
+                                $asset['locked'] = $wallet['locked'];
+                                $asset['btc_value'] = round($value, 8);
+                                $asset['usd_value'] = $value * $btc_usd;
+                                $asset['gbp_value'] = number_format($asset['usd_value'] / env("USD_GBP_RATE"), 2);
+                                $return['assets'][] = $asset;
+
+                            }
+
+                            break;
+
+                        }
+                    }
+                }
+            	
+            }
         }
 
         return $return;

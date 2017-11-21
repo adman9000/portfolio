@@ -9,7 +9,7 @@
 
     
 
-                <div class="panel-heading">{{ $exchange }}</div>
+                <div class="panel-heading">{{ $exchange['title'] }}</div>
 
                 <div class="panel-body">
 
@@ -32,15 +32,15 @@
 
 	                @endif
 
-                <p>Buy & sell crypto on {{ $exchange }}</p>
+                <p>Buy & sell crypto on {{ $exchange['title'] }}</p>
 
                 <table class='table table-bordered'>
-                <thead><tr><th>Code</th><th>Balance</th><th>Buy / Sell</th></tr></thead>
+                <thead><tr><th>Code</th><th>Balance</th><th>Available</th><th>Locked</th><th>BTC Value</th><th>GBP Value</th><th>Buy / Sell</th></tr></thead>
                 <tbody>
 
-                @foreach($balances as $asset)
+                @foreach($stats['assets'] as $asset)
 
-                	<tr><td> {{ $asset['code'] }} </td><td>{{ $asset['balance'] }}</td>
+                	<tr><td> {{ $asset['code'] }} </td><td>{{ $asset['balance'] }}</td><td>{{ $asset['available'] }}</td><td>{{ $asset['locked'] }}</td><td>{{ $asset['btc_value'] }}</td><td>&pound;{{ $asset['gbp_value'] }}</td>
 
 					<td>
 

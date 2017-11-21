@@ -1,6 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Modules\Portfolio;
+
+use App\User;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,15 +18,15 @@ class  Transaction extends Model
     }
 
     public function scheme() {
-        return $this->belongsTo('App\Scheme');
+        return $this->belongsTo('App\Modules\Portfolio\Scheme');
     }
 
     public function coinSold(){
-    	return $this->belongsTo('App\Coin', 'coin_sold_id');
+    	return $this->belongsTo('App\Modules\Portfolio\Coin', 'coin_sold_id');
     }
     
     public function coinBought(){
-    	return $this->belongsTo('App\Coin', 'coin_bought_id');
+    	return $this->belongsTo('App\Modules\Portfolio\Coin', 'coin_bought_id');
     }
 
     //TODO: coinscheme relationships?
