@@ -35,66 +35,61 @@
                 <p>Buy & sell crypto on {{ $exchange['title'] }}</p>
 
                 <table class='table table-bordered'>
-                <thead><tr><th>Code</th><th>Balance</th><th>Available</th><th>Locked</th><th>BTC Value</th><th>GBP Value</th><th>Buy / Sell</th></tr></thead>
+                <thead><tr><th>Code</th><th>Balance</th><th>Available</th><th>Locked</th><th>BTC Value</th><th>GBP Value</th><th>Sell</th></tr></thead>
                 <tbody>
 
                 @foreach($stats['assets'] as $asset)
 
-                	<tr><td> {{ $asset['code'] }} </td><td>{{ $asset['balance'] }}</td><td>{{ $asset['available'] }}</td><td>{{ $asset['locked'] }}</td><td>{{ $asset['btc_value'] }}</td><td>&pound;{{ $asset['gbp_value'] }}</td>
+                	@if($asset['btc_value'] > 0.0001)
 
-					<td>
+	                	<tr><td> {{ $asset['code'] }} </td><td>{{ $asset['balance'] }}</td><td>{{ $asset['available'] }}</td><td>{{ $asset['locked'] }}</td><td>{{ $asset['btc_value'] }}</td><td>&pound;{{ $asset['gbp_value'] }}</td>
 
-                		@if ( $asset['code'] == 'ZEUR' ) 
+						<td>
 
-							<form method='post' action=''>
-	                		{{csrf_field()}}
-	                		<input type='hidden' name='action' value='buy'>
-	                		<input type='hidden' name='coin_2' value='{{ $asset['code'] }}' />
-	                		<select name='coin_1' >
-	                		 	@foreach($balances as $myasset)
-	                		 		@if( $myasset['code'] != "ZEUR") <option value='{{ $myasset.code }}'>{{ $myasset['code'] }}</option> @endif
-	                		 	@endforeach
-	                		 </select>
-
-	                		<input type='number' name='volume' value='{{ $myasset['balance'] }}' step='any' />
-	                		<input type='submit' class='btn btn-xs btn-warning' value='Buy' >
-	                		</form>
-
-					@elseif ( $asset['code'] == 'BTC' ) 
-
-							<form method='post' action=''>
-	                		{{csrf_field()}}
-	                		<input type='hidden' name='action' value='buy'>
-	                		<input type='hidden' name='coin_2' value='{{ $asset['code'] }}' />
-	                		<select name='coin_1' >
-	                		 	@foreach($balances as $myasset)
-	                		 		@if( $myasset['code'] != "BTC") <option value='{{ $myasset['code'] }}'>{{ $myasset['code'] }}</option> @endif
-	                		 	@endforeach
-	                		 </select>
-
-	                		<input type='number' name='volume' value='{{ $asset['balance'] }}' step='any' />
-	                		<input type='submit' class='btn btn-xs btn-warning' value='Buy' >
-	                		</form>
+	     
+	                		
+		                		<form method='post' action='' class='form form-inline'>
+		                		{{csrf_field()}}
+		                		<input type='hidden' name='action' value='sell'>
+		                		<input type='hidden' name='coin_1' value='{{ $asset['code'] }}' />
+		                		<input type='hidden' name='coin_2' value='BTC' />
+		                		<input type='number' name='volume' value='{{ $asset['balance'] }}' step='any' class='form-control' />
+		                		<input type='submit' class='btn btn-sm btn-warning' value='Sell'>
+		                		</form>
 
 
-                		@else
-                		
-	                		<form method='post' action=''>
-	                		{{csrf_field()}}
-	                		<input type='hidden' name='action' value='sell'>
-	                		<input type='hidden' name='coin_1' value='{{ $asset['code'] }}' />
-	                		<input type='hidden' name='coin_2' value='ZEUR' />
-	                		<input type='number' name='volume' value='{{ $asset['balance'] }}' step='any' />
-	                		<input type='submit' class='btn btn-xs btn-warning' value='Sell'>
-	                		</form>
+	                	</td>
 
-	                	@endif
+	                	</tr>
 
-                	</td>
-
-                	</tr>
+                	@endif
 
                @endforeach
+
+           </tbody>
+       </table>
+
+       <h3>BTC</h3>
+
+       <table class='table table-bordered'><tr><th>Balance</th><th>Available</th><th>Locked</th><th>GBP Value</th><th>Exchange</th></tr>
+       	<tr><td>{{ $stats['btc']['balance'] }}</td><td>{{ $stats['btc']['available'] }}</td><td>{{ $stats['btc']['locked'] }}</td><td>{{ $stats['btc']['gbp_value'] }}</td>
+       		<td>
+       		<form method='post' action='' class='form form-inline'>
+        		{{csrf_field()}}
+        		<input type='hidden' name='action' value='buy'>
+        		<input type='hidden' name='coin_2' value='BTC' />
+
+        		<div class='form-group'>
+	        		<select name='coin_1' class='form-control' >
+	        		 	@foreach($stats['assets'] as $myasset)
+	        		 		 <option value='{{ $myasset['code'] }}'>{{ $myasset['code'] }}</option>
+	        		 	@endforeach
+	        		 </select>
+        		<input type='number' name='volume' value='{{ $stats['btc']['available'] }}' step='any' class='form-control' />
+        		<input type='submit' class='btn btn-sm btn-warning' value='Buy' >
+        		</form>
+        	</td></tr>
+       </table>
 
 
                 </div>

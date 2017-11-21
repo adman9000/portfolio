@@ -64,7 +64,7 @@ class ExchangeController extends Controller
       //get the user exchange model
       $user_exchange = $user->exchanges->where("exchange_id", "=", $data['exchange']->id)->first();
 
-      $data['stats'] = $user_exchange->getBalances(false);
+      $data['stats'] = $user_exchange->getBalances(true);
 
       return view("exchanges.show", $data);
     }

@@ -147,6 +147,11 @@ class BinanceExchange {
                 if($wallet['asset'] == "BTC") {
 
                     $btc_balance +=  $wallet['free'];
+                    $return['btc']['balance'] = $wallet['free'] + $wallet['locked'];
+                    $return['btc']['available'] = $wallet['free'];
+                    $return['btc']['locked'] = $wallet['locked'];
+                    $return['btc']['usd_value'] = $return['btc']['balance'] * $btc_usd;
+                    $return['btc']['gbp_value'] = number_format($return['btc']['usd_value'] / env("USD_GBP_RATE"), 2);
 
                 }
                 else {

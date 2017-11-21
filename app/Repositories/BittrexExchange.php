@@ -140,6 +140,11 @@ class BittrexExchange {
                 if($wallet['Currency'] == "BTC") {
 
                     $btc_balance +=  $wallet['Balance'];
+                    $return['btc']['balance'] = $wallet['Balance'];
+                    $return['btc']['available'] = $wallet['Available'];
+                    $return['btc']['locked'] = $wallet['Pending'];
+                    $return['btc']['usd_value'] = $return['btc']['balance'] * $btc_usd;
+                    $return['btc']['gbp_value'] = number_format($return['btc']['usd_value'] / env("USD_GBP_RATE"), 2);
 
                 }
                 else {

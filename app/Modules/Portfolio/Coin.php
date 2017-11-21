@@ -17,7 +17,7 @@ class Coin extends Model
     //relationships
     public function schemes() {
 
-        return $this->belongsToMany('App\Modules\Portfolio\Scheme')->using('App\CoinScheme')->withPivot('id','set_price', 'been_bought', 'amount_held', 'sale_1_completed', 'sale_2_completed', 'sale_1_triggered', 'sale_2_triggered', 'highest_price');;
+        return $this->belongsToMany('App\Modules\Portfolio\Scheme')->using('App\Modules\Portfolio\CoinScheme')->withPivot('id','set_price', 'been_bought', 'amount_held', 'sale_1_completed', 'sale_2_completed', 'sale_1_triggered', 'sale_2_triggered', 'highest_price');;
     }
 
 
