@@ -23,6 +23,12 @@ class BinanceExchange {
 
     }
 
+    function setAPI($key, $secret) {
+
+         $this->api_key = $key;
+        $this->api_secret = $secret;
+    }
+
 	/** getAccountStats()
 	 * Returns an array of account stats for Binance
 	 * btc balance, alts btc value, btc to usd exchange rate, array of altcoins held
@@ -194,5 +200,38 @@ class BinanceExchange {
 
         return $return;
 	}
+
+
+    /** getTicker()
+    Get all the BTC markets available on this exchange with prices
+    **/
+
+    function getTicker() {
+
+        //The ticker info to return
+        $ticker = array();
+
+        $bapi = new BinanceAPI();
+        $bapi->setAPI($this->api_key, $this->api_secret);
+
+        $markets = $bapi->getTicker();
+
+        //Loop through markets, find any of my coins and save the latest price to DB
+        foreach($markets as $market) {
+            $base = substr($market['symbol'], strlen($market['symbol'])-3, 3);
+            $code = substr($market['symbol'], 0, strlen($market['symbol'])-3);
+
+            if($base == "BTC") {
+                
+                $price_info = array("code" => $code, "price"=>$market['price']);
+                  
+                $ticker[] = $price_info;
+   
+            }
+        }
+
+
+        return $ticker;
+    }
 
 }

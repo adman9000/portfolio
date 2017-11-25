@@ -16,12 +16,12 @@ mix.scripts([
 'resources/assets/vendor/bootstrap/js/bootstrap.js',
 'resources/assets/vendor/metisMenu/jquery.metisMenu.js',
 'resources/assets/vendor/pace/pace.js',
-'resources/assets/vendor/slimscroll/jquery.slimscroll.min.js',
-'resources/assets/js/app.js'
-], 'public/js/app.js')
+'resources/assets/vendor/slimscroll/jquery.slimscroll.min.js'
+], 'public/js/code.js')
    .sass('resources/assets/sass/app.scss', 'public/css')
    .sass('resources/assets/sass/inspinia.scss', 'public/css')
    .sass('resources/assets/sass/admin.scss', 'public/css')
 .js('resources/assets/js/frontend.js', 'public/js')
 .js('resources/assets/js/admin.js', 'public/js')
+.js('resources/assets/js/app.js', 'public/js')
    .sass('resources/assets/sass/frontend.scss', 'public/css');

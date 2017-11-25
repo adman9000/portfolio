@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Coin extends Model
 {
     //
-    protected $fillable = ['code', 'name', 'exchange'];
+    protected $fillable = ['code', 'name', 'prices', 'current_supply','max_supply'];
 
 
 

@@ -3,15 +3,17 @@
 
 namespace App\Repositories;
 
-use App\Coin;
-use App\CoinPrice;
-use App\Transaction;
-use App\Scheme;
+use App\Modules\Portfolio\Coin;
+use App\Modules\Portfolio\CoinPrice;
+use App\Modules\Portfolio\Transaction;
+use App\Modules\Portfolio\Scheme;
+use App\Modules\Portfolio\Exchange;
 use App\User;
 use App\Notifications\Trade;
 use adman9000\kraken\KrakenAPIFacade;
 use adman9000\Bittrex\Bittrex;
 use Illuminate\Support\Facades\File;
+use adman9000\coinmarketcap\CoinmarketcapAPIFacade;
 
 
 class Exchanges {
@@ -34,13 +36,103 @@ class Exchanges {
      **/
     function runSchedule() {
 
-        $this->saveBittrexPrices();
-        $this->checkForCompletedOrders();
-        $this->runTradingRules();
-        $this->coinPusher();
-        $this->btcPusher();
+        //Get latest prices from Coinmarketcap
+        $this->saveCMCPrices();
+
+        //Get latest prices from exchanges
+        $this->saveExchangePrices();
+
+        //Update any incomplete orders on any exchange. TODO
+        //$this->checkForCompletedOrders();
+
+        //Run the automated trading rules. Pause this for now!
+        //$this->runTradingRules();
+
+        //Pusher events to update browsers in real time
+       // $this->coinPusher();
+        //$this->btcPusher();
 
     }
+
+
+    /** getBittrexPrices
+    ** called every 5 mins, saves bittrex prices to DB
+    **/
+    function saveCMCPrices() {
+
+
+        $log_file = storage_path("logs/cmc.log");
+        File::append($log_file, "--------------------------------- ".date("d/m/Y G:i")."----------------------------------"."\n");
+        File::append($log_file, "--------------------------------- saveCMCPrices() ----------------------------------"."\n");
+
+        //Get latest markets for everythign on CMC
+        $markets = CoinmarketcapAPIFacade::getTicker(0, 0, "GBP");
+
+        //Get an array of all coins in my DB
+        $coins = Coin::all();
+
+        //Loop through markets, find any of my coins and save the latest price to DB
+        //Also make sure we have got all of the current top 100 coins in the DB
+        $i=0;
+        foreach($markets as $market) {
+            $i++;
+            $price_added = false;
+
+            $base = $market['symbol'];
+            foreach($coins as $coin) {
+                if($coin->code == $base) {
+                    //Found the coin in our database, so add the latest price record
+                    $price_info = array("coin_id"=>$coin->id, "btc_price"=>$market['price_btc'], "usd_price"=>$market['price_usd'], "gbp_price"=>$market['price_gbp'], "current_supply"=>$market['total_supply']);
+                   
+                    $price = CoinPrice::create($price_info);
+                    File::append($log_file, "Price saved for ".$coin->code);
+                    $price_added = true;
+                }
+            }
+
+            //If this coin is not already in our database and we are still in the top 100, add it
+            if((!$price_added) && ($i<=100)) {
+                    
+                $coin_info = array("code"=>$base, "name"=>$market['name'], "max_supply"=>$market['max_supply']);
+                $coin = Coin::create($coin_info);
+
+                //Also add the latest price record
+                $price_info = array("coin_id"=>$coin->id, "btc_price"=>$market['price_btc'], "usd_price"=>$market['price_usd'], "gbp_price"=>$market['price_gbp'], "current_supply"=>$market['total_supply']);
+                $price = CoinPrice::create($price_info);
+                File::append($log_file, "Coin added ".$coin->code);
+            }
+        }
+
+        //Get all coins again with latest price for each, and update the coin record
+        //$coins = Coin::all()->with("latestCoinprice");
+
+
+    }
+
+
+    /** saveExchangePrices
+    ** called every 5 mins, saves exchange prices to DB
+    **/
+    function saveExchangePrices() {
+
+
+        $log_file = storage_path("logs/exchanges.log");
+        File::append($log_file, "--------------------------------- ".date("d/m/Y G:i")."----------------------------------"."\n");
+        File::append($log_file, "--------------------------------- retrievePrices() ----------------------------------"."\n");
+
+        //Get all exchanges in the database
+        $exchanges = Exchange::all();
+
+        //Loop through them and get the latest prices from each
+        foreach($exchanges as $myexchange) {
+            $myexchange->setupCoins();
+            $myexchange->retrievePrices();
+            File::append($log_file, "Prices saved for ".$myexchange->name);
+        }
+
+    }
+
+
 
     /** btcPusher
     * TODO: store BTC rate & amount in DB?
@@ -104,39 +196,6 @@ class Exchanges {
     }
 
 
-    /** getBittrexPrices
-    ** called every 5 mins, saves bittrex prices to DB
-    **/
-    function saveBittrexPrices() {
-
-
-        $log_file = storage_path("logs/bittrex.log");
-        File::append($log_file, "--------------------------------- ".date("d/m/Y G:i")."----------------------------------"."\n");
-        File::append($log_file, "--------------------------------- saveBittrexPrices() ----------------------------------"."\n");
-
-        //Get latest markets for everythign on bittrex
-        $markets = Bittrex::getMarketSummaries();
-
-        //Get an array of all coins in my DB
-        $coins = Coin::all();
-
-        //Loop through markets, find any of my coins and save the latest price to DB
-        foreach($markets['result'] as $market) {
-            $arr = explode("-", $market['MarketName']);
-            $base = $arr[0];
-            if($base == "BTC") {
-                foreach($coins as $coin) {
-                    if($coin->code == $arr[1]) {
-                        $price_info = array("coin_id"=>$coin->id, "current_price"=>$market['Last']);
-                        $price = CoinPrice::create($price_info);
-
-                        File::append($log_file, "Price saved for ".$coin->code);
-                    }
-                }
-            }
-        }
-
-    }
 
     /**updateCoinBalances
      * Save current bittrex balances to DB

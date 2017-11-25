@@ -4,6 +4,7 @@
     "/css/inspinia.css": "/css/inspinia.css",
     "/css/admin.css": "/css/admin.css",
     "/css/frontend.css": "/css/frontend.css",
+    "/js/app.js": "/js/app.js",
     "/js/admin.js": "/js/admin.js",
-    "/js/app.js": "/js/app.js"
+    "/js/code.js": "/js/code.js"
 }

@@ -3,9 +3,6 @@
 namespace App\Modules\Portfolio;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Repositories\BittrexExchange;
-use App\Repositories\BinanceExchange;
-use App\Repositories\KrakenExchange;
 use App\User;
 
 class UserExchange extends Model
@@ -31,23 +28,9 @@ class UserExchange extends Model
 
     function getExchangeClass() {
 
-
-         switch($this->exchange->slug) {
-
-              case "bittrex" :
-                return new BittrexExchange($this->api_key, $this->api_secret);
-                break;
-
-            case "binance" :
-                return new BinanceExchange($this->api_key, $this->api_secret);
-                break;
-                
-            case "kraken" :
-                return new KrakenExchange($this->api_key, $this->api_secret);
-                break;
-
-        }
-        return false;
+        $exchange = $this->exchange->getExchangeClass();
+        $exchange->setAPI($this->api_key, $this->api_secret);
+        return $exchange;
     }
 
     /* getAccountStats()

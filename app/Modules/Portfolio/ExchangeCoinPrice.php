@@ -4,12 +4,12 @@ namespace App\Modules\Portfolio;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CoinPrice extends Model
+class ExchangeCoinPrice extends Model
 {
     //
-    protected $fillable = ['coin_id', 'btc_price', 'usd_price', 'gbp_price', 'current_supply'];
+    protected $fillable = ['coin_id', 'exchange_id','exchange_coin_id','btc_price','usd_price','gbp_price'];
 
-    protected $table = "cmc_prices";
+    protected $table = "exchanges_prices";
 
     public function coin() {
     	return $this->belongsTo('App\Modules\Portfolio\Coin');

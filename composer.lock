@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3d2cb9eb0313eb08805a3e07b2083279",
+    "content-hash": "f56cf829248549442e23acc853540995",
     "packages": [
         {
             "name": "adman9000/laravel-binance",
@@ -53,6 +53,54 @@
             ],
             "description": "Implementation of Binance trading API for Laravel",
             "time": "2017-11-18T16:56:06+00:00"
+        },
+        {
+            "name": "adman9000/laravel-coinmarketcap",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/adman9000/laravel-coinmarketcap.git",
+                "reference": "a392452608a4444ab65a26f7ba831d684d5b0906"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/adman9000/laravel-coinmarketcap/zipball/a392452608a4444ab65a26f7ba831d684d5b0906",
+                "reference": "a392452608a4444ab65a26f7ba831d684d5b0906",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "laravel/framework": ">=5.3",
+                "php": ">=5.6.4"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "adman9000\\coinmarketcap\\CoinmarketcapServiceProvider"
+                    ],
+                    "aliases": {
+                        "Coinmarketcap": "adman9000\\coinmarketcap\\CoinmarketcapAPIFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "adman9000\\coinmarketcap\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Adam Harding",
+                    "email": "myaddressistaken@googlemail.com"
+                }
+            ],
+            "description": "Implementation of Coinmarketcap trading API for Laravel",
+            "time": "2017-11-25T11:33:10+00:00"
         },
         {
             "name": "adman9000/laravelbittrex",
@@ -5250,6 +5298,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "adman9000/laravel-binance": 20,
+        "adman9000/laravel-coinmarketcap": 20,
         "adman9000/laravelbittrex": 20,
         "adman9000/laravelkraken": 20,
         "doctrine/dbal": 20,

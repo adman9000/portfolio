@@ -15,7 +15,6 @@
 </head>
 <body >
 
-    <div id="app">
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">
                 <div class="navbar-header">
@@ -113,7 +112,6 @@
 
 
         @yield('content')
-    </div>
 
 <footer class='footer'>
     <div class='row'>
@@ -126,12 +124,8 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
-    <!-- AngularJS -->
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.js" type="text/javascript"></script>
+    <script src="{{ asset('js/code.js') }}"></script>
 
-
-<!-- pusher-angular -->
-<script src="/js/angular-pusher.js"></script>
 <script src="{{ asset('js/custom.js') }}"></script>
 
  @yield('footer_scripts')

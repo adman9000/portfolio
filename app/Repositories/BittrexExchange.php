@@ -19,6 +19,13 @@ class BittrexExchange {
         $this->api_secret = $secret;
 
     }
+    
+    function setAPI($key, $secret) {
+
+         $this->api_key = $key;
+        $this->api_secret = $secret;
+    }
+
 
 	/** getAccountStats()
 	 * Returns an array of account stats for Binance
@@ -189,5 +196,40 @@ class BittrexExchange {
 
         return $return;
 	}
+
+
+
+
+    /** getTicker()
+    Get all the BTC markets available on this exchange with prices
+    **/
+
+    function getTicker() {
+
+        //The ticker info to return
+        $ticker = array();
+
+         //Get what we need from the API
+        $bapi = new Client(config("bittrex.auth"), config("bittrex.urls"));
+        $bapi->setAPI($this->api_key, $this->api_secret);
+
+        $markets =  $bapi->getMarketSummaries();
+
+        //Loop through markets, find any of my coins and save the latest price to DB
+        foreach($markets['result'] as $market) {
+            $arr = explode("-", $market['MarketName']);
+            $base = $arr[0];
+            if($base == "BTC") {
+                
+                $price_info = array("code" => $arr[1], "price"=>$market['Last']);
+                  
+                $ticker[] = $price_info;
+   
+            }
+        }
+
+
+        return $ticker;
+    }
 
 }

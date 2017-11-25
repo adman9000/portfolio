@@ -18,6 +18,13 @@ class KrakenExchange {
                 $this->api_secret = $secret;
 
         }
+        
+    function setAPI($key, $secret) {
+
+         $this->api_key = $key;
+        $this->api_secret = $secret;
+    }
+
 
 	/** getAccountStats()
 	 * Returns an array of account stats for Binance
@@ -80,5 +87,11 @@ class KrakenExchange {
 
         return $return;
 	}
+
+
+        function getTicker() {
+
+                return array();
+        }
 
 }
