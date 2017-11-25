@@ -4,10 +4,12 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     use Notifiable;
+    use HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -27,15 +29,34 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+     public function adminShortcuts() {
+
+        return $this->hasMany('App\AdminShortcut');
+
+    }
+
+    public function hasAdminShortcut($url) {
+
+        foreach($this->adminShortcuts as $shortcut) {
+            if($shortcut['url'] == $url) return true;
+        }
+        return false;
+    }
+
 
     //relationships
     public function coins() {
 
-        return $this->belongsToMany('App\Coin');
+        return $this->belongsToMany('App\Modules\Portfolio\Coin');
 
     }
 
     public function transactions() {
-        return $this->hasMany('App\Transaction');
+        return $this->hasMany('App\Modules\Portfolio\Transaction');
+    }
+
+    public function exchanges() {
+
+        return $this->hasMany('App\Modules\Portfolio\UserExchange');
     }
 }

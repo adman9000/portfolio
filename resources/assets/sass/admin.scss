@@ -1,0 +1,189 @@
+.padding-remove{padding:0;}
+.margin-remove{margin:0;}
+
+.margin-top-xlarge{margin-top:80px;}
+.margin-top-large{margin-top:60px;}
+.margin-top-medium{margin-top:30px;}
+.margin-top-small{margin-top:15px;}
+.margin-bottom-small{margin-bottom:15px;}
+.margin-bottom-medium{margin-bottom:30px;}
+.margin-bottom-large{margin-bottom:60px;}
+.margin-bottom-xlarge{margin-bottom:80px;}
+.padding-bottom-xlarge{padding-bottom:80px;}
+.padding-bottom-large{padding-bottom:60px;}
+.padding-bottom-medium{padding-bottom:30px;}
+.padding-bottom-small{padding-bottom:15px;}
+.padding-top-xlarge{padding-top:80px;}
+.padding-top-large{padding-top:60px;}
+.padding-top-medium{padding-top:30px;}
+.padding-top-small{padding-top:15px;}
+
+.padding-small{padding:15px;}
+.padding-medium{padding:30px;}
+.sub-header{
+	font-size: 18px;
+    position: relative;
+    top: -2px;
+	color: #1ab394;
+}
+h3{color:#18a689;}
+
+/** Nestable lists for pages etc **/
+
+.dd-handle { line-height:2.2em; }
+.dd-item button { font-weight:bold;padding-top:10px;  }
+.wrapper-content {
+  padding: 30px 15px;
+}
+.dd-item button {
+    font-weight: bold;
+    padding-top: 10px;
+    padding: 0;
+    margin: 0;
+    line-height: 40px;
+	height:40px;
+}
+.dd-item > button:before
+{
+	font-size: 30px;
+}
+.dd-item > button[data-action="collapse"]:before {
+    line-height: 35px;
+}
+.dd-item.online .dd-handle {
+	background-color: #e9fcf8;
+}
+.dd-item.offline .dd-handle{
+	background-color: #f2f2f2;
+}
+.dd-handle {
+    border: 1px solid #acd4cc; 
+}
+.dd-handle .glyphicon {
+    font-size:20px;
+	line-height: 27px;
+	margin:0 10px;
+}
+.dd-handle .text-navy:hover{color:#18a689;}
+.dd-dragel > .dd-item .dd-handle{background-color:#acd4cc; font-weight:700;}
+.btn{
+	transition: all 0.5s ease;
+    -webkit-transition: all 0.5s ease;
+    -ms-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+	font-size:16px;
+	text-transform:uppercase;
+}
+
+/* Shortcuts */
+.shortcut-page{
+	position: absolute;
+    top: 10px;
+    right: 25px;
+    padding: 10px;
+    border: 1px solid #f1f1f1;	
+}
+.shortcut-page .glyphicon{
+	font-size:24px;
+	color:#999c9e;	
+}
+.shortcut-page .glyphicon.text-warning {
+    color: #f8ac59;
+}
+
+/* activity link */
+.activity-link{
+	position: absolute;
+    top: 10px;
+    right: 85px;
+    padding: 10px;
+    border: 1px solid #f1f1f1;	
+}
+.activity-link .glyphicon{
+	font-size:24px;
+	color:#999c9e;	
+}
+/* Typeahead */
+.twitter-typeahead {
+display:block !important;
+}
+.typeahead, .tt-query, .tt-hint {
+    font-size: 14px;
+    height: 34px;
+    outline: medium none;
+    padding: 6px 12px;
+    /*width: 396px;*/
+	border-radius:1px;
+}
+.typeahead {
+    background-color: #FFFFFF;
+}
+.typeahead-search { min-width:300px }
+.typeahead:focus {
+    border: 2px solid #0097CF;
+}
+.tt-query {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+.tt-hint {
+    color: #999999;
+}
+.tt-menu {
+    background-color: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 8px 8px 8px 8px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    margin-top: 12px;
+    padding: 8px 0;
+    width: 422px;
+}
+.tt-suggestion p {
+    font-size: 13px;
+    line-height: 24px;
+    padding: 3px 20px;
+}
+.tt-suggestion.tt-cursor {
+    background-color: #0097CF;
+    color: #FFFFFF;
+}
+.tt-suggestion {
+    margin: 0;
+    /*margin-left: -40px;*/
+	font-weight:normal;
+	padding-left:0px;
+}
+.tt-dataset {
+    font-size: 14px;
+	font-weight:bold;
+    /*margin-left: 20px;*/
+	padding-left:10px;
+}
+.tt-menu  hr { padding:3px; margin:3px; }
+
+/* button sizing fixes */
+.btn-sm { font-size:80%; }
+
+
+/*** UBuildme custom stuff **/
+
+/** Trade type colours */
+.ground-works {
+	color: red;
+}
+
+
+.project-manager .tag-list li a.bg-success {
+    background-color: #00cd8a;
+    color: #ffffff;
+}
+.project-manager .tag-list li a.bg-danger {
+    background-color: #e4b9b9;
+}
+
+a.btn.pull-right{margin-left:5px; }
+a.btn-default { color: gray; }
+
+
+/** AH - Readmore */
+.collapse-readmore { display:none;}
+.collapse-readmore.in {display:inline}

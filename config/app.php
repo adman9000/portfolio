@@ -180,6 +180,8 @@ return [
         adman9000\kraken\KrakenServiceProvider::class,
         adman9000\Bittrex\BittrexServiceProvider::class,
 
+        Laravel\Passport\PassportServiceProvider::class,
+
     ],
 
     /*

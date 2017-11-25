@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
 
-         $schedule->call('\App\Repositories\Exchanges@getPrices')->everyFiveMinutes();
+         $schedule->call('\App\Repositories\Exchanges@runSchedule')->everyFiveMinutes();
     }
 
     /**
