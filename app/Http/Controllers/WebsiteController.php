@@ -1,4 +1,9 @@
-<?php
+<?php 
+/* WebsiteController
+ * Main controller for website pages & content
+ * TODO: dashboard controller etc should extend this one?
+ **/
+
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +33,16 @@ class WebsiteController extends Controller
      */
     public function index(Request $request)
     {
+
+        //The correct url for the page being loaded in case we need to redirect
+        $correct_url = false;
+
+        //The template for the element we are viewing
+        $element_template = false;
+
+        //The template for the page we are viewing
+        $page_template = false;
+
 
         //If there is no url path we are on the homepage, so find it!
         if($request->path() == "/") {
@@ -80,13 +95,13 @@ class WebsiteController extends Controller
 
         //Set the page template
         if($page) $template = "page_templates/".$page->template->filename;
-        else $template = "404";
+        else abort(404);
 
         //Add the page to the data array
         $data['page'] = $page;
 
         
-        if("/".$request->path() != $correct_url) return redirect($correct_url);
+        if(($correct_url) && ("/".$request->path() != $correct_url)) return redirect($correct_url);
 
         return view()->first([$element_template, $template, '404'], $data);
     }

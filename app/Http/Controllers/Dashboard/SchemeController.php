@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Controllers\Controller;
 use App\Modules\Portfolio\Scheme;
 use App\Modules\Portfolio\Coin;
 use App\Modules\Portfolio\CoinScheme;

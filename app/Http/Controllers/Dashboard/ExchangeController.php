@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dashboard;
 use Illuminate\Http\Request;
 
+use App\Http\Controllers\Controller;
 use App\Modules\Portfolio\Exchange;
 use App\Modules\Portfolio\Coin;
 use App\Modules\Portfolio\CoinPrice;
@@ -49,7 +50,7 @@ class ExchangeController extends Controller
         $data['usd_value'] = number_format($data['stats']['total']['usd_value'], 2);
         $data['gbp_value'] = number_format(($data['stats']['total']['usd_value'] / $data['usd_gbp_rate']), 2);
 
-        return view('exchanges.index', $data);
+        return view('dashboard.exchanges.index', $data);
     
     }
 
@@ -66,7 +67,7 @@ class ExchangeController extends Controller
 
       $data['stats'] = $user_exchange->getBalances(true);
 
-      return view("exchanges.show", $data);
+      return view("dashboard.exchanges.show", $data);
     }
 
     /** getPrices

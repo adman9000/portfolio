@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Repositories\Exchanges;
-use App\Modules\Portfolio\UserExchange;
+//use App\Repositories\Exchanges;
+//use App\Modules\Portfolio\UserExchange;
 use Illuminate\Support\Facades\Auth;
 
-class HomeController extends Controller
+class DashboardController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -52,6 +53,66 @@ class HomeController extends Controller
         $data['gbp_value'] = number_format(($data['stats']['total']['usd_value'] / $data['usd_gbp_rate']), 2);
 
 
-        return view('home', $data);
+        return view('dashboard.home', $data);
     }
+
+
+      /** run()
+     * All non ajax calls to this controller pass though this function
+     * @param  \Illuminate\Http\Request  $request
+     * @param  $view
+     * @return \Illuminate\Http\Response
+     */
+    public function run(Request $request, $view=false) {
+
+        //First try to get a response from posted actions
+        $response = $this->actions($request);
+
+        //if there is none then get a response from the view
+        if(!$response)
+            $response =  $this->view($view);
+
+        return $response;
+    }
+
+
+    /* actions()
+     * All posted actions get processed here
+    **/
+    public function actions(Request $request) {
+
+         if($request->isMethod('post')) {
+
+            switch($request->input('action')) {
+
+
+            }
+
+        }
+
+        return false;
+    }
+
+
+    /* Respond with a view
+    **/
+    public function view($view=false) {
+
+
+        switch($view) {
+
+
+            case "" :
+            case "index" :
+            case "home" :
+                return $this->index();
+
+            default :
+                abort(404);
+                break;
+
+        }
+
+    }
+
 }

@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dashboard;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Modules\Portfolio\Coin;
 use App\Modules\Portfolio\Transaction;
-use App\Events\PusherEvent;
+//use App\Events\PusherEvent;
 use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller

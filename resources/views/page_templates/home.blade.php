@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('content')
 <div class="container">
@@ -14,8 +14,11 @@
                         </div>
                     @endif
 
+                @if (Auth::check())
+                       
+                       Hi {{Auth::user()->name}}
 
-                    <p>
+                         <p>
                     @hasanyrole('member|administrator')
                         I am either a member or an admin or both!
                     @else
@@ -37,10 +40,13 @@
                     @endrole
                 </p>
 
-                <ul class='list-group'>
-                    <li class='list-group-item'>Basic testing class added: ./vendor/.bin/phpunit tests/Feature/UserTest.php</li>
-                    <li class='list-group-item'>Activity log in place for user table and permissions</li>
-                </ul>
+                    @else
+
+                        <a href="{{ url('/login') }}">Login</a> or <a href="{{ url('/register') }}">Register</a>
+                        
+                    @endif
+
+
 
                 </div>
             </div>

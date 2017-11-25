@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 
 @section('content') 
 
@@ -24,7 +24,7 @@
                       @if($exchange != "total")
 
                     <tr>
-                      <td><a href='/exchanges/{{ $exchange }}'>{{ $exchange }}</a></td>
+                      <td><a href="{{ route('dashboard') }}/exchanges/{{ $exchange }}"'">{{ $exchange }}</a></td>
                       <td>{{ $details['total_btc_value']}} BTC</td>
                       <td>&pound;{{ $details['total_usd_value'] / $usd_gbp_rate}}</td>
                     </tr>

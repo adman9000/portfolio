@@ -1,9 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">Dashboard</div>
 
@@ -14,11 +14,50 @@
                         </div>
                     @endif
 
-                      @if (Auth::check())
-                       
-                       Hi {{Auth::user()->name}}
+                   
+                   <div class='row'>
 
-                   <p>This page uses live data from bittrex for market values and coin balances. The coin list & scheme pages use data stored in the database & updated every 5 minutes from Bittrex.</p>
+                        <div class='col-xs-6'>
+
+                            <div class='well'>
+
+                                <h4>Portfolio Pie Chart</h4>
+
+                            </div>
+
+                        </div>
+
+                        <div class='col-xs-6'>
+
+                            <div class='well'>
+
+                                <h4>Portfolio Bar Chart</h4>
+
+                            </div>
+
+                        </div>
+
+                        <div class='col-xs-6'>
+
+                            <div class='well'>
+
+                                <h4>Portfolio Gains Line Chart</h4>
+
+                            </div>
+
+                        </div>
+
+                        <div class='col-xs-6'>
+
+                            <div class='well'>
+
+                                <h4>Top 5 Coins Table</h4>
+
+                            </div>
+
+                        </div>
+                    </div>
+
                     <br />
                     <hr /><br />
 
@@ -52,20 +91,7 @@
                         <li>Notifications when attempting to buy or sell - email/slack/windows</li>
                     </ul>
 
-                     @else
-
-                        
-                        <p><b>AutoTrader Site</b></p>
-                    <p>Set up multiple schemes to run on bittrex. Monitor progress, cancel or modify schemes at any time. Place additional orders without affecting schemes or add/remove coins from schemes.</p>
-
-                    <p>Each scheme allows you to set a baseline price for each coin (defaults to current price). You then set a % drop at which to buy the coin and 2 sell points in order to stage sell</p> 
-
-                    <p><b>NOT YET READY FOR PUBLIC USE</b></p>
-
-                        <a href="{{ url('/login') }}">Login</a> or <a href="{{ url('/register') }}">Register</a>
-                                
-                    @endif
-
+  
 
 
                 </div>
