@@ -19,7 +19,7 @@ class Cmc extends Migration
 
 
         Schema::table('coins', function (Blueprint $table) {
-            $table->json('prices')->nullable(); 
+            $table->text('prices')->nullable(); 
             $table->bigInteger('current_supply')->nullable();
             $table->bigInteger('max_supply')->nullable();
             $table->dropColumn('exchange');
