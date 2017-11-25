@@ -125,7 +125,7 @@ class Exchanges {
 
         //Loop through them and get the latest prices from each
         foreach($exchanges as $myexchange) {
-            $myexchange->setupCoins();
+           // $myexchange->setupCoins();
             $myexchange->retrievePrices();
             File::append($log_file, "Prices saved for ".$myexchange->name);
         }
