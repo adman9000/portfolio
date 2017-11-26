@@ -56,7 +56,7 @@
 										<td >&pound;@{{ formatPrice(coin.market_cap) }}</td> 
 										
 										<td align=right> 
-											<? /* <a href='/coins/@{{ coin.id }}' class='btn btn-xs btn-info'>View</a>*/ ?>
+											 <a href='' class='btn btn-xs btn-info' v-bind:href="coin.url">View</a>
 										</td></tr>
 
 							</tbody>
@@ -66,7 +66,7 @@
 						</table>
 
 						<br />
-						<a href='/coins/create' class='btn btn-info'>Add Coin</a>
+						<a href='{{ route('dashboard') }}/coins/create' class='btn btn-info'>Add Coin</a>
 						<br />
 					</div>
 				</div>
@@ -99,7 +99,8 @@
 		     usd_price: "{{$coin->latestCoinPrice['usd_price']}}" ,
 		     gbp_price: "{{$coin->latestCoinPrice['gbp_price']}}" ,
 		     current_supply: "{{$coin->latestCoinPrice['current_supply']}}" ,
-		     market_cap: "{{$coin->latestCoinPrice['current_supply'] * $coin->latestCoinPrice['gbp_price']}}" 
+		     market_cap: "{{$coin->latestCoinPrice['current_supply'] * $coin->latestCoinPrice['gbp_price']}}" ,
+		     url: "{{ route('dashboard') }}/coins/{{ $coin->id }}"
 		   },
 
 		   @endforeach

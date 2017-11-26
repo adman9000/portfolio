@@ -44,4 +44,9 @@ class Coin extends Model
     public function transactionsBought() {
         return $this->hasMany('App\Modules\Portfolio\Transaction', 'coin_bought_id');
     }
+
+    public function exchanges() {
+
+        return $this->belongsToMany('App\Modules\Portfolio\Exchange')->using('App\Modules\Portfolio\ExchangeCoin')->withPivot('code', 'btc_price', 'usd_price', 'gbp_price');
+    }
 }

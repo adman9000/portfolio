@@ -25,6 +25,8 @@ Route::get("/test", function() {
 	//Role::create(['name' => 'administrator']);
 	//Role::create(['name' => 'member']);
 	Permission::create(['name' => 'edit users']);
+	Permission::create(['name' => 'autotrade']);
+	Permission::create(['name' => 'trade']);
 
          $user = Auth::user();
 

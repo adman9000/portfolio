@@ -105,7 +105,7 @@ class CoinController extends Controller
             $data['coins'][] = $gnt;
 
 
-            return view('coins.charts', $data);
+            return view('dashboard.coins.charts', $data);
         }
 
 
@@ -181,20 +181,25 @@ class CoinController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified coin.
+     * IN PROGRESS: Default display shows coinmarketcap data and list of exchanges & latest price at each
+     * TODO: If logged in you also get your balance at each exchange plus cold storage
+     * TODO: If you have the trade permission you get trade buttons
+     * TODO: If you have the autotrade permission you get schemes this coin is in
      *
      * @param  \App\Task  $task
      * @return \Illuminate\Http\Response
      */
     public function show(Coin $coin)
     {
-        //
-        
+
+        //Logged in user
+        $user = Auth::user();
 
         //chart data
         //start with 1 month chart
 
-        //Get an array of datetimes 5 minutes apart
+        //Get an array of datetimes 1 hour apart
         $startTime  = new \DateTime("1 month ago");
         $timeStep   = 60;
 
@@ -209,6 +214,8 @@ class CoinController extends Controller
             $startTime->add(new \DateInterval('PT'.$timeStep.'M'));
         }
 
+        $coin->load('exchanges');
+
         //Loop through coin prices and add them to the time array where times match
         foreach($coin->coinprices as $price) {
             $pricetime = new \DateTime($price->created_at);
@@ -221,28 +228,30 @@ class CoinController extends Controller
 
             //If we have a time set in the price array, give it the price
             if(isset($timeArray[$pricetime->format('Y-m-d H:i')]))
-                $timeArray[$pricetime->format('Y-m-d H:i')] = $price->current_price;
+                $timeArray[$pricetime->format('Y-m-d H:i')] = $price->btc_price;
 
             //Get the highest point of the chart
-            $high = max($high, $price->current_price);
+            $high = max($high, $price->btc_price);
         }
         
-        foreach($coin->schemes as $s=>$scheme) {
-            $coin->schemes[$s]->pivot->buy_price =  $scheme->pivot->set_price - ($scheme->pivot->set_price * $scheme->buy_drop_percent/100);
-            if($coin->schemes[$s]->pivot->buy_price>0) $coin->schemes[$s]->pivot->buy_amount =  $scheme->buy_amount/$coin->schemes[$s]->pivot->buy_price;
-            $coin->schemes[$s]->pivot->sell_trigger_1 =  $scheme->pivot->set_price + ($scheme->pivot->set_price * $scheme->sell_1_gain_percent/100);
-            $coin->schemes[$s]->pivot->sell_trigger_2 = $scheme->pivot->set_price + ($scheme->pivot->set_price * $scheme->sell_2_gain_percent/100);
-            $coin->schemes[$s]->pivot->sell_point_1 = max($coin->schemes[$s]->pivot->sell_trigger_1, $coin->schemes[$s]->pivot->highest_price) - (max($scheme->pivot->set_price, $coin->schemes[$s]->pivot->highest_price) * $scheme->sell_1_drop_percent/100);
-            $coin->schemes[$s]->pivot->sell_point_2 = max($coin->schemes[$s]->pivot->sell_trigger_2, $coin->schemes[$s]->pivot->highest_price) - (max($scheme->pivot->set_price, $coin->schemes[$s]->pivot->highest_price) * $scheme->sell_2_drop_percent/100);
+        if($user->can('autotrade')) {
 
-         
+            foreach($coin->schemes as $s=>$scheme) {
+                $coin->schemes[$s]->pivot->buy_price =  $scheme->pivot->set_price - ($scheme->pivot->set_price * $scheme->buy_drop_percent/100);
+                if($coin->schemes[$s]->pivot->buy_price>0) $coin->schemes[$s]->pivot->buy_amount =  $scheme->buy_amount/$coin->schemes[$s]->pivot->buy_price;
+                $coin->schemes[$s]->pivot->sell_trigger_1 =  $scheme->pivot->set_price + ($scheme->pivot->set_price * $scheme->sell_1_gain_percent/100);
+                $coin->schemes[$s]->pivot->sell_trigger_2 = $scheme->pivot->set_price + ($scheme->pivot->set_price * $scheme->sell_2_gain_percent/100);
+                $coin->schemes[$s]->pivot->sell_point_1 = max($coin->schemes[$s]->pivot->sell_trigger_1, $coin->schemes[$s]->pivot->highest_price) - (max($scheme->pivot->set_price, $coin->schemes[$s]->pivot->highest_price) * $scheme->sell_1_drop_percent/100);
+                $coin->schemes[$s]->pivot->sell_point_2 = max($coin->schemes[$s]->pivot->sell_trigger_2, $coin->schemes[$s]->pivot->highest_price) - (max($scheme->pivot->set_price, $coin->schemes[$s]->pivot->highest_price) * $scheme->sell_2_drop_percent/100);         
+            }
         }
+
         $data['chart_highest'] = $high;
         $data['chart_data'] = $timeArray;
         $data['coin'] = $coin;
         $data['chart_show_every'] = $timeStep;
 
-        return view("coins.show", $data);
+        return view("dashboard.coins.show", $data);
     }
 
     /**
@@ -254,7 +263,7 @@ class CoinController extends Controller
     public function edit(Coin $coin)
     {
         //
-        return view("coins.edit", array("coin" => $coin));
+        return view("dashboard.coins.edit", array("coin" => $coin));
     }
 
     /**

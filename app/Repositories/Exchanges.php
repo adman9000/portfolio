@@ -3,11 +3,13 @@
 
 namespace App\Repositories;
 
+use Illuminate\Support\Facades\DB;
 use App\Modules\Portfolio\Coin;
 use App\Modules\Portfolio\CoinPrice;
 use App\Modules\Portfolio\Transaction;
 use App\Modules\Portfolio\Scheme;
 use App\Modules\Portfolio\Exchange;
+use App\Modules\Portfolio\ExchangeCoin;
 use App\User;
 use App\Notifications\Trade;
 use adman9000\kraken\KrakenAPIFacade;
@@ -104,7 +106,16 @@ class Exchanges {
         }
 
         //Get all coins again with latest price for each, and update the coin record
-        //$coins = Coin::all()->with("latestCoinprice");
+        $coins = Coin::with("latestCoinprice")->get();
+
+        foreach($coins as $coin) {
+            $prices = array();
+            $prices['latest']['btc'] = $coin->latestCoinprice->btc_price;
+            $prices['latest']['usd'] = $coin->latestCoinprice->usd_price;
+            $prices['latest']['gbp'] = $coin->latestCoinprice->gbp_price;
+            $coin->prices = json_encode($prices);
+            $coin->save();
+        }
 
 
     }
@@ -128,6 +139,18 @@ class Exchanges {
            // $myexchange->setupCoins();
             $myexchange->retrievePrices();
             File::append($log_file, "Prices saved for ".$myexchange->name);
+        }
+
+        $coins = ExchangeCoin::with("latestCoinprice")->get();
+
+        foreach($coins as $coin) {
+            if($coin->latestCoinprice) {
+                //Pivot, so update with a query
+                DB::table('coin_exchange')->where('id', $coin->id)
+                ->update(['btc_price' => $coin->latestCoinprice->btc_price,
+                'usd_price' => $coin->latestCoinprice->usd_price,
+                'gbp_price' => $coin->latestCoinprice->gbp_price]);
+            }
         }
 
     }
