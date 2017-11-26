@@ -17,6 +17,7 @@ use adman9000\kraken\KrakenAPIFacade;
 use adman9000\Bittrex\Bittrex;
 use Illuminate\Support\Facades\File;
 use adman9000\coinmarketcap\CoinmarketcapAPIFacade;
+use App\Events\PriceEvent;
 
 
 class Exchanges {
@@ -90,6 +91,8 @@ class Exchanges {
 
         }
 
+        //Send latest portfolio value to users
+       event(new PriceEvent());
 
     }
 

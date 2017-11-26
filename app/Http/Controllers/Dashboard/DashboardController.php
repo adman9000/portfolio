@@ -38,6 +38,7 @@ class DashboardController extends Controller
 
        $user = Auth::user();
 
+
         //Load all this users coins
         $user->load('coins');
 

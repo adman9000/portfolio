@@ -29,6 +29,15 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    protected $slack_webhook_url = "https://hooks.slack.com/services/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";
+
+       
+
+     public function routeNotificationForSlack()
+    {
+        return $this->slack_webhook_url;
+    }
+
      public function adminShortcuts() {
 
         return $this->hasMany('App\AdminShortcut');
@@ -68,6 +77,11 @@ class User extends Authenticatable
      public function userValues1Day() {
 
         return $this->hasMany('App\Modules\Portfolio\UserValue')->where("created_at", ">=", date("Y-m-d G:i:s", strtotime("24 hours ago")));
+
+    }
+     public function portfolioValue() {
+
+        return $this->hasOne('App\Modules\Portfolio\UserValue')->orderBy("created_at", "DESC")->first();
 
     }
 }
