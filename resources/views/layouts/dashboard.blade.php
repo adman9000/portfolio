@@ -41,6 +41,7 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
 
+                        <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
                         <li><a href="{{ route('coins') }}">Coins</a></li>
                         <li><a href="{{ route('exchanges') }}">Exchanges</a></li>
                          <li class="dropdown">
