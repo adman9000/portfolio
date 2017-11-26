@@ -57,7 +57,7 @@
 
                             <div class='well'>
 
-                                <h4>Top 5 Coins Table</h4>
+                                <h4>Your Top 10 Coins</h4>
 
                                 <div id='chart-4'>
 
@@ -67,7 +67,7 @@
                                         <tbody>
                                             <? $i=0;?>
                                             @foreach( $coins as $coin)
-                                                <? if($i++>=5) break; ?>
+                                                <? if($i++>=10) break; ?>
                                                 <tr>
                                                     <td>{{ $coin['code'] }}</td>
                                                     <td>{{ $coin['balance'] }}</td>
