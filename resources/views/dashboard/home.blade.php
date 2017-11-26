@@ -247,7 +247,7 @@
         ]);
 
         // Set chart options
-        chart_options = {'title':'Portfolio value (GBP)',
+        chart_options = {'title':'24 Hour Portfolio value (GBP)',
                        'width':'90%',
                        height: 400
                    };

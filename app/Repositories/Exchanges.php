@@ -58,6 +58,7 @@ class Exchanges {
     }
 
     /** Called directly by cronjob every hour. Calculates current value of each users portfolio */
+    */
     function calculatePortfolios() {
 
         $users = User::with("coins")->get();
@@ -74,13 +75,13 @@ class Exchanges {
             //Portfolio value change calculated from CMC data
             foreach($user->coins as $ucoin) {
 
-                $ucoin->load('coin');
+                $ucoin->load('exchangeCoin');
                 
-                $prices = json_decode($ucoin->coin->prices);
+               // $prices = json_decode($ucoin->coin->prices);
 
-                $data['btc_value'] += $prices->latest->btc * $ucoin->balance;
-                $data['gbp_value'] += $prices->latest->gbp * $ucoin->balance;
-                $data['usd_value'] += $prices->latest->usd * $ucoin->balance;
+                $data['btc_value'] += $ucoin->exchangeCoin->btc_price * $ucoin->balance;
+                $data['gbp_value'] += $ucoin->exchangeCoin->gbp_price * $ucoin->balance;
+                $data['usd_value'] += $ucoin->exchangeCoin->usd_price * $ucoin->balance;
 
             }
 

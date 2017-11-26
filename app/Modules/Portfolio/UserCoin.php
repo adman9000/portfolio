@@ -24,6 +24,9 @@ class UserCoin extends Model
     	return $this->belongsTo("\App\User");
     }
 
+  function exchangeCoin() {
 
+    	return $this->belongsTo("\App\Modules\Portfolio\ExchangeCoin");
+    }
 }
 ?>

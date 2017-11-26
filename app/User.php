@@ -65,4 +65,9 @@ class User extends Authenticatable
         return $this->hasMany('App\Modules\Portfolio\UserValue');
 
     }
+     public function userValues1Day() {
+
+        return $this->hasMany('App\Modules\Portfolio\UserValue')->where("created_at", ">=", date("Y-m-d G:i:s", strtotime("24 hours ago")));
+
+    }
 }
