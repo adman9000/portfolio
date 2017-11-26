@@ -25,30 +25,41 @@ class ExchangeController extends Controller
     public function index() {
 
 
-        //TODO: Combine exhanges in DB with APIs somehow?
+      //Get all our account stats from the different exchanges we use
+       $data = array();
+       $data['btc_value'] = 0;
+       $data['usd_value'] = 0;
+       $data['gbp_value'] = 0;
+       $data['stats'] = array();
 
        $user = Auth::user();
 
-       $data = array();
-       $data['stats'] = array();
-       $data['stats']['total'] = array();
-       $data['stats']['total']['btc_value'] = 0;
-       $data['stats']['total']['usd_value'] = 0;
+        //Load all this users coins
+        $user->load('coins');
 
+        //Load all the coins for each of their exchanges
+        foreach($user->exchanges as $exchange) {
+            $exchange->exchange->load('coins');
 
-       foreach($user->exchanges as $exchange) {
+            $exchangedata = array('btc_value'=>0,'usd_value'=>0,'gbp_value'=>0);
+            //Loop through users coins & calculate the current value of each in GBP & USD
+            foreach($exchange->exchange->coins as $ecoin) {
+                foreach($user->coins as $ucoin) {
+                    if($ecoin->id == $ucoin->exchange_coin_id) {
+                        $exchangedata['btc_value'] += $ucoin->balance * $ecoin->btc_price;
+                        $exchangedata['usd_value'] += $ucoin->balance * $ecoin->usd_price;
+                        $exchangedata['gbp_value'] += $ucoin->balance * $ecoin->gbp_price;
+                    }
+                }
+                $data['stats'][$exchange->exchange->slug] = $exchangedata;
 
-            $data['stats'][$exchange->exchange->slug] = $exchange->getAccountStats();
-            $data['stats']['total']['btc_value'] += $data['stats'][$exchange->exchange->slug]['total_btc_value'];
-            $data['stats']['total']['usd_value'] += $data['stats'][$exchange->exchange->slug]['total_usd_value'];
+            }
 
         }
 
-        //Add the GBP value to the data array
-        $data['usd_gbp_rate']  = env("USD_GBP_RATE");
-        $data['btc_value'] = $data['stats']['total']['btc_value'];
-        $data['usd_value'] = number_format($data['stats']['total']['usd_value'], 2);
-        $data['gbp_value'] = number_format(($data['stats']['total']['usd_value'] / $data['usd_gbp_rate']), 2);
+        //Format the currency values
+       // $data['usd_value'] = number_format($data['usd_value'], 2);
+       // $data['gbp_value'] = number_format($data['gbp_value'], 2);
 
         return view('dashboard.exchanges.index', $data);
     
@@ -57,15 +68,41 @@ class ExchangeController extends Controller
 
     public function show($name, Request $request) {
 
+
       $data = array();
-      $data['exchange'] = Exchange::where("slug", "=", $name)->first();
+      $data['stats'] = array();
+      $data['stats']['assets'] = array();
+
+      $exchange = Exchange::where("slug", "=", $name)->first();
 
       $user = Auth::user();
 
-      //get the user exchange model
-      $user_exchange = $user->exchanges->where("exchange_id", "=", $data['exchange']->id)->first();
+      //Load all this users coins
+        $user->load('coins');
 
-      $data['stats'] = $user_exchange->getBalances(true);
+        $exchange->load('coins');
+
+        $data['exchange'] = $exchange;
+
+        foreach($exchange->coins as $ecoin) {
+
+          $asset = $ecoin;
+
+        foreach($user->coins as $ucoin) {
+
+            if($ucoin->exchange_coin_id == $ecoin->id) {
+
+              $asset->balance = $ucoin->balance;
+              $asset->available = $ucoin->available;
+              $asset->locked = $ucoin->locked;
+              $asset->btc_value = $asset->balance * $asset->btc_price;
+              $asset->gbp_value = $asset->balance * $asset->gbp_price;
+              $asset->usd_value = $asset->balance * $asset->usd_price;
+
+            }
+          }
+          $data['stats']['assets'][] = $asset;
+      }
 
       return view("dashboard.exchanges.show", $data);
     }

@@ -35,15 +35,25 @@
                 <p>Buy & sell crypto on {{ $exchange['title'] }}</p>
 
                 <table class='table table-bordered'>
-                <thead><tr><th>Code</th><th>Balance</th><th>Available</th><th>Locked</th><th>BTC Value</th><th>GBP Value</th><th>Sell</th></tr></thead>
+                <thead><tr><th>Code</th><th>BTC Price</th><th>GBP Price</th><th>Balance</th><th>Available</th><th>Locked</th><th>BTC Value</th><th>GBP Value</th> @can('trade')<th>Sell</th>@endcan </tr></thead>
                 <tbody>
 
                 @foreach($stats['assets'] as $asset)
 
-                	@if($asset['btc_value'] > 0.0001)
+                	
 
-	                	<tr><td> {{ $asset['code'] }} </td><td>{{ $asset['balance'] }}</td><td>{{ $asset['available'] }}</td><td>{{ $asset['locked'] }}</td><td>{{ $asset['btc_value'] }}</td><td>&pound;{{ $asset['gbp_value'] }}</td>
+	                	<tr>
+                      <td> {{ $asset['code'] }} </td>
+                      <td>{{ $asset['btc_price'] }}</td>
+                      <td>{{ $asset['gbp_price'] }}</td>
+                      <td>{{ $asset['balance'] }}</td>
+                      <td>{{ $asset['available'] }}</td>
+                      <td>{{ $asset['locked'] }}</td>
+                      <td>{{ $asset['btc_value'] }}</td>
+                      <td>&pound;{{ $asset['gbp_value'] }}</td>
 
+
+                      @can('trade')
 						<td>
 
 	     
@@ -60,15 +70,17 @@
 
 	                	</td>
 
+                    @endcan
+
 	                	</tr>
 
-                	@endif
 
                @endforeach
 
            </tbody>
        </table>
 
+<? /*
        <h3>BTC</h3>
 
        <table class='table table-bordered'><tr><th>Balance</th><th>Available</th><th>Locked</th><th>GBP Value</th><th>Exchange</th></tr>
@@ -90,7 +102,7 @@
         		</form>
         	</td></tr>
        </table>
-
+*/ ?>
 
                 </div>
 

@@ -209,9 +209,15 @@ class BittrexExchange {
         //The ticker info to return
         $ticker = array();
 
+
          //Get what we need from the API
         $bapi = new Client(config("bittrex.auth"), config("bittrex.urls"));
         $bapi->setAPI($this->api_key, $this->api_secret);
+
+
+        //Get the BTC-USD rate
+        $btc_market = $bapi->getMarketSummary("USDT-BTC");
+        $btc_usd = $btc_market['result'][0]['Last'];
 
         $markets =  $bapi->getMarketSummaries();
 
@@ -221,7 +227,7 @@ class BittrexExchange {
             $base = $arr[0];
             if($base == "BTC") {
                 
-                $price_info = array("code" => $arr[1], "price"=>$market['Last']);
+                $price_info = array("code" => $arr[1], "btc_price"=>$market['Last'], "usd_price" => $market['Last'] * $btc_usd, "gbp_price" => $market['Last'] * $btc_usd / env("USD_GBP_RATE"));
                   
                 $ticker[] = $price_info;
    
@@ -232,4 +238,17 @@ class BittrexExchange {
         return $ticker;
     }
 
+
+        //get the btc usd market & gbp price as well
+    function getBTCMarket() {
+
+        $bapi = new Client(config("bittrex.auth"), config("bittrex.urls"));
+        $bapi->setAPI($this->api_key, $this->api_secret);
+
+        $market = $bapi->getMarketSummary("USDT-BTC");
+        $market = $market['result'][0];
+        $price_info = array("code" => "BTC",  "usd_price" => $market['Last'] , "gbp_price" => $market['Last'] / env("USD_GBP_RATE"));
+                return $price_info;
+
+    }
 }

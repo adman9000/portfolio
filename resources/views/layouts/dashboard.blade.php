@@ -39,9 +39,8 @@
                  @if (Auth::user())
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        <li><a href="{{ route('schemes') }}">Schemes</a></li>
+
                         <li><a href="{{ route('coins') }}">Coins</a></li>
-                        <li><a href="{{ route('transactions') }}">Transactions</a></li>
                         <li><a href="{{ route('exchanges') }}">Exchanges</a></li>
                          <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -52,6 +51,15 @@
                          <li><a href="{{ route('charts') }}">All Time</a></li>
                          <li><a href="{{ route('charts24', '24hr') }}">24 Hour</a></li>
                          </ul></li>
+                         
+                        @can('autotrade')
+                            <li><a href="{{ route('schemes') }}">Schemes</a></li>
+                        @endcan
+                        
+                        @can('trade')
+                        <li><a href="{{ route('transactions') }}">Transactions</a></li>
+                        @endcan
+
                     </ul>
                     @endif
 

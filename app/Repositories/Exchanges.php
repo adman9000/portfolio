@@ -155,6 +155,19 @@ class Exchanges {
 
     }
 
+    /* oneoff function to set up exchange coins table **/
+    function setupCoins() {
+
+         //Get all exchanges in the database
+        $exchanges = Exchange::all();
+
+        //Loop through them and get the latest prices from each
+        foreach($exchanges as $myexchange) {
+            $myexchange->setupCoins();
+        }
+
+    }
+
 
 
     /** btcPusher

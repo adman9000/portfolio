@@ -25,8 +25,8 @@
 
                     <tr>
                       <td><a href="{{ route('dashboard') }}/exchanges/{{ $exchange }}"'">{{ $exchange }}</a></td>
-                      <td>{{ $details['total_btc_value']}} BTC</td>
-                      <td>&pound;{{ $details['total_usd_value'] / $usd_gbp_rate}}</td>
+                      <td>{{ $details['btc_value']}} BTC</td>
+                      <td>&pound;{{ $details['gbp_value'] }}</td>
                     </tr>
 
                     @endif

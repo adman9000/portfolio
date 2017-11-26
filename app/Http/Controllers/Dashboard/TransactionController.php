@@ -23,7 +23,7 @@ class TransactionController extends Controller
         $user = Auth::user();
         $data['transactions'] = $user->transactions;
 
-        return view('transactions.index', $data);
+        return view('dashboard.transactions.index', $data);
     }
 
 
@@ -38,7 +38,7 @@ class TransactionController extends Controller
         //
         $data = array();
         $data['coins'] = Coin::with('latestCoinprice')->get();
-        return view("transactions.create", $data);
+        return view("dashboard.transactions.create", $data);
     }
 
     /**
@@ -73,7 +73,7 @@ class TransactionController extends Controller
     {
         //
 		$transaction->load('coinSold', 'coinBought', 'scheme');
-        return view("transactions.show", array("transaction" => $transaction));
+        return view("dashboard.transactions.show", array("transaction" => $transaction));
     }
 
     /**
@@ -89,7 +89,7 @@ class TransactionController extends Controller
         $data = array();
         $data['coins'] = Coin::with('latestCoinprice')->get();
         $data['transaction'] = $transaction;
-        return view("transactions.edit", $data);
+        return view("dashboard.transactions.edit", $data);
     }
 
     /**

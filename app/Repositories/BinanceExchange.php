@@ -216,6 +216,13 @@ class BinanceExchange {
 
         $markets = $bapi->getTicker();
 
+         //find the BTCUSD ticker
+        foreach($markets as $market) {
+            if($market['symbol'] == "BTCUSDT") {
+                $btc_usd = $market['price'];
+            }
+        }
+
         //Loop through markets, find any of my coins and save the latest price to DB
         foreach($markets as $market) {
             $base = substr($market['symbol'], strlen($market['symbol'])-3, 3);
@@ -223,7 +230,7 @@ class BinanceExchange {
 
             if($base == "BTC") {
                 
-                $price_info = array("code" => $code, "price"=>$market['price']);
+                $price_info = array("code" => $code, "btc_price"=>$market['price'], "usd_price" => $market['price'] * $btc_usd, "gbp_price" => $market['price'] * $btc_usd / env("USD_GBP_RATE"));
                   
                 $ticker[] = $price_info;
    
@@ -232,6 +239,25 @@ class BinanceExchange {
 
 
         return $ticker;
+    }
+
+
+    //get the btc usd market & gbp price as well
+    function getBTCMarket() {
+
+        $bapi = new BinanceAPI();
+        $bapi->setAPI($this->api_key, $this->api_secret);
+
+        $markets = $bapi->getTicker();
+
+         //find the BTCUSD ticker
+        foreach($markets as $market) {
+            if($market['symbol'] == "BTCUSDT") {
+                 $price_info = array("code" => "BTC",  "usd_price" => $market['price'] , "gbp_price" => $market['price'] / env("USD_GBP_RATE"));
+                return $price_info;
+            }
+        }
+
     }
 
 }

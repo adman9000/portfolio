@@ -67,6 +67,12 @@
                         <li>GBP VALUE: £{{ $gbp_value }}</li>
                     </ul>
 
+                    <form method='post' action="{{ route('dashboard') }}">
+                          {{ csrf_field() }}
+                        <input type='hidden' name='action' value='resync' />
+                        <input type='submit' value='Resync Balances' class='btn btn-sm btn-info' />
+                    </form>
+
                     <p><b>TRADING ASSISTANT TODO:</b></p>
 
                     <ul>

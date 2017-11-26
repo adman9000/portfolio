@@ -61,6 +61,43 @@ class UserExchange extends Model
 
     }
 
-   }
+    /** updateBalances()
+     * Update the balances in the DB for all coins held by this user on this exchange
+     **/
+    public function updateBalances() {
+
+        $balances = $this->getBalances(false);
+
+        //BTC is done different
+        $coin = ExchangeCoin::where('code',"BTC")->where('exchange_id', $this->exchange_id)->get()->first();
+        if($balances['btc']['balance']>0) {
+            if($coin) {
+                $ucoin = UserCoin::updateOrCreate(
+                   [ 'exchange_coin_id'=>$coin->id, 'user_id'=>$this->user_id], 
+                    ['coin_id' => $coin->coin_id, 'exchange_id'=> $coin->exchange_id, 'balance' => $balances['btc']['balance'], 'available' => $balances['btc']['available'], 'locked' => $balances['btc']['locked']]);
+            }
+        }
+        else {
+            //No BTC, delete existing BTC balance record
+            UserCoin::where('user_id', $this->user_id)->where('exchange_coin_id', $coin->id)->delete();
+        }
+
+        //Loop through the balances at the exchange and make sure they are stored in the DB
+        foreach($balances['assets'] as $asset) {
+            $coin = ExchangeCoin::where('code',$asset['code'])->where('exchange_id', $this->exchange_id)->get()->first();
+            if($coin) {
+                $ucoin = UserCoin::updateOrCreate(
+                   [ 'exchange_coin_id'=>$coin->id, 'user_id'=>$this->user_id], 
+                    ['coin_id' => $coin->coin_id, 'exchange_id'=> $coin->exchange_id, 'balance' => $asset['balance'], 'available' => $asset['available'], 'locked' => $asset['locked']]);
+            }
+            else {
+                //Their coin is not in our database
+            }
+
+        }
+    }
+
+
+}
 
    

@@ -29,28 +29,39 @@ class DashboardController extends Controller
     {
 
         //Get all our account stats from the different exchanges we use
+       $data = array();
+       $data['btc_value'] = 0;
+       $data['usd_value'] = 0;
+       $data['gbp_value'] = 0;
 
        $user = Auth::user();
 
-       $data = array();
-       $data['stats'] = array();
-       $data['stats']['total'] = array();
-       $data['stats']['total']['btc_value'] = 0;
-       $data['stats']['total']['usd_value'] = 0;
+        //Load all this users coins
+        $user->load('coins');
 
-       foreach($user->exchanges as $exchange) {
+        //Load all the coins for each of their exchanges
+        foreach($user->exchanges as $exchange) {
+            $exchange->exchange->load('coins');
 
-            $data['stats'][$exchange->exchange->slug] = $exchange->getAccountStats();
-            $data['stats']['total']['btc_value'] += $data['stats'][$exchange->exchange->slug]['total_btc_value'];
-            $data['stats']['total']['usd_value'] += $data['stats'][$exchange->exchange->slug]['total_usd_value'];
+            //Loop through users coins & calculate the current value of each in GBP & USD
+            foreach($user->coins as $ucoin) {
+                foreach($exchange->exchange->coins as $ecoin) {
+                    if($ecoin->id == $ucoin->exchange_coin_id) {
+
+                        $data['btc_value'] += $ucoin->balance * $ecoin->btc_price;
+                        $data['usd_value'] += $ucoin->balance * $ecoin->usd_price;
+                        $data['gbp_value'] += $ucoin->balance * $ecoin->gbp_price;
+
+                    }
+                }
+
+            }
 
         }
 
-        //Add the GBP value to the data array
-        $data['usd_gbp_rate']  = env("USD_GBP_RATE");
-        $data['btc_value'] = $data['stats']['total']['btc_value'];
-        $data['usd_value'] = number_format($data['stats']['total']['usd_value'], 2);
-        $data['gbp_value'] = number_format(($data['stats']['total']['usd_value'] / $data['usd_gbp_rate']), 2);
+        //Format the currency values
+        $data['usd_value'] = number_format($data['usd_value'], 2);
+        $data['gbp_value'] = number_format($data['gbp_value'], 2);
 
 
         return view('dashboard.home', $data);
@@ -81,10 +92,22 @@ class DashboardController extends Controller
     **/
     public function actions(Request $request) {
 
+
+       $user = Auth::user();
+
+
          if($request->isMethod('post')) {
 
             switch($request->input('action')) {
 
+                case "resync" :
+ 
+                    //Update the logged in users balances from each of their exchanges
+                   foreach($user->exchanges as $exchange) {
+                        $exchange->updateBalances();
+                    }
+
+                break;
 
             }
 

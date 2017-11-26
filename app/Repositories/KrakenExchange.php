@@ -94,4 +94,9 @@ class KrakenExchange {
                 return array();
         }
 
+           //get the btc usd market & gbp price as well
+    function getBTCMarket() {
+        return false;
+    }
+
 }
