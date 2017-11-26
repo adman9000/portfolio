@@ -29,7 +29,12 @@ class Coin extends Model
 
     public function coinprices24Hours()
     { 
-      return $this->hasMany('App\Modules\Portfolio\CoinPrice')->where("created_at", ">=", $yesterday);
+      return $this->hasMany('App\Modules\Portfolio\CoinPrice')->where("created_at", ">=", date("Y-m-d G:i:s", strtotime("24 hours ago")));
+    }
+
+    public function coinprices1Week()
+    { 
+      return $this->hasMany('App\Modules\Portfolio\CoinPrice')->where("created_at", ">=", date("Y-m-d G:i:s", strtotime("1 week ago")));
     }
 
     //All price records for this coin

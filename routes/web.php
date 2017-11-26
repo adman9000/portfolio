@@ -127,9 +127,10 @@ Route::prefix('dashboard')->group(function() {
 //CMC
 Route::get('/cmc', function(){
 		$exchanges = new Exchanges();
-		$exchanges->setupCoins();
-		$exchanges->saveCMCPrices();
-		$exchanges->saveExchangePrices();
+		//$exchanges->setupCoins();
+		//$exchanges->saveCMCPrices();
+		//$exchanges->saveExchangePrices();
+		$exchanges->calculatePortfolios();
 	});
 
 //FRONT END ROUTES

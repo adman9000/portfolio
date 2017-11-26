@@ -59,4 +59,10 @@ class User extends Authenticatable
 
         return $this->hasMany('App\Modules\Portfolio\UserExchange');
     }
+
+     public function userValues() {
+
+        return $this->hasMany('App\Modules\Portfolio\UserValue');
+
+    }
 }

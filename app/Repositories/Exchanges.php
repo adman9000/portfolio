@@ -10,6 +10,7 @@ use App\Modules\Portfolio\Transaction;
 use App\Modules\Portfolio\Scheme;
 use App\Modules\Portfolio\Exchange;
 use App\Modules\Portfolio\ExchangeCoin;
+use App\Modules\Portfolio\UserValue;
 use App\User;
 use App\Notifications\Trade;
 use adman9000\kraken\KrakenAPIFacade;
@@ -53,6 +54,41 @@ class Exchanges {
         //Pusher events to update browsers in real time
        // $this->coinPusher();
         //$this->btcPusher();
+
+    }
+
+    /** Called directly by cronjob every hour. Calculates current value of each users portfolio */
+    function calculatePortfolios() {
+
+        $users = User::with("coins")->get();
+
+
+        foreach($users as $user) {
+
+            $data = array();
+            $data['btc_value'] = 0;
+            $data['gbp_value'] = 0;
+            $data['usd_value'] = 0;
+            $data['user_id'] = $user->id;
+
+            //Portfolio value change calculated from CMC data
+            foreach($user->coins as $ucoin) {
+
+                $ucoin->load('coin');
+                
+                $prices = json_decode($ucoin->coin->prices);
+
+                $data['btc_value'] += $prices->latest->btc * $ucoin->balance;
+                $data['gbp_value'] += $prices->latest->gbp * $ucoin->balance;
+                $data['usd_value'] += $prices->latest->usd * $ucoin->balance;
+
+            }
+
+            UserValue::create($data);
+
+
+        }
+
 
     }
 
@@ -149,7 +185,9 @@ class Exchanges {
                 DB::table('coin_exchange')->where('id', $coin->id)
                 ->update(['btc_price' => $coin->latestCoinprice->btc_price,
                 'usd_price' => $coin->latestCoinprice->usd_price,
-                'gbp_price' => $coin->latestCoinprice->gbp_price]);
+                'gbp_price' => $coin->latestCoinprice->gbp_price,
+                'updated_at' => date("Y-m-d G:i:s")
+                ]);
             }
         }
 

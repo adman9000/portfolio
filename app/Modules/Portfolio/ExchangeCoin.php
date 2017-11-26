@@ -32,12 +32,27 @@ class ExchangeCoin extends Pivot
 
     public function coinprices24Hours()
     { 
-      return $this->hasMany('App\Modules\Portfolio\ExchangeCoinPrice')->where("created_at", ">=", $yesterday);
+      return $this->hasMany('App\Modules\Portfolio\ExchangeCoinPrice')->where("created_at", ">=", date("Y-m-d G:i:s", strtotime("24 hours ago")));
     }
 
     //All price records for this coin
     public function coinprices() {
         return $this->hasMany('App\Modules\Portfolio\ExchangeCoinPrice');
+    }
+
+    public function coinprice1DayAgo()
+    { 
+      return $this->hasOne('App\Modules\Portfolio\ExchangeCoinPrice', 'exchange_coin_id')->where("created_at", "<=", date("Y-m-d G:i:s", strtotime("24 hours ago")))->orderBy('created_at', 'DESC')->first();
+    }
+
+    public function coinprice1HourAgo()
+    { 
+      return $this->hasOne('App\Modules\Portfolio\ExchangeCoinPrice', 'exchange_coin_id')->where("created_at", "<=", date("Y-m-d G:i:s", strtotime("1 hour ago")))->orderBy('created_at', 'DESC')->first();
+    }
+
+    public function coinprice1WeekAgo()
+    { 
+      return $this->hasOne('App\Modules\Portfolio\ExchangeCoinPrice', 'exchange_coin_id')->where("created_at", "<=", date("Y-m-d G:i:s", strtotime("1 week ago")))->orderBy('created_at', 'DESC')->first();
     }
 
    }

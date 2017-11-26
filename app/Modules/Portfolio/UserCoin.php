@@ -14,5 +14,16 @@ class UserCoin extends Model
     protected $table = "coin_user";
 
 
+     function coin() {
+
+    	return $this->belongsTo("\App\Modules\Portfolio\Coin");
+    }
+
+    function user() {
+
+    	return $this->belongsTo("\App\User");
+    }
+
+
 }
 ?>
