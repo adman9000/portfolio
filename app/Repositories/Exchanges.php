@@ -58,7 +58,7 @@ class Exchanges {
     }
 
     /** Called directly by cronjob every hour. Calculates current value of each users portfolio */
-    */
+    
     function calculatePortfolios() {
 
         $users = User::with("coins")->get();
