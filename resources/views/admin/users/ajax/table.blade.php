@@ -10,9 +10,11 @@
                     <td>{{ $record['email'] }}</td>
                     <td>{{ $record['name'] }}</td>
                     <td>
-                        <a data-toggle='modal-ajax' href="/admin/users/show/{{ $record['id'] }}" class='btn btn-info btn-xs'>View</a>
-                        <a data-toggle='modal-ajax' href="/admin/users/edit/{{ $record['id'] }}" class='btn btn-primary btn-xs'>Edit</a>
-                        <a href="/admin/users/permissions/{{ $record['id'] }}" class='btn btn-primary btn-xs'>Permissions</a>
+                        <a data-toggle='modal-ajax' href="/admin/users/show/{{ $record['id'] }}" class='btn btn-info btn-sm'>View</a>
+                        @can('edit users')
+                        <a data-toggle='modal-ajax' href="/admin/users/edit/{{ $record['id'] }}" class='btn btn-primary btn-sm'>Edit</a>
+                        <a href="/admin/users/permissions/{{ $record['id'] }}" class='btn btn-primary btn-sm'>Permissions</a>
+                        @endcan
                     </td>
                     </tr>
                 @endforeach

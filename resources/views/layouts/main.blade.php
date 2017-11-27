@@ -62,7 +62,9 @@
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                                    @role('member')
+                                        <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                                    @endrole
                                     @role('administrator')
                                         <li><a href='{{ route('admin') }}'>Admin</a></li>
                                     @endrole

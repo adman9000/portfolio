@@ -25,7 +25,7 @@ class UserController extends BaseController
 
 
          //Check a specific permission, uses App/Middleware/CheckPermission
-         $this->middleware(['permission:edit users']);
+         $this->middleware(['permission:view users']);
 
 
     }
@@ -55,7 +55,12 @@ class UserController extends BaseController
     **/
     public function actions(Request $request, User $user=null) {
 
+        //Can only carry out actions if they have edit access
+        $user = Auth::user();
+        if(!$user->hasPermissionTo("edit users")) return false;
+
          if($request->isMethod('post')) {
+
 
             switch($request->input('action')) {
 
@@ -84,20 +89,27 @@ class UserController extends BaseController
     **/
     public function view($view=false, User $user=null) {
 
+
+        //Can only view 'action' pages if they have edit access
+        $user = Auth::user();
+
         parent::view($view);
 
         switch($view) {
 
             case "create" :
+                if(!$user->hasPermissionTo("edit users")) abort(404);
                 return $this->create();
 
             case "show" :
                 return $this->show($user);
 
             case "edit" :
+                if(!$user->hasPermissionTo("edit users")) abort(404);
                 return $this->edit($user);
 
             case "permissions" :
+                if(!$user->hasPermissionTo("edit users")) abort(404);
                 return $this->permissions($user);
 
             case "" :

@@ -12,8 +12,9 @@
                     </h1>
                     <small>List of registered users</small>
 
+@can('edit users')
 <a href='/admin/users/create' class='btn btn-sm btn-primary'>Create User</a>
-
+@endcan
     <div id='record-table'>
 
                     <?=$record_table?>

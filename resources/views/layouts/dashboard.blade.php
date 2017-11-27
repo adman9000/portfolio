@@ -78,6 +78,13 @@
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
+                                    @role('member')
+                                        <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                                    @endrole
+                                    @role('administrator')
+                                        <li><a href='{{ route('admin') }}'>Admin</a></li>
+                                    @endrole
+                                    
                                     <li>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();

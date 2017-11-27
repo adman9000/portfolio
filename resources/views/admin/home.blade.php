@@ -1,6 +1,86 @@
 @extends('layouts.admin')
 
 @section('content')
+
+@can('view users')
+
+    <div class='row'>
+        <div class="col-md-6 col-lg-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-primary pull-right"><?=date("F")?></span>
+                    <h5>User Activity</h5>
+                </div>
+                <div class="ibox-content">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h1 class="no-margins"><?=$monthly_registrations?></h1>
+                            <div class="font-bold text-navy"><i class="fa fa-child"></i> <small>Registrations</small></div>
+                        </div>
+                        <div class="col-md-6">
+                            <h1 class="no-margins"><?=$monthly_logins?></h1>
+                            <div class="font-bold text-navy"><i class="fa fa-truck"></i> <small>Logins</small></div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        
+            <div class="col-md-6 col-lg-4">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-info pull-right">Today</span>
+                        <h5>User Activity</h5>
+                    </div>
+                    <div class="ibox-content">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h1 class="no-margins"><?=$daily_registrations?></h1>
+                                <div class="font-bold text-info"><i class="fa fa-child"></i> <small>Registrations</small></div>
+                            </div>
+                            <div class="col-md-6">
+                                <h1 class="no-margins"><?=$daily_logins?></h1>
+                                <div class="font-bold text-info"><i class="fa fa-truck"></i> <small>Logins</small></div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-warning pull-right">Alert</span>
+                        <h5>User Alerts</h5>
+                    </div>
+                    <div class="ibox-content">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h1 class="no-margins"><?=$num_unconfirmed_users?></h1>
+                                <div class="font-bold text-warning"><i class="fa fa-child"></i> <small>Unconfirmed Users</small></div>
+                            </div>
+                            <div class="col-md-6">
+                                <h1 class="no-margins"><?=$num_administrators?></h1>
+                                <div class="font-bold text-warning"><i class="fa fa-truck"></i> <small>Administrators</small></div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+    </div>
+
+@endcan
+
     <div class="row">
        <div class='col-md-12'>
                 <div class='widget white-bg style1'>

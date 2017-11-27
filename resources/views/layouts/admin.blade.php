@@ -42,7 +42,7 @@
                     </li>
                          <li class="{{ isActiveRoute('admin') }}" ><a href="{{ route('admin') }}"><i class="fa fa-th-large"></i> <span class="nav-label">Dashboard</span></a></li>
 
-                        @can('edit users')
+                        @can('view users')
                              <li class="{{ isActiveRoute('users') }}" ><a href="{{ route('users') }}"><i class="fa fa-th-large"></i> <span class="nav-label">User Management</span></a></li>
                         @endcan
 
@@ -93,7 +93,7 @@
             <div class="wrapper wrapper-content animated fadeInRight">
 
                 <? //Only dashboard doesnt have breadcrumbs or this header section
-                if(sizeof($breadcrumb_array)>0) { ?>
+                if(sizeof($breadcrumb_array)>1) { ?>
             
                 <div class="row">
                     <div class="col-sm-12">

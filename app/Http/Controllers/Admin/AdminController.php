@@ -101,10 +101,19 @@ class AdminController extends BaseController
     //Standard admin pages
     public function index() {
 
+        $user = Auth::user();
 
-         $user = Auth::user();
+        //Get stats for admin dashboard
+        $data = array();
+        $data['monthly_logins'] = 0;
+        $data['monthly_registrations'] = 0;
+        $data['daily_logins'] = 0;
+        $data['daily_registrations'] = 0;
+        $data['num_unconfirmed_users'] = 0;
+        $data['num_administrators'] = 0;
 
-         return $this->render('admin.home');
+
+         return $this->render('admin.home', $data);
     }
 
 

@@ -24,17 +24,17 @@ Route::get("/test", function() {
 
 	//Role::create(['name' => 'administrator']);
 	//Role::create(['name' => 'member']);
-	Permission::create(['name' => 'edit users']);
-	Permission::create(['name' => 'autotrade']);
-	Permission::create(['name' => 'trade']);
+	//Permission::create(['name' => 'edit users']);
+	//Permission::create(['name' => 'view users']);
+	//Permission::create(['name' => 'publish content']);
 
          $user = Auth::user();
 
-         //$user->assignRole('member', 'administrator');
+         //$user->assignRole('administrator');
          $user->givePermissionTo('edit users');
 
 	echo "OK";
-	dd($user->hasRole("member"));
+	dd($user->hasRole("administrator"));
 	die();
 
 });

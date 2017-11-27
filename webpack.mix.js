@@ -12,8 +12,8 @@ let mix = require('laravel-mix');
  */
 
 mix.scripts([
-'resources/assets/vendor/jquery/jquery-3.1.1.min.js',
-'resources/assets/vendor/bootstrap/js/bootstrap.js',
+//'resources/assets/vendor/jquery/jquery-3.1.1.min.js',
+//'resources/assets/vendor/bootstrap/js/bootstrap.js',
 'resources/assets/vendor/metisMenu/jquery.metisMenu.js',
 'resources/assets/vendor/pace/pace.js',
 'resources/assets/vendor/slimscroll/jquery.slimscroll.min.js'

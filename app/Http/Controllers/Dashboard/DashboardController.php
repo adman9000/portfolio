@@ -93,7 +93,7 @@ class DashboardController extends Controller
 
         $data['chart'] = array();
         foreach($user->userValues as $valuation) {
-            $data['chart'][date("G:i", strtotime($valuation->created_at))] = $valuation->gbp_value;
+            $data['chart'][date("d G:i", strtotime($valuation->created_at))] = $valuation->gbp_value;
         }
 
         //Format the currency values
