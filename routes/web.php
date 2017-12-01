@@ -16,7 +16,9 @@ use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use adman9000\coinmarketcap\CoinmarketcapAPIFacade;
+use App\Modules\Portfolio\Exchange;
 
+use App\Modules\Portfolio\UserExchange;
 
 Auth::routes();
 
@@ -126,11 +128,14 @@ Route::prefix('dashboard')->group(function() {
 
 //CMC
 Route::get('/cmc', function(){
-		$exchanges = new Exchanges();
-		//$exchanges->setupCoins();
+
+		$exchange = Exchange::find(1);
+		$exchange->setupCoins();
+		//$exchanges = new Exchanges();
+		//$exchanges->saveExchangePrices();
 		//$exchanges->saveCMCPrices();
 		//$exchanges->saveExchangePrices();
-		$exchanges->calculatePortfolios();
+		//$exchanges->calculatePortfolios();
 	});
 
 //FRONT END ROUTES

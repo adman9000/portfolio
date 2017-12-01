@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 class ExchangeCoin extends Pivot
 {
     //
-    protected $fillable = ['coin_id','exchange_id','code', 'btc_price', 'usd_price', 'gbp_price'];
+    protected $fillable = ['coin_id','exchange_id','code', 'market_code', 'btc_price', 'usd_price', 'gbp_price'];
 
     protected $table = "coin_exchange";
 

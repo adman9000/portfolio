@@ -52,7 +52,7 @@ class Exchange extends Model
         //Loop through markets, find any of my coins and save the latest price to DB
         foreach($ticker as $market) {
             foreach($this->coins as $coin) {
-                if($coin->code == $market['code']) {
+                if(($coin->code == $market['code']) || ($coin->market_code == $market['code'])) {
                     $price_info = array("coin_id"=>$coin->coin_id, "exchange_id"=>$this->id, "exchange_coin_id"=>$coin->id, "btc_price"=>$market['btc_price'], "usd_price"=>$market['usd_price'], "gbp_price"=>$market['gbp_price']);
 
                     $price = ExchangeCoinPrice::create($price_info);
@@ -76,6 +76,7 @@ class Exchange extends Model
 
 
     //A one-off function to set up all the markets for an exchange. Needs manual checking as some codes will be different
+    //Basically we want to know all the coins that can be traded with BTC on this exchange
     function setupCoins() {
 
         //Cheat with BTC
@@ -88,15 +89,43 @@ class Exchange extends Model
 
         $class = $this->getExchangeClass();
 
-        $ticker =  $class->getTicker();
+        //$ticker = $class->getTicker();
 
-        foreach($ticker as $market) {
-            foreach($coins as $coin) {
-                if($coin->code == $market['code']) {
-                	$coin_info = array("coin_id"=>$coin->id, "exchange_id"=>$this->id, "code"=>$market['code']);
-                	ExchangeCoin::firstOrCreate($coin_info);
+        //dd($ticker);
+
+        $assets =  $class->getAssets();
+
+        $markets =  $class->getMarkets();
+
+        //dd($markets);
+
+        foreach($assets as $asset) {
+
+            $accepted = false;
+
+            //Make sure there is a BTC market for this asset on this exchange
+            foreach($markets as $market) {
+
+                if($asset['code'] == $market['base_code']) {
+                    $accepted = true;
+                    $market_code = $market['market_code'];
+                    break;
                 }
+
             }
+
+            if($accepted) {
+
+                //Find the coin in our database and link it to this exchange
+                foreach($coins as $coin) {
+                    if(($coin->code == $asset['code']) || ($coin->code == $asset['alt_code'])) {
+                    	$coin_info = array("coin_id"=>$coin->id, "exchange_id"=>$this->id, "code"=>$asset['code'], 'market_code'=>$market_code);
+                    	ExchangeCoin::firstOrCreate($coin_info);
+                    }
+                }
+
+            }
+
         }
 
     }
