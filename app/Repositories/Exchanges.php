@@ -11,6 +11,7 @@ use App\Modules\Portfolio\Scheme;
 use App\Modules\Portfolio\Exchange;
 use App\Modules\Portfolio\ExchangeCoin;
 use App\Modules\Portfolio\UserValue;
+use App\Modules\Portfolio\Alert;
 use App\User;
 use App\Notifications\Trade;
 use adman9000\kraken\KrakenAPIFacade;
@@ -18,6 +19,7 @@ use adman9000\Bittrex\Bittrex;
 use Illuminate\Support\Facades\File;
 use adman9000\coinmarketcap\CoinmarketcapAPIFacade;
 use App\Events\PriceEvent;
+use App\Notifications\PriceAlert;
 
 
 class Exchanges {
@@ -56,6 +58,8 @@ class Exchanges {
        // $this->coinPusher();
         //$this->btcPusher();
 
+        $this->userAlerts();
+
     }
 
     /** Called directly by cronjob every hour. Calculates current value of each users portfolio */
@@ -91,8 +95,6 @@ class Exchanges {
 
         }
 
-        //Send latest portfolio value to users
-       event(new PriceEvent());
 
     }
 
@@ -181,7 +183,10 @@ class Exchanges {
             File::append($log_file, "Prices saved for ".$myexchange->name);
         }
 
+
+        //Update the exchange coins records
         $coins = ExchangeCoin::with("latestCoinprice")->get();
+
 
         foreach($coins as $coin) {
             if($coin->latestCoinprice) {
@@ -192,9 +197,50 @@ class Exchanges {
                 'gbp_price' => $coin->latestCoinprice->gbp_price,
                 'updated_at' => date("Y-m-d G:i:s")
                 ]);
+
+                //Update all users coin values for this coin
+                DB::table('coin_user')->where('exchange_coin_id', $coin->id)
+                ->update(['gbp_value' => DB::raw($coin->latestCoinprice->gbp_price ." * `balance`"),
+                'updated_at' => date("Y-m-d G:i:s")
+                ]);
+               
             }
         }
 
+    }
+
+    /* userAlerts()
+     * Send alerts to users if targets met
+    **/
+    function userAlerts() {
+
+        $alerts = Alert::where("triggered", false)->get();
+
+        foreach($alerts as $alert) {
+
+            //reset coin value
+            $coin_value = 0;
+
+            //Get all records of this coin for this user
+            $alert->user->load('coins');
+            foreach($alert->user->coins as $ucoin) {
+                if($ucoin->coin_id == $alert->coin_id)
+                    $coin_value += $ucoin->gbp_value;
+            }
+
+            if($coin_value >= $alert->gbp_max_value) {
+
+                //Do greater than alert
+                //Send latest value to user
+                //event(new PriceEvent());
+                $alert->user->notify(new PriceAlert($alert->coin->code." value above £".$alert->gbp_max_value));
+            }
+            else if($coin_value <= $alert->gbp_min_value) {
+                //Do less than alert
+                $alert->user->notify(new PriceAlert($alert->coin->code." value below £".$alert->gbp_max_value));
+            }
+
+        }
     }
 
     /* oneoff function to set up exchange coins table **/

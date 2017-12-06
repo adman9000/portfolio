@@ -23,7 +23,7 @@ class PriceAlert extends Notification
     public function __construct($value)
     {
         //
-        $this->msg = "Portfolio Value: £".number_format($value, 2);
+        $this->msg = $value; //"Portfolio Value: £".number_format($value, 2);
     }
 
     /**
