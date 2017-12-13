@@ -166,6 +166,7 @@ class Exchanges {
 
         foreach($wallets as $wallet) {
 
+
              $coin = Coin::with('latestCoinprice')->find($wallet->coin_id);
             
             if($coin) {
@@ -178,7 +179,7 @@ class Exchanges {
                 $wallet->gbp_value = $wallet->balance * $gbp_price;
             }
 
-            $wallet->save;
+            $wallet->save();
 
         }
 

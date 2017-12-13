@@ -143,7 +143,7 @@ Route::get('/cmc', function(){
 		//$exchange->setupCoins();
 		$exchanges = new Exchanges();
 		//$exchanges->saveExchangePrices();
-		$exchanges->userAlerts();
+		$exchanges->saveCMCPrices();
 		//$exchanges->saveCMCPrices();
 		//$exchanges->saveExchangePrices();
 		//$exchanges->calculatePortfolios();
