@@ -60,6 +60,12 @@ class User extends Authenticatable
 
     }
 
+    public function wallets() {
+
+        return $this->hasMany('App\Modules\Portfolio\Wallet');
+
+    }
+
     public function transactions() {
         return $this->hasMany('App\Modules\Portfolio\Transaction');
     }

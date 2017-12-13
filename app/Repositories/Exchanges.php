@@ -12,6 +12,7 @@ use App\Modules\Portfolio\Exchange;
 use App\Modules\Portfolio\ExchangeCoin;
 use App\Modules\Portfolio\UserValue;
 use App\Modules\Portfolio\Alert;
+use App\Modules\Portfolio\Wallet;
 use App\User;
 use App\Notifications\Trade;
 use adman9000\kraken\KrakenAPIFacade;
@@ -160,6 +161,27 @@ class Exchanges {
         }
 
 
+        //Finally we can update users wallets
+        $wallets = Wallet::all();
+
+        foreach($wallets as $wallet) {
+
+             $coin = Coin::with('latestCoinprice')->find($wallet->coin_id);
+            
+            if($coin) {
+                $btc_price = $coin->latestCoinprice['btc_price'];
+                $usd_price = $coin->latestCoinprice['usd_price'];
+                $gbp_price = $coin->latestCoinprice['gbp_price'];
+
+                $wallet->btc_value = $wallet->balance * $btc_price;
+                $wallet->usd_value = $wallet->balance * $usd_price;
+                $wallet->gbp_value = $wallet->balance * $gbp_price;
+            }
+
+            $wallet->save;
+
+        }
+
     }
 
 
@@ -234,10 +256,16 @@ class Exchanges {
                 //Send latest value to user
                 //event(new PriceEvent());
                 $alert->user->notify(new PriceAlert($alert->coin->code." value above £".$alert->gbp_max_value));
+
+                //mark as triggered
+                Alert::where("id", $alert->id)->update(["triggered" => 1]);
             }
             else if($coin_value <= $alert->gbp_min_value) {
                 //Do less than alert
                 $alert->user->notify(new PriceAlert($alert->coin->code." value below £".$alert->gbp_max_value));
+
+                //mark as triggered
+                Alert::where("id", $alert->id)->update(["triggered" => 1]);
             }
 
         }

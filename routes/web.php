@@ -102,6 +102,16 @@ Route::prefix('dashboard')->group(function() {
 	Route::patch('/transactions/{transaction}', 'Dashboard\TransactionController@update'); //Submit edit
 	Route::delete('/transactions/{transaction}', 'Dashboard\TransactionController@destroy'); //Submit delete
 
+	//Wallets
+	Route::get('/wallets', 'Dashboard\WalletController@index')->name('wallets'); //view all
+	Route::get('/wallets/create', 'Dashboard\WalletController@create'); // create form
+	Route::get('/wallets/{wallet}/edit', 'Dashboard\WalletController@edit'); //edit form
+	Route::get('/wallets/{wallet}', 'Dashboard\WalletController@show'); //view
+	Route::post('/wallets', 'Dashboard\WalletController@store'); //Submit new
+	Route::patch('/wallets/{wallet}', 'Dashboard\WalletController@update'); //Submit edit
+	Route::delete('/wallets/{wallet}', 'Dashboard\WalletController@destroy'); //Submit delete
+
+
 	//Exchanges
 
 	Route::get('/exchanges', 'Dashboard\ExchangeController@index')->name('exchanges'); //view all
