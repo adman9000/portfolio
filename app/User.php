@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -82,7 +83,7 @@ class User extends Authenticatable
     }
      public function userValues1Day() {
 
-        return $this->hasMany('App\Modules\Portfolio\UserValue')->where("created_at", ">=", strtotime("24 hours ago"));
+        return $this->hasMany('App\Modules\Portfolio\UserValue')->where("created_at", ">=", Carbon::now()->subDay());
 
     }
      public function portfolioValue() {
