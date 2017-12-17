@@ -38,47 +38,86 @@ class DashboardController extends Controller
 
        $user = Auth::user();
 
-
-        //Load all this users coins
-        $user->load('coins');
-
-        //Load all the coins for each of their exchanges
-        foreach($user->exchanges as $exchange) {
-            $exchange->exchange->load('coins');
-
-            //Loop through users coins & calculate the current value of each in GBP & USD
-            foreach($user->coins as $ucoin) {
+       //Are we looking at wallets, exchanges or both
 
 
-                foreach($exchange->exchange->coins as $ecoin) {
-                    if($ecoin->id == $ucoin->exchange_coin_id) {
+      if((!request('type')) || (request('type')=="wallet")) {
 
-                        $coinprice1HourAgo = $ecoin->coinprice1HourAgo();
-                        $coinprice1DayAgo = $ecoin->coinprice1DayAgo();
-                        $coinprice1WeekAgo = $ecoin->coinprice1WeekAgo();
+        //Load all this users wallets
+        $user->load('wallets');
 
-                        $data['btc_value'] += $ucoin->balance * $ecoin->btc_price;
-                        $data['usd_value'] += $ucoin->balance * $ecoin->usd_price;
-                        $data['gbp_value'] += $ucoin->balance * $ecoin->gbp_price;
+        foreach($user->wallets as $wallet) {
 
-                        if(!isset($assets[$ecoin->coin_id])) {
-                            $assets[$ecoin->coin_id] = array();
-                            $assets[$ecoin->coin_id]['code'] = $ecoin->code;
-                            $assets[$ecoin->coin_id]['gbp_value'] =0;
-                            $assets[$ecoin->coin_id]['balance'] =0;
-                            $assets[$ecoin->coin_id]['gbp_value_1_hour'] =0;
-                            $assets[$ecoin->coin_id]['gbp_value_1_day'] =0;
-                            $assets[$ecoin->coin_id]['gbp_value_1_week'] =0;
-                        }
-                        $assets[$ecoin->coin_id]['balance'] += $ucoin->balance;
-                        $assets[$ecoin->coin_id]['gbp_value'] += $ucoin->balance * $ecoin->gbp_price;
-                        if($coinprice1HourAgo) $assets[$ecoin->coin_id]['gbp_value_1_hour'] += $ucoin->balance * $coinprice1HourAgo->gbp_price;
-                        if($coinprice1DayAgo) $assets[$ecoin->coin_id]['gbp_value_1_day'] += $ucoin->balance * $coinprice1DayAgo->gbp_price;
-                        if($coinprice1WeekAgo) $assets[$ecoin->coin_id]['gbp_value_1_week'] += $ucoin->balance * $coinprice1WeekAgo->gbp_price;
-                    }
-                }
+          $data['btc_value'] += $wallet->btc_value;
+          $data['usd_value'] += $wallet->usd_value;
+          $data['gbp_value'] += $wallet->gbp_value;
 
-            }
+
+          $wallet->load("coin");
+
+          if(!isset($assets[$wallet->coin_id])) {
+              $assets[$wallet->coin_id] = array();
+              $assets[$wallet->coin_id]['code'] = $wallet->coin->code;
+              $assets[$wallet->coin_id]['gbp_value'] =0;
+              $assets[$wallet->coin_id]['balance'] =0;
+              $assets[$wallet->coin_id]['gbp_value_1_hour'] =0;
+              $assets[$wallet->coin_id]['gbp_value_1_day'] =0;
+              $assets[$wallet->coin_id]['gbp_value_1_week'] =0;
+          }
+
+           $assets[$wallet->coin_id]['balance'] += $wallet->balance;
+           $assets[$wallet->coin_id]['gbp_value'] += $wallet->gbp_value;
+
+        }
+
+      }
+
+
+
+       if((!request('type')) || (request('type')=="exchange")) {
+
+          //Load all this users coins
+          $user->load('coins');
+
+          //Load all the coins for each of their exchanges
+          foreach($user->exchanges as $exchange) {
+              $exchange->exchange->load('coins');
+
+              //Loop through users coins & calculate the current value of each in GBP & USD
+              foreach($user->coins as $ucoin) {
+
+
+                  foreach($exchange->exchange->coins as $ecoin) {
+                      if($ecoin->id == $ucoin->exchange_coin_id) {
+
+                          $coinprice1HourAgo = $ecoin->coinprice1HourAgo();
+                          $coinprice1DayAgo = $ecoin->coinprice1DayAgo();
+                          $coinprice1WeekAgo = $ecoin->coinprice1WeekAgo();
+
+                          $data['btc_value'] += $ucoin->balance * $ecoin->btc_price;
+                          $data['usd_value'] += $ucoin->balance * $ecoin->usd_price;
+                          $data['gbp_value'] += $ucoin->balance * $ecoin->gbp_price;
+
+                          if(!isset($assets[$ecoin->coin_id])) {
+                              $assets[$ecoin->coin_id] = array();
+                              $assets[$ecoin->coin_id]['code'] = $ecoin->code;
+                              $assets[$ecoin->coin_id]['gbp_value'] =0;
+                              $assets[$ecoin->coin_id]['balance'] =0;
+                              $assets[$ecoin->coin_id]['gbp_value_1_hour'] =0;
+                              $assets[$ecoin->coin_id]['gbp_value_1_day'] =0;
+                              $assets[$ecoin->coin_id]['gbp_value_1_week'] =0;
+                          }
+                          $assets[$ecoin->coin_id]['balance'] += $ucoin->balance;
+                          $assets[$ecoin->coin_id]['gbp_value'] += $ucoin->balance * $ecoin->gbp_price;
+                          if($coinprice1HourAgo) $assets[$ecoin->coin_id]['gbp_value_1_hour'] += $ucoin->balance * $coinprice1HourAgo->gbp_price;
+                          if($coinprice1DayAgo) $assets[$ecoin->coin_id]['gbp_value_1_day'] += $ucoin->balance * $coinprice1DayAgo->gbp_price;
+                          if($coinprice1WeekAgo) $assets[$ecoin->coin_id]['gbp_value_1_week'] += $ucoin->balance * $coinprice1WeekAgo->gbp_price;
+                      }
+                  }
+
+              }
+
+          }
 
         }
 

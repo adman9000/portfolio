@@ -5,7 +5,22 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading">Dashboard</div>
+                <div class="panel-heading">
+                    <h3 class='panel-title pull-left'>Dashboard</h3>
+                     <!-- Right Side Of Navbar -->
+                     <!-- Single button -->
+                    <div class="btn-group pull-right">
+                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        View <span class="caret"></span>
+                      </button>
+                    <ul class="dropdown-menu">
+                            <li><a href="{{ route('dashboard') }}">All</a></li>
+                            <li><a href="{{ route('dashboard') }}?type=exchange">Exchanges</a></li>
+                            <li><a href="{{ route('dashboard') }}?type=wallet">Wallets</a></li>
+                    </ul>
+                </div>
+                    <div class='clearfix'></div>
+                </div>
 
                 <div class="panel-body">
                     @if (session('status'))
