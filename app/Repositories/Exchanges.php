@@ -67,29 +67,44 @@ class Exchanges {
     
     function calculatePortfolios() {
 
-        $users = User::with("coins")->get();
+        $users = User::with("coins", "wallets")->get();
 
 
         foreach($users as $user) {
 
             $data = array();
-            $data['btc_value'] = 0;
-            $data['gbp_value'] = 0;
-            $data['usd_value'] = 0;
+            $data['exchanges_btc_value'] = 0;
+            $data['exchanges_gbp_value'] = 0;
+            $data['exchanges_usd_value'] = 0;
+            $data['wallets_btc_value'] = 0;
+            $data['wallets_gbp_value'] = 0;
+            $data['wallets_usd_value'] = 0;
             $data['user_id'] = $user->id;
 
             //Portfolio value change calculated from CMC data
             foreach($user->coins as $ucoin) {
 
                 $ucoin->load('exchangeCoin');
-                
-               // $prices = json_decode($ucoin->coin->prices);
 
-                $data['btc_value'] += $ucoin->exchangeCoin->btc_price * $ucoin->balance;
-                $data['gbp_value'] += $ucoin->exchangeCoin->gbp_price * $ucoin->balance;
-                $data['usd_value'] += $ucoin->exchangeCoin->usd_price * $ucoin->balance;
+                $data['exchanges_btc_value'] += $ucoin->exchangeCoin->btc_price * $ucoin->balance;
+                $data['exchanges_gbp_value'] += $ucoin->exchangeCoin->gbp_price * $ucoin->balance;
+                $data['exchanges_usd_value'] += $ucoin->exchangeCoin->usd_price * $ucoin->balance;
 
             }
+
+            //Get the total value of all wallets
+            foreach($user->wallets as $wallet) {
+
+                $data['wallets_btc_value'] += $wallet->btc_value;
+                $data['wallets_gbp_value'] += $wallet->gbp_value;
+                $data['wallets_usd_value'] += $wallet->usd_value;
+
+            }
+
+            //totals
+            $data['btc_value'] = $data['exchanges_btc_value'] + $data['wallets_btc_value'];
+            $data['usd_value'] = $data['exchanges_usd_value'] + $data['wallets_usd_value'];
+            $data['gbp_value'] = $data['exchanges_gbp_value'] + $data['wallets_gbp_value'];
 
             UserValue::create($data);
 

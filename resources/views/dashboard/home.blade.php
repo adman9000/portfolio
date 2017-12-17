@@ -256,7 +256,7 @@
 
             @foreach($chart as $date=>$value) 
 
-            ,['{{ $date }}', {{ $value }}]
+            <? if($value) { ?>,['{{ $date }}', {{ $value }}]<? } ?>
             
             @endforeach
         ]);
@@ -264,7 +264,8 @@
         // Set chart options
         chart_options = {'title':'24 Hour Portfolio value (GBP)',
                        'width':'90%',
-                       height: 400
+                       height: 400,
+                       interpolateNulls: true
                    };
 
         // Instantiate and draw our chart, passing in some options.

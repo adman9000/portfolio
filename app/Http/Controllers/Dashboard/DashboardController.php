@@ -132,7 +132,20 @@ class DashboardController extends Controller
 
         $data['chart'] = array();
         foreach($user->userValues1Day as $valuation) {
-            $data['chart'][date("d G:i", strtotime($valuation->created_at))] = $valuation->gbp_value;
+            switch (request('type')) {
+              case "exchange" :
+                 $data['chart'][date("d G:i", strtotime($valuation->created_at))] = $valuation->exchanges_gbp_value;
+                break;
+
+              case "wallet" :
+                 $data['chart'][date("d G:i", strtotime($valuation->created_at))] = $valuation->wallets_gbp_value;
+                break;
+
+              default : 
+                 $data['chart'][date("d G:i", strtotime($valuation->created_at))] = $valuation->gbp_value;
+                break;
+            }
+           
         }
 
         //Format the currency values

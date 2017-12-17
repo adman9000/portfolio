@@ -45,22 +45,22 @@ Route::get("/test", function() {
 //CMC
 Route::get('/cmc', function(){
 
-		$exchange = Exchange::find(3);
-		$exchange->setupCoins();
+		//$exchange = Exchange::find(3);
+		//$exchange->setupCoins();
 
-		$exchange = Exchange::find(4);
-		$exchange->setupCoins();
+		//$exchange = Exchange::find(4);
+		//$exchange->setupCoins();
 
 		$exchanges = new Exchanges();
-		$exchanges->saveCMCPrices();
-        $exchanges->saveExchangePrices();
+		//$exchanges->saveCMCPrices();
+        //$exchanges->saveExchangePrices();
 
 		//$exchanges->saveExchangePrices();
 		//$exchange->setupCoins();
 		//$exchanges->getAccountStats();
 		//$exchanges->saveCMCPrices();
 		//$exchanges->saveExchangePrices();
-		//$exchanges->calculatePortfolios();
+		$exchanges->calculatePortfolios();
 	});
 
 
