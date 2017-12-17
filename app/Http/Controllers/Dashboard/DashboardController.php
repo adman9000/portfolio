@@ -131,7 +131,7 @@ class DashboardController extends Controller
         $user->load('userValues1Day');
 
         $data['chart'] = array();
-        foreach($user->userValues as $valuation) {
+        foreach($user->userValues1Day as $valuation) {
             $data['chart'][date("d G:i", strtotime($valuation->created_at))] = $valuation->gbp_value;
         }
 
