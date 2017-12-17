@@ -9,6 +9,7 @@
         "php": ">=5.6.4",
         "adman9000/laravel-binance": "dev-master",
         "adman9000/laravel-coinmarketcap": "dev-master",
+        "adman9000/laravel-cryptopia": "dev-master",
         "adman9000/laravelbittrex": "dev-master",
         "adman9000/laravelkraken": "dev-master",
         "doctrine/dbal": "^2.5@dev",

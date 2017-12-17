@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "f56cf829248549442e23acc853540995",
+    "content-hash": "6eb859e6158063cb195bc471632aab3c",
     "packages": [
         {
             "name": "adman9000/laravel-binance",
@@ -101,6 +101,54 @@
             ],
             "description": "Implementation of Coinmarketcap trading API for Laravel",
             "time": "2017-11-25T11:33:10+00:00"
+        },
+        {
+            "name": "adman9000/laravel-cryptopia",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/adman9000/laravel-cryptopia.git",
+                "reference": "60061ddad08c18777dab23b95f9b747ca5f7ca20"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/adman9000/laravel-cryptopia/zipball/60061ddad08c18777dab23b95f9b747ca5f7ca20",
+                "reference": "60061ddad08c18777dab23b95f9b747ca5f7ca20",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "laravel/framework": ">=5.3",
+                "php": ">=5.6.4"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "adman9000\\cryptopia\\CryptopiaServiceProvider"
+                    ],
+                    "aliases": {
+                        "Cryptopia": "adman9000\\cryptopia\\CryptopiaAPIFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "adman9000\\cryptopia\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Adam Harding",
+                    "email": "myaddressistaken@googlemail.com"
+                }
+            ],
+            "description": "Implementation of Cryptopia trading API for Laravel",
+            "time": "2017-12-17T11:27:43+00:00"
         },
         {
             "name": "adman9000/laravelbittrex",
@@ -5299,6 +5347,7 @@
     "stability-flags": {
         "adman9000/laravel-binance": 20,
         "adman9000/laravel-coinmarketcap": 20,
+        "adman9000/laravel-cryptopia": 20,
         "adman9000/laravelbittrex": 20,
         "adman9000/laravelkraken": 20,
         "doctrine/dbal": 20,

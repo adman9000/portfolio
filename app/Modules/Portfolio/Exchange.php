@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Repositories\BittrexExchange;
 use App\Repositories\BinanceExchange;
 use App\Repositories\KrakenExchange;
+use App\Repositories\CryptopiaExchange;
 
 class Exchange extends Model
 {
@@ -30,6 +31,10 @@ class Exchange extends Model
                 
             case "kraken" :
                 return new KrakenExchange($this->api_key, $this->api_secret);
+                break;
+
+            case "cryptopia" :
+                return new CryptopiaExchange($this->api_key, $this->api_secret);
                 break;
 
         }
@@ -71,7 +76,6 @@ class Exchange extends Model
             }
         }
 
-        
     }
 
 
@@ -118,7 +122,7 @@ class Exchange extends Model
 
                 //Find the coin in our database and link it to this exchange
                 foreach($coins as $coin) {
-                    if(($coin->code == $asset['code']) || ($coin->code == $asset['alt_code'])) {
+                    if(($coin->code == $asset['code']) || (isset($asset['alt_code']) && ($coin->code == $asset['alt_code']))) {
                     	$coin_info = array("coin_id"=>$coin->id, "exchange_id"=>$this->id, "code"=>$asset['code'], 'market_code'=>$market_code);
                     	ExchangeCoin::firstOrCreate($coin_info);
                     }

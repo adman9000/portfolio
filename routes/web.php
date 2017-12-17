@@ -12,6 +12,7 @@
 */
 
 use App\Repositories\Exchanges;
+use App\Repositories\CryptopiaExchange;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -40,6 +41,28 @@ Route::get("/test", function() {
 	die();
 
 });
+
+//CMC
+Route::get('/cmc', function(){
+
+		$exchange = Exchange::find(3);
+		$exchange->setupCoins();
+
+		$exchange = Exchange::find(4);
+		$exchange->setupCoins();
+
+		$exchanges = new Exchanges();
+		$exchanges->saveCMCPrices();
+        $exchanges->saveExchangePrices();
+
+		//$exchanges->saveExchangePrices();
+		//$exchange->setupCoins();
+		//$exchanges->getAccountStats();
+		//$exchanges->saveCMCPrices();
+		//$exchanges->saveExchangePrices();
+		//$exchanges->calculatePortfolios();
+	});
+
 
 //ADMIN ROUTES
 Route::get("/admin", "Admin\AdminController@index")->name("admin");
@@ -136,18 +159,6 @@ Route::prefix('dashboard')->group(function() {
 });
 
 
-//CMC
-Route::get('/cmc', function(){
-
-		//$exchange = Exchange::find(1);
-		//$exchange->setupCoins();
-		$exchanges = new Exchanges();
-		//$exchanges->saveExchangePrices();
-		$exchanges->saveCMCPrices();
-		//$exchanges->saveCMCPrices();
-		//$exchanges->saveExchangePrices();
-		//$exchanges->calculatePortfolios();
-	});
 
 //FRONT END ROUTES
 Route::get('/', 'WebsiteController@index')->name('home');

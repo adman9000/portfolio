@@ -7,10 +7,11 @@
 
 namespace App\Repositories;
 
-use adman9000\binance\BinanceAPI;
-use adman9000\binance\BinanceAPIFacade;
+use adman9000\cryptopia\CryptopiaAPI;
+use adman9000\cryptopia\CryptopiaAPIFacade;
+use App\Modules\Portfolio\Coin;
 
-class BinanceExchange {
+class CryptopiaExchange {
 
 
     protected $api_key;
@@ -45,27 +46,26 @@ class BinanceExchange {
 		$alts_btc_value = 0;
 
 		//Get what we need from the API
-        $bapi = new BinanceAPI();
+        $bapi = new CryptopiaAPI();
         $bapi->setAPI($this->api_key, $this->api_secret);
 
-		$ticker = $bapi->getTicker();
+		$ticker = $bapi->getTicker("BTC");
+
         $balances = $bapi->getBalances();
 
         //Convert it to consistent data format
 
-        //find the BTCUSD ticker
-        foreach($ticker as $market) {
-            if($market['symbol'] == "BTCUSDT") {
-                $btc_usd = $market['price'];
-            }
-        }
+        //find the BTCUSD price
+        //$btc_usd = 10000;
+        $coin = Coin::with("latestCoinprice")->where("code", "BTC")->first();
+        $btc_usd = $coin->latestCoinprice->usd_price;
 
         foreach($balances as $wallet) {
 
              //include BTC
-            if($wallet['asset'] == "BTC") {
+            if($wallet['Symbol'] == "BTC") {
 
-                $btc_balance +=  $wallet['free']+ $wallet['locked'];
+                $btc_balance +=  $wallet['Total'];
 
             }
             else {
@@ -73,18 +73,18 @@ class BinanceExchange {
 
                 foreach($ticker as $market) {
 
-                    if($market['symbol'] == $wallet['asset']."BTC") {
+                    if($market['Label'] == $wallet['Symbol']."/BTC") {
 
                     	//Calculate the BTC value of this coin and add it to the balance
-                        $value = ($wallet['free'] + $wallet['locked']) * $market['price'];
+                        $value = $wallet['Total'] * $market['LastPrice'];
 
                         $alts_btc_value += $value;
 
                         //Set the amount of this altcoin held, plus its BTC value if amount is >0
-                        if($wallet['free'] > 0) {
-	                        $data[$wallet['asset']]['btc_value']['balance'] = $wallet['free'] + $wallet['locked'];
-	                        $data[$wallet['asset']]['btc_value'] = $value;
-	                        $data[$wallet['asset']]['usd_value'] = $value * $btc_usd;
+                        if($wallet['Total'] > 0) {
+	                        $data[$wallet['Symbol']]['btc_value']['balance'] = $wallet['Total'];
+	                        $data[$wallet['Symbol']]['btc_value'] = $value;
+	                        $data[$wallet['Symbol']]['usd_value'] = $value * $btc_usd;
 	                    }
 
                         break;
@@ -127,7 +127,7 @@ class BinanceExchange {
         $alts_btc_value = 0;
 
 		 //Get balances of my coins
-         $bapi = new BinanceAPI();
+         $bapi = new CryptopiaAPI();
         $bapi->setAPI($this->api_key, $this->api_secret);
 
         $ticker = $bapi->getTicker();
@@ -140,22 +140,19 @@ class BinanceExchange {
         if(!$balances) return false;
         else {
 
-             //find the BTCUSD ticker
-            foreach($ticker as $market) {
-                if($market['symbol'] == "BTCUSDT") {
-                    $btc_usd = $market['price'];
-                }
-            }
+             //find the BTCUSD price
+            $coin = Coin::with("latestCoinprice")->where("code", "BTC")->first();
+            $btc_usd = $coin->latestCoinprice->usd_price;
 
             foreach($balances as $wallet) {
 
                  //include BTC
-                if($wallet['asset'] == "BTC") {
+                if($wallet['Symbol'] == "BTC") {
 
-                    $btc_balance +=  $wallet['free'];
-                    $return['btc']['balance'] = $wallet['free'] + $wallet['locked'];
-                    $return['btc']['available'] = $wallet['free'];
-                    $return['btc']['locked'] = $wallet['locked'];
+                    $btc_balance +=  $wallet['Total'];
+                    $return['btc']['balance'] = $wallet['Available'] + $wallet['Unconfirmed'];
+                    $return['btc']['available'] = $wallet['Available'];
+                    $return['btc']['locked'] = $wallet['Unconfirmed'];
                     $return['btc']['usd_value'] = $return['btc']['balance'] * $btc_usd;
                     $return['btc']['gbp_value'] = number_format($return['btc']['usd_value'] / env("USD_GBP_RATE"), 2);
 
@@ -165,12 +162,12 @@ class BinanceExchange {
 
                     foreach($ticker as $market) {
 
-                        if($market['symbol'] == $wallet['asset']."BTC") {
+                    if($market['Label'] == $wallet['Symbol']."/BTC") {
 
-                            $total = $wallet['free'] + $wallet['locked'];
+                            $total = $wallet['Total'];
 
                             //Calculate the BTC value of this coin and add it to the balance
-                            $value = $total * $market['price'];
+                            $value = $total * $market['LastPrice'];
 
                             $alts_btc_value += $value;
 
@@ -178,10 +175,10 @@ class BinanceExchange {
                             if($inc_zero || $value > 0.0001) {
 
                                 $asset = array();
-                                $asset['code'] = $wallet['asset'];
+                                $asset['code'] = $wallet['Symbol'];
                                 $asset['balance'] = $total;
-                                $asset['available'] = $wallet['free'];
-                                $asset['locked'] = $wallet['locked'];
+                                $asset['available'] = $wallet['Available'];
+                                $asset['locked'] = $wallet['Unconfirmed'];
                                 $asset['btc_value'] = round($value, 8);
                                 $asset['usd_value'] = $value * $btc_usd;
                                 $asset['gbp_value'] = number_format($asset['usd_value'] / env("USD_GBP_RATE"), 2);
@@ -202,6 +199,8 @@ class BinanceExchange {
 	}
 
 
+    /*** PUBLIC API CALLS **/
+
     /** getTicker()
     Get all the BTC markets available on this exchange with prices
     **/
@@ -211,26 +210,24 @@ class BinanceExchange {
         //The ticker info to return
         $ticker = array();
 
-        $bapi = new BinanceAPI();
+        $bapi = new CryptopiaAPI();
         $bapi->setAPI($this->api_key, $this->api_secret);
 
-        $markets = $bapi->getTicker();
+        $markets = $bapi->getTicker("BTC");
 
-         //find the BTCUSD ticker
-        foreach($markets as $market) {
-            if($market['symbol'] == "BTCUSDT") {
-                $btc_usd = $market['price'];
-            }
-        }
+         //find the BTCUSD price
+        $coin = Coin::with("latestCoinprice")->where("code", "BTC")->first();
+        $btc_usd = $coin->latestCoinprice->usd_price;
 
-        //Loop through markets, find any of my coins and save the latest price to DB
+        //Loop through markets and return in standardised fashion
         foreach($markets as $market) {
-            $base = substr($market['symbol'], strlen($market['symbol'])-3, 3);
-            $code = substr($market['symbol'], 0, strlen($market['symbol'])-3);
+            $base = "BTC";
+            $arr = explode("/", $market['Label']);
+            $code = $arr[0];
 
             if($base == "BTC") {
                 
-                $price_info = array("code" => $code, "btc_price"=>$market['price'], "usd_price" => $market['price'] * $btc_usd, "gbp_price" => $market['price'] * $btc_usd / env("USD_GBP_RATE"));
+                $price_info = array("code" => $code, "btc_price"=>$market['LastPrice'], "usd_price" => $market['LastPrice'] * $btc_usd, "gbp_price" => $market['LastPrice'] * $btc_usd / env("USD_GBP_RATE"));
                   
                 $ticker[] = $price_info;
    
@@ -244,19 +241,15 @@ class BinanceExchange {
 
 
     //Return an array of all tradeable assets on the exchange
-    //Got to use the market pairs data as no currency list for binance api
     function getAssets() {
 
-        $assets = BinanceAPIFacade::getMarkets();
+        $assets = CryptopiaAPIFacade::getCurrencies();
         $return =array();
-      
         foreach($assets as $result) {
-            if($result['quoteAsset'] == "BTC") {
-                $row = array();
-                $row['code'] = $result['baseAsset'];
-                $row['name'] = $result['baseAsset'];
-                $return[] = $row;
-            }
+            $row = array();
+            $row['code'] = $result['Symbol'];
+            $row['name'] = $result['Name'];
+            $return[] = $row;
         }
 
         return $return;
@@ -265,16 +258,16 @@ class BinanceExchange {
       //Return an array of all tradeable pairs on the exchange
     function getMarkets() {
 
-        $markets = BinanceAPIFacade::getMarkets();
+        $markets = CryptopiaAPIFacade::getAssetPairs();
         $return =array();
 
         foreach($markets as $result) {
             //only allow BTC traded coins in here
-            if($result['quoteAsset'] == "BTC") {
+            if($result['BaseSymbol'] == "BTC") {
                 $row = array();
-                $row['market_code'] = $result['symbol'];
-                $row['base_code'] = $result['baseAsset'];
-                $row['trade_code'] = $result['quoteAsset'];
+                $row['market_code'] = $result['Label'];
+                $row['base_code'] = $result['Symbol'];
+                $row['trade_code'] = $result['BaseSymbol'];
                 $return[] = $row;
             }
         }
@@ -283,22 +276,12 @@ class BinanceExchange {
 
     }
 
-
-    //get the btc usd market & gbp price as well
+    //get the btc usd market & gbp price as well - isnt one!
     function getBTCMarket() {
 
-        $bapi = new BinanceAPI();
-        $bapi->setAPI($this->api_key, $this->api_secret);
-
-        $markets = $bapi->getTicker();
-
-         //find the BTCUSD ticker
-        foreach($markets as $market) {
-            if($market['symbol'] == "BTCUSDT") {
-                 $price_info = array("code" => "BTC",  "usd_price" => $market['price'] , "gbp_price" => $market['price'] / env("USD_GBP_RATE"));
-                return $price_info;
-            }
-        }
+        $coin = Coin::with("latestCoinprice")->where("code", "BTC")->first();
+        $price_info = array("code" => "BTC",  "usd_price" => $coin->latestCoinprice->usd_price , "gbp_price" => $coin->latestCoinprice->gbp_price);
+        return $price_info;
 
     }
 
