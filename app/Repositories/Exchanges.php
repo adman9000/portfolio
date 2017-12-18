@@ -13,6 +13,7 @@ use App\Modules\Portfolio\ExchangeCoin;
 use App\Modules\Portfolio\UserValue;
 use App\Modules\Portfolio\Alert;
 use App\Modules\Portfolio\Wallet;
+use App\Modules\Portfolio\WalletValue;
 use App\User;
 use App\Notifications\Trade;
 use adman9000\kraken\KrakenAPIFacade;
@@ -48,6 +49,9 @@ class Exchanges {
 
         //Get latest prices from exchanges
         $this->saveExchangePrices();
+
+        //Update users wallet values
+        $this->calculateWalletValues();
 
         //Update any incomplete orders on any exchange. TODO
         //$this->checkForCompletedOrders();
@@ -112,6 +116,50 @@ class Exchanges {
         }
 
 
+    }
+
+    /** calculateWalletValues()
+     * Called every 5 minutes, updates values of users wallets
+     **/
+    function calculateWalletValues() {
+
+        //Get all users with their wallets
+        $users = User::with("wallets")->get();
+
+
+        foreach($users as $user) {
+
+            foreach($user->wallets as $wallet) {
+
+                //Get latest coin price data
+                $coin = Coin::with("latestCoinprice")->find($wallet->coin_id);
+
+                //create the data array for the wallet value record
+                $data = [
+                    'user_id' => $user->id,
+                    'coin_id' => $coin->id,
+                    'wallet_id' => $wallet->id,
+                    'balance' => $wallet->balance,
+                    'btc_price' => $coin->latestCoinprice->btc_price,
+                    'usd_price' => $coin->latestCoinprice->usd_price,
+                    'gbp_price' => $coin->latestCoinprice->gbp_price,
+                    'btc_value' => $wallet->balance * $coin->latestCoinprice->btc_price,
+                    'usd_value' => $wallet->balance * $coin->latestCoinprice->usd_price,
+                    'gbp_value' => $wallet->balance * $coin->latestCoinprice->gbp_price
+                ];
+
+                //Create the value record for a permanent snapshot
+                WalletValue::create($data);
+
+                //update the wallet record
+                unset($data['wallet_id']);
+                unset($data['btc_price']);
+                unset($data['usd_price']);
+                unset($data['gbp_price']);
+                $wallet->update($data);
+
+            }
+        }
     }
 
 

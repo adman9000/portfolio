@@ -52,9 +52,9 @@ Route::get('/cmc', function(){
 		//$exchange->setupCoins();
 
 		$exchanges = new Exchanges();
-		//$exchanges->saveCMCPrices();
-        //$exchanges->saveExchangePrices();
-
+		$exchanges->saveCMCPrices();
+       //$exchanges->saveExchangePrices();
+		$exchanges->calculateWalletValues();
 		//$exchanges->saveExchangePrices();
 		//$exchange->setupCoins();
 		//$exchanges->getAccountStats();

@@ -56,13 +56,18 @@ class DashboardController extends Controller
           $wallet->load("coin");
 
           if(!isset($assets[$wallet->coin_id])) {
+
+              $wallet1HourAgo = $wallet->value1HourAgo();
+              $wallet1DayAgo = $wallet->value1DayAgo();
+              $wallet1WeekAgo = $wallet->value1WeekAgo();
+
               $assets[$wallet->coin_id] = array();
               $assets[$wallet->coin_id]['code'] = $wallet->coin->code;
               $assets[$wallet->coin_id]['gbp_value'] =0;
               $assets[$wallet->coin_id]['balance'] =0;
-              $assets[$wallet->coin_id]['gbp_value_1_hour'] =0;
-              $assets[$wallet->coin_id]['gbp_value_1_day'] =0;
-              $assets[$wallet->coin_id]['gbp_value_1_week'] =0;
+              $assets[$wallet->coin_id]['gbp_value_1_hour'] = $wallet1HourAgo ? $wallet1HourAgo->gbp_value : 0;
+              $assets[$wallet->coin_id]['gbp_value_1_day'] = $wallet1DayAgo ? $wallet1DayAgo->gbp_value : 0;
+              $assets[$wallet->coin_id]['gbp_value_1_week'] = $wallet1WeekAgo ? $wallet1WeekAgo->gbp_value : 0;
           }
 
            $assets[$wallet->coin_id]['balance'] += $wallet->balance;
