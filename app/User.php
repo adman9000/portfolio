@@ -67,6 +67,13 @@ class User extends Authenticatable
 
     }
 
+    public function alerts() {
+
+        return $this->hasMany('App\Modules\Portfolio\Alert');
+
+    }
+
+
     public function transactions() {
         return $this->hasMany('App\Modules\Portfolio\Transaction');
     }

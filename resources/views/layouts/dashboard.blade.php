@@ -44,6 +44,8 @@
                         <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
                         <li><a href="{{ route('coins') }}">Coins</a></li>
                         <li><a href="{{ route('exchanges') }}">Exchanges</a></li>
+                        <li><a href="{{ route('wallets') }}">Wallets</a></li>
+                        <li><a href="{{ route('alerts') }}">Alerts</a></li>
                          <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     Charts <span class="caret"></span>

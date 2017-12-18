@@ -53,14 +53,15 @@ Route::get('/cmc', function(){
 
 		$exchanges = new Exchanges();
 		$exchanges->saveCMCPrices();
+		$exchanges->userAlerts();
        //$exchanges->saveExchangePrices();
-		$exchanges->calculateWalletValues();
+		//$exchanges->calculateWalletValues();
 		//$exchanges->saveExchangePrices();
 		//$exchange->setupCoins();
 		//$exchanges->getAccountStats();
 		//$exchanges->saveCMCPrices();
 		//$exchanges->saveExchangePrices();
-		$exchanges->calculatePortfolios();
+		//$exchanges->calculatePortfolios();
 	});
 
 
@@ -133,6 +134,16 @@ Route::prefix('dashboard')->group(function() {
 	Route::post('/wallets', 'Dashboard\WalletController@store'); //Submit new
 	Route::patch('/wallets/{wallet}', 'Dashboard\WalletController@update'); //Submit edit
 	Route::delete('/wallets/{wallet}', 'Dashboard\WalletController@destroy'); //Submit delete
+
+
+	//alerts
+	Route::get('/alerts', 'Dashboard\AlertController@index')->name('alerts'); //view all
+	Route::get('/alerts/create', 'Dashboard\AlertController@create'); // create form
+	Route::get('/alerts/{alert}/edit', 'Dashboard\AlertController@edit'); //edit form
+	Route::get('/alerts/{alert}', 'Dashboard\AlertController@show'); //view
+	Route::post('/alerts', 'Dashboard\AlertController@store'); //Submit new
+	Route::patch('/alerts/{alert}', 'Dashboard\AlertController@update'); //Submit edit
+	Route::delete('/alerts/{alert}', 'Dashboard\AlertController@destroy'); //Submit delete
 
 
 	//Exchanges

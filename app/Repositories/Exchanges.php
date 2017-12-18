@@ -313,20 +313,43 @@ class Exchanges {
                 if($ucoin->coin_id == $alert->coin_id)
                     $coin_value += $ucoin->gbp_value;
             }
+            $alert->user->load('wallets');
+            foreach($alert->user->wallets as $wallet) {
+                if($wallet->coin_id == $alert->coin_id)
+                    $coin_value += $wallet->gbp_value;
+            }
 
-            if($coin_value >= $alert->gbp_max_value) {
+            $coin_price = $alert->coin->latestCoinprice->gbp_price;
 
-                //Do greater than alert
-                //Send latest value to user
-                //event(new PriceEvent());
+            if( ($alert->gbp_max_value>0) && ($coin_value >= $alert->gbp_max_value)) {
+
+                //Value greater than
                 $alert->user->notify(new PriceAlert($alert->coin->code." value above £".$alert->gbp_max_value));
 
                 //mark as triggered
                 Alert::where("id", $alert->id)->update(["triggered" => 1]);
             }
-            else if($coin_value <= $alert->gbp_min_value) {
-                //Do less than alert
+            else if(($alert->gbp_min_value>0) && ($coin_value <= $alert->gbp_min_value)) {
+                
+                 //Value less than
                 $alert->user->notify(new PriceAlert($alert->coin->code." value below £".$alert->gbp_max_value));
+
+                //mark as triggered
+                Alert::where("id", $alert->id)->update(["triggered" => 1]);
+            }
+
+            else if(($alert->gbp_max_price>0) && ($coin_price >= $alert->gbp_max_price)) {
+
+                //Value greater than
+                $alert->user->notify(new PriceAlert($alert->coin->code." price above £".$alert->gbp_max_price));
+
+                //mark as triggered
+                Alert::where("id", $alert->id)->update(["triggered" => 1]);
+            }
+            else if(($alert->gbp_min_price>0) && ($coin_price <= $alert->gbp_min_price)) {
+                
+                 //Value less than
+                $alert->user->notify(new PriceAlert($alert->coin->code." price below £".$alert->gbp_min_price));
 
                 //mark as triggered
                 Alert::where("id", $alert->id)->update(["triggered" => 1]);
