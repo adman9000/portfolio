@@ -31,6 +31,7 @@
 					</div>
 
 			
+	<hr />
 
 					 <div class='form-group'>
 						<label>Minimum GBP price</label>
@@ -39,21 +40,24 @@
 
 
 					 <div class='form-group'>
-						<label>Minimum GBP value</label>
-						<input type='text' name='gbp_min_value' class='form-control' />
+						<label>Maximum GBP price</label>
+						<input type='text' name='gbp_max_price' class='form-control'  />
 					</div>
 
+					<hr />
 
 					 <div class='form-group'>
-						<label>Maximum GBP price</label>
-						<input type='text' name='gbp_max_price' class='form-control' />
+						<label>Minimum GBP value</label>
+						<input type='text' name='gbp_min_value' class='form-control'  />
 					</div>
+
 
 
 					 <div class='form-group'>
 						<label>Maximum GBP value</label>
-						<input type='text' name='gbp_max_value' class='form-control' />
+						<input type='text' name='gbp_max_value' class='form-control'  />
 					</div>
+
 
 					<div class='form-group'>
 						<input type='submit' value='Submit' class='btn btn-primary' />
