@@ -47,11 +47,12 @@ class Exchanges {
         //Get latest prices from Coinmarketcap
         $this->saveCMCPrices();
 
+        //Update users wallet values
+        $this->calculateWalletValues();
+        
         //Get latest prices from exchanges
         $this->saveExchangePrices();
 
-        //Update users wallet values
-        $this->calculateWalletValues();
 
         //Update any incomplete orders on any exchange. TODO
         //$this->checkForCompletedOrders();
