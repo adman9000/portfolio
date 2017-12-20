@@ -1,3 +1,9 @@
+
+$(document).ready(function() {
+
+	$(".datatable").DataTable();
+})
+
 //Ajax loaded modal popup using content from the href and wrapping in modal code
 	$("body").on("click", '[data-toggle="modal-ajax"]', function(e) {
 		e.preventDefault();

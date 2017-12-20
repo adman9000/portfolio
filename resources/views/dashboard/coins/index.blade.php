@@ -22,7 +22,7 @@
 						<input type="text" class="form-control" placeholder="Search Coins" ng-model="searchCoins">
 						</div></div></div>
 
-						<table class='table table-bordered table-striped table-condensed'>
+						<table class='table table-bordered table-striped table-condensed datatable'>
 							<thead><tr>
 
 							<th>Num</th>

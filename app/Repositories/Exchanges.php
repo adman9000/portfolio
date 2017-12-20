@@ -193,7 +193,7 @@ class Exchanges {
                     $price_info = array("coin_id"=>$coin->id, "btc_price"=>$market['price_btc'], "usd_price"=>$market['price_usd'], "gbp_price"=>$market['price_gbp'], "current_supply"=>$market['total_supply']);
                    
                     $price = CoinPrice::create($price_info);
-                    File::append($log_file, "Price saved for ".$coin->code);
+                    File::append($log_file, "Price saved for ".$coin->code."\n");
                     $price_added = true;
                 }
             }
@@ -207,7 +207,7 @@ class Exchanges {
                 //Also add the latest price record
                 $price_info = array("coin_id"=>$coin->id, "btc_price"=>$market['price_btc'], "usd_price"=>$market['price_usd'], "gbp_price"=>$market['price_gbp'], "current_supply"=>$market['total_supply']);
                 $price = CoinPrice::create($price_info);
-                File::append($log_file, "Coin added ".$coin->code);
+                File::append($log_file, "Coin added ".$coin->code."\n");
             }
         }
 
@@ -246,6 +246,8 @@ class Exchanges {
 
         }
 
+
+        File::append($log_file, "---------------------------- saveCMCPrices() complete -----------------------------"."\n\n");
     }
 
 
@@ -257,7 +259,7 @@ class Exchanges {
 
         $log_file = storage_path("logs/exchanges.log");
         File::append($log_file, "--------------------------------- ".date("d/m/Y G:i")."----------------------------------"."\n");
-        File::append($log_file, "--------------------------------- retrievePrices() ----------------------------------"."\n");
+        File::append($log_file, "--------------------------------- saveExchangePrices() ----------------------------------"."\n");
 
         //Get all exchanges in the database
         $exchanges = Exchange::all();
@@ -266,7 +268,7 @@ class Exchanges {
         foreach($exchanges as $myexchange) {
            // $myexchange->setupCoins();
             $myexchange->retrievePrices();
-            File::append($log_file, "Prices saved for ".$myexchange->name);
+            File::append($log_file, "Prices saved for ".$myexchange->name."\n");
         }
 
 
@@ -292,6 +294,8 @@ class Exchanges {
                
             }
         }
+
+        File::append($log_file, "---------------------------- saveExchangePrices() complete -----------------------------"."\n");
 
     }
 

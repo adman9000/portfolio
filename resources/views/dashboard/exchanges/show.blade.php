@@ -34,7 +34,7 @@
 
                 <p>Buy & sell crypto on {{ $exchange['title'] }}</p>
 
-                <table class='table table-bordered'>
+                <table class='table table-bordered datatable'>
                 <thead><tr><th>Code</th><th>BTC Price</th><th>GBP Price</th><th>Balance</th><th>Available</th><th>Locked</th><th>BTC Value</th><th>GBP Value</th> @can('trade')<th>Sell</th>@endcan </tr></thead>
                 <tbody>
 
@@ -63,8 +63,14 @@
 		                		<input type='hidden' name='action' value='sell'>
 		                		<input type='hidden' name='coin_1' value='{{ $asset['code'] }}' />
 		                		<input type='hidden' name='coin_2' value='BTC' />
-		                		<input type='number' name='volume' value='{{ $asset['balance'] }}' step='any' class='form-control' />
-		                		<input type='submit' class='btn btn-sm btn-warning' value='Sell'>
+                        <div class='form-group'>
+                          <div  class='input-group'>
+		                		    <input type='number' name='volume' value='{{ $asset['balance'] }}' step='any' class='form-control' />
+		                		    <span class='input-group-btn'>
+                              <input type='submit' class='btn btn-warning' value='Sell'>
+                            </span>
+                          </div >
+                        </div>
 		                		</form>
 
 
