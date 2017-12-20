@@ -217,11 +217,15 @@ class Exchanges {
 
         foreach($coins as $coin) {
             $prices = array();
-            $prices['latest']['btc'] = $coin->latestCoinprice->btc_price;
-            $prices['latest']['usd'] = $coin->latestCoinprice->usd_price;
-            $prices['latest']['gbp'] = $coin->latestCoinprice->gbp_price;
-            $coin->prices = json_encode($prices);
-            $coin->save();
+            if($coin->latestCoinprice) {
+                $prices['latest']['btc'] = $coin->latestCoinprice->btc_price;
+                $prices['latest']['usd'] = $coin->latestCoinprice->usd_price;
+                $prices['latest']['gbp'] = $coin->latestCoinprice->gbp_price;
+                $coin->prices = json_encode($prices);
+                $coin->save();
+            }
+            else 
+                File::append($log_file, "No latest price found for ".$coin->code."\n");
         }
 
 
@@ -269,7 +273,7 @@ class Exchanges {
         foreach($exchanges as $myexchange) {
            // $myexchange->setupCoins();
             $myexchange->retrievePrices();
-            File::append($log_file, "Prices saved for ".$myexchange->name."\n");
+            File::append($log_file, "Prices saved for ".$myexchange->title."\n");
         }
 
 
