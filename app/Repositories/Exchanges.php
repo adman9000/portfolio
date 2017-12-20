@@ -235,9 +235,9 @@ class Exchanges {
         foreach($wallets as $wallet) {
 
 
-             $coin = Coin::with('latestCoinprice')->find($wallet->coin_id);
+            $coin = Coin::with('latestCoinprice')->find($wallet->coin_id);
             
-            if($coin) {
+            if(($coin) && ($coin->latestCoinprice)){
                 $btc_price = $coin->latestCoinprice['btc_price'];
                 $usd_price = $coin->latestCoinprice['usd_price'];
                 $gbp_price = $coin->latestCoinprice['gbp_price'];
@@ -245,9 +245,10 @@ class Exchanges {
                 $wallet->btc_value = $wallet->balance * $btc_price;
                 $wallet->usd_value = $wallet->balance * $usd_price;
                 $wallet->gbp_value = $wallet->balance * $gbp_price;
-            }
+            
 
-            $wallet->save();
+                $wallet->save();
+            }
 
         }
 
