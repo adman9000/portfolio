@@ -61,6 +61,7 @@
 		                		<form method='post' action='' class='form form-inline'>
 		                		{{csrf_field()}}
 		                		<input type='hidden' name='action' value='sell'>
+                        <input type='hidden' name='exchange_id' value='{{ $exchange['id'] }}'>
 		                		<input type='hidden' name='coin_1' value='{{ $asset['code'] }}' />
 		                		<input type='hidden' name='coin_2' value='BTC' />
                         <div class='form-group'>

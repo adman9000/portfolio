@@ -66,6 +66,10 @@ class ExchangeController extends Controller
     }
 
 
+    /** show()
+     * @param $name - name of exchange to display
+     * @return view
+    **/
     public function show($name, Request $request) {
 
 
@@ -106,6 +110,13 @@ class ExchangeController extends Controller
 
       return view("dashboard.exchanges.show", $data);
     }
+
+
+
+
+
+    //////////Maybe not used any more
+
 
     /** getPrices
     * Get latest prices for all my coins from relevant exchanges
@@ -150,7 +161,7 @@ class ExchangeController extends Controller
 
     /** OLD VERSION 
     * Functions for showing bittrex & kraken pages
-    **/
+    **
 
     public function kraken()
     {
@@ -221,7 +232,7 @@ class ExchangeController extends Controller
      * Show Bittrex
      *
      * @return \Illuminate\Http\Response
-     */
+     *
     public function bittrex()
     {
         //create data array
@@ -288,7 +299,7 @@ class ExchangeController extends Controller
         return view("exchanges.show", $data);
     }
 
-
+**/
 
 
 }

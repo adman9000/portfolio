@@ -93,6 +93,19 @@ class User extends Authenticatable
         return $this->hasMany('App\Modules\Portfolio\UserValue')->where("created_at", ">=", Carbon::now()->subDay());
 
     }
+
+    public function userValues1Week() {
+
+        return $this->hasMany('App\Modules\Portfolio\UserValue')->where("created_at", ">=", Carbon::now()->subWeek());
+
+    }
+
+    public function userValues1Month() {
+
+        return $this->hasMany('App\Modules\Portfolio\UserValue')->where("created_at", ">=", Carbon::now()->subMonth());
+
+    }
+
      public function portfolioValue() {
 
         return $this->hasOne('App\Modules\Portfolio\UserValue')->orderBy("created_at", "DESC")->first();

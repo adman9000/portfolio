@@ -166,6 +166,60 @@ class DashboardController extends Controller
     }
 
 
+    /** ajax()
+     * All ajax calls go here
+    **/
+    public function ajax(Request $request, $view=false, $id=false) {
+
+      switch($view) {
+
+        case "portfolio" :
+
+          $user = Auth::user();
+          
+          switch(request('period')) {
+            case "24hour" :
+            $user->load('userValues1Day');
+            $chart_data = $user->userValues1Day;
+              break;
+            case "7day" :
+            $user->load('userValues1Week');
+            $chart_data = $user->userValues1Week;
+              break;
+            case "1month" :
+            $user->load('userValues1Month');
+            $chart_data = $user->userValues1Month;
+              break;
+            }
+
+          $data = array();
+          $data['chart'] = array();
+          foreach($chart_data as $valuation) {
+              switch (request('type')) {
+                case "exchange" :
+                   $data['chart'][date("d G:i", strtotime($valuation->created_at))] = $valuation->exchanges_gbp_value;
+                  break;
+
+                case "wallet" :
+                   $data['chart'][date("d G:i", strtotime($valuation->created_at))] = $valuation->wallets_gbp_value;
+                  break;
+
+                default : 
+                   $data['chart'][date("d G:i", strtotime($valuation->created_at))] = $valuation->gbp_value;
+                  break;
+              }
+          }
+
+          echo json_encode($data);;
+          break;
+
+      }
+
+      die();
+
+    }
+
+
       /** run()
      * All non ajax calls to this controller pass though this function
      * @param  \Illuminate\Http\Request  $request

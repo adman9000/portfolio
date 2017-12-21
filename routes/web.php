@@ -169,6 +169,10 @@ Route::prefix('dashboard')->group(function() {
 		$exchange->checkForCompletedOrders();
 	});
 
+	Route::post('/exchanges/{exchange}', 'Dashboard\ExchangeController@actions'); //view all
+
+	Route::any('/ajax/{view?}/{id?}', "Dashboard\DashboardController@ajax");
+	
 	//dashboard fallback
 	Route::any("/{view?}/{id?}", "Dashboard\DashboardController@run");
 

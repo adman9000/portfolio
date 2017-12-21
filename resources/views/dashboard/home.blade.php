@@ -60,7 +60,18 @@
 
                             <div class='well'>
 
-                                <h4>Portfolio Gains Line Chart</h4>
+                                <h4 class='pull-left'>Portfolio Gains Line Chart</h4>
+                                <div class="btn-group pull-right">
+                                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        View <span class="caret"></span>
+                                      </button>
+                                    <ul class="dropdown-menu">
+                                            <li><a href="#" class='update-graph' data-period='24hour'>24 Hour</a></li>
+                                            <li><a href="#" class='update-graph' data-period='7day' >7 Day</a></li>
+                                            <li><a href="#" class='update-graph' data-period='1month' >1 Month</a></li>
+                                    </ul>
+                                </div>
+                                <div class='clearfix'></div>
 
                                 <div id='chart-3'></div>
 
@@ -274,6 +285,52 @@
 
 
       }
+
+
+      //update the line graph
+      $("document").ready(function() {
+
+        $(".update-graph").click(function(e) {
+            e.preventDefault();
+
+            var period = $(this).data("period");
+            $.ajax( { url : "/dashboard/ajax/portfolio?type=<?=request('type')?>&period="+period, success : function(data) {
+
+                data = $.parseJSON(data);
+                data = data['chart'];
+                console.log(data);
+
+                var data_array = new Array();;
+
+                data_array.push(['Date', 'Value']);
+
+                $.each(data, function(index, val) {
+                    console.log(val);
+                    data_array.push([index, val]);
+
+                })
+
+                console.log(data_array);
+
+                chart_data = new google.visualization.arrayToDataTable(data_array);
+
+                // Set chart options
+                chart_options = {'title':'24 Hour Portfolio value (GBP)',
+                               'width':'90%',
+                               height: 400,
+                               interpolateNulls: true
+                           };
+
+                // Instantiate and draw our chart, passing in some options.
+                chart = new google.visualization.LineChart(document.getElementById('chart-3'));
+                chart.draw(chart_data, chart_options);
+
+
+            }});
+
+        });
+
+      });
 
     </script>
 
