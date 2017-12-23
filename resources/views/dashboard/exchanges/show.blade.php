@@ -61,9 +61,7 @@
 		                		<form method='post' action='' class='form form-inline'>
 		                		{{csrf_field()}}
 		                		<input type='hidden' name='action' value='sell'>
-                        <input type='hidden' name='exchange_id' value='{{ $exchange['id'] }}'>
-		                		<input type='hidden' name='coin_1' value='{{ $asset['code'] }}' />
-		                		<input type='hidden' name='coin_2' value='BTC' />
+		                		<input type='hidden' name='user_coin_id' value='{{ $asset['user_coin_id'] }}' />
                         <div class='form-group'>
                           <div  class='input-group'>
 		                		    <input type='number' name='volume' value='{{ $asset['balance'] }}' step='any' class='form-control' />
@@ -73,6 +71,20 @@
                           </div >
                         </div>
 		                		</form>
+
+<form method='post' action='' class='form form-inline'>
+                        {{csrf_field()}}
+                        <input type='hidden' name='action' value='buy'>
+                        <input type='hidden' name='user_coin_id' value='{{ $asset['user_coin_id'] }}' />
+                        <div class='form-group'>
+                          <div  class='input-group'>
+                            <input type='number' name='volume' value='' step='any' class='form-control' />
+                            <span class='input-group-btn'>
+                              <input type='submit' class='btn btn-warning' value='Buy'>
+                            </span>
+                          </div >
+                        </div>
+                        </form>
 
 
 	                	</td>

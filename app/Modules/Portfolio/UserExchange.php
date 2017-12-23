@@ -70,11 +70,12 @@ class UserExchange extends Model
 
         //BTC is done different
         $coin = ExchangeCoin::where('code',"BTC")->where('exchange_id', $this->exchange_id)->get()->first();
+
         if($balances['btc']['balance']>0) {
             if($coin) {
                 $ucoin = UserCoin::updateOrCreate(
                    [ 'exchange_coin_id'=>$coin->id, 'user_id'=>$this->user_id], 
-                    ['coin_id' => $coin->coin_id, 'exchange_id'=> $coin->exchange_id, 'balance' => $balances['btc']['balance'], 'available' => $balances['btc']['available'], 'locked' => $balances['btc']['locked']]);
+                    ['coin_id' => $coin->coin_id, 'user_exchange_id'=> $this->id, 'balance' => $balances['btc']['balance'], 'available' => $balances['btc']['available'], 'locked' => $balances['btc']['locked']]);
             }
         }
         else {
@@ -96,7 +97,7 @@ class UserExchange extends Model
                     
                     $ucoin = UserCoin::updateOrCreate(
                        [ 'exchange_coin_id'=>$coin->id, 'user_id'=>$this->user_id], 
-                        ['coin_id' => $coin->coin_id, 'exchange_id'=> $coin->exchange_id, 'balance' => $asset['balance'], 'available' => $asset['available'], 'locked' => $asset['locked']]);
+                        ['coin_id' => $coin->coin_id, 'user_exchange_id'=> $this->id, 'balance' => $asset['balance'], 'available' => $asset['available'], 'locked' => $asset['locked']]);
                 }
             }
             else {

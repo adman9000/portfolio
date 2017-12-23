@@ -302,4 +302,50 @@ class BinanceExchange {
 
     }
 
+
+
+    function marketSell($symbol, $quantity) {
+
+        $bapi = new BinanceAPI();
+        $bapi->setAPI($this->api_key, $this->api_secret);
+
+
+        //Make sure quantity is within step limits
+
+        $markets = $bapi->getMarkets();
+
+        foreach($markets as $market) {
+            if(($market['baseAsset'] == $symbol) && ($market['quoteAsset'] == "BTC")) {
+                $step = $market['filters'][1]['stepSize'];
+            }
+        }
+
+        $quantity = floor($quantity/$step) * $step;
+
+        return $bapi->marketSell($symbol."BTC", $quantity);
+
+    }
+
+    function marketBuy($symbol, $quantity) {
+
+        $bapi = new BinanceAPI();
+        $bapi->setAPI($this->api_key, $this->api_secret);
+
+
+        //Make sure quantity is within step limits
+
+        $markets = $bapi->getMarkets();
+
+        foreach($markets as $market) {
+            if(($market['baseAsset'] == $symbol) && ($market['quoteAsset'] == "BTC")) {
+                $step = $market['filters'][1]['stepSize'];
+            }
+        }
+
+        $quantity = floor($quantity/$step) * $step;
+
+        return $bapi->marketBuy($symbol."BTC", $quantity);
+
+    }
+
 }

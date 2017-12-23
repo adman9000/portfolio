@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Portfolio\Exchange;
 use App\Modules\Portfolio\Coin;
 use App\Modules\Portfolio\CoinPrice;
+use App\Modules\Portfolio\UserCoin;
 use adman9000\kraken\KrakenAPIFacade;
 use adman9000\Bittrex\Bittrex;
 use App\Repositories\Exchanges;
@@ -96,6 +97,7 @@ class ExchangeController extends Controller
 
             if($ucoin->exchange_coin_id == $ecoin->id) {
 
+              $asset->user_coin_id = $ucoin->id;
               $asset->balance = $ucoin->balance;
               $asset->available = $ucoin->available;
               $asset->locked = $ucoin->locked;
@@ -112,7 +114,32 @@ class ExchangeController extends Controller
     }
 
 
+    /** actions()
+    *
+    * All extra actions - buying, selling etc
+    */
+    public function actions($name=false,  Request $request) {
 
+      $exchange = Exchange::where("slug", "=", $name)->first();
+      
+
+      switch(request('action')) {
+
+        case "sell" :
+          $usercoin = UserCoin::find(request('user_coin_id'));
+          $usercoin->marketSell(request('volume'));
+
+        break;
+
+          case "buy" :
+          $usercoin = UserCoin::find(request('user_coin_id'));
+          $usercoin->marketBuy(request('volume'));
+
+        break;
+      }
+
+      return $this->show($name, $request);
+    }
 
 
     //////////Maybe not used any more

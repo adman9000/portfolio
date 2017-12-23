@@ -20,6 +20,7 @@ use adman9000\coinmarketcap\CoinmarketcapAPIFacade;
 use App\Modules\Portfolio\Exchange;
 
 use App\Modules\Portfolio\UserExchange;
+use App\Modules\Portfolio\UserCoin;
 
 Auth::routes();
 
@@ -45,6 +46,21 @@ Route::get("/test", function() {
 //CMC
 Route::get('/cmc', function(){
 
+	$user_coins = UserCoin::all();
+
+	foreach($user_coins as $ucoin) {
+
+		$ucoin->load('exchangeCoin');
+
+		$exchange_id = $ucoin->exchangeCoin->exchange_id;
+		$user_id = $ucoin->user_id;
+
+		$user_exchange = UserExchange::where("exchange_id", $exchange_id)->where("user_id", $user_id)->first();
+
+		$ucoin->user_exchange_id = $user_exchange->id;
+		$ucoin->save();
+	}
+
 		//$exchange = Exchange::find(3);
 		//$exchange->setupCoins();
 
@@ -53,20 +69,20 @@ Route::get('/cmc', function(){
 
 		$exchanges = new Exchanges();
         //Get latest prices from Coinmarketcap
-       // $exchanges->saveCMCPrices();
+       // $exchanges->saveCMCPrices(); 
 
         //Update users wallet values
        // $exchanges->calculateWalletValues();
         
         //Get latest prices from exchanges
-        $exchanges->saveExchangePrices();
+        //$exchanges->saveExchangePrices();
 
 		//$exchanges->saveExchangePrices();
 		//$exchange->setupCoins();
 		//$exchanges->getAccountStats();
 		//$exchanges->saveCMCPrices();
 		//$exchanges->saveExchangePrices();
-		//$exchanges->calculatePortfolios();
+		$exchanges->calculatePortfolios();
 	});
 
 
@@ -156,7 +172,7 @@ Route::prefix('dashboard')->group(function() {
 	Route::get('/exchanges', 'Dashboard\ExchangeController@index')->name('exchanges'); //view all
 	Route::post('/exchanges', 'Dashboard\ExchangeController@index'); //view all
 
-	Route::any('/exchanges/{name}', 'Dashboard\ExchangeController@show'); //view all
+	Route::get('/exchanges/{name}', 'Dashboard\ExchangeController@show'); //view all
 
 
 	Route::get('/exchanges/getprices', 'Dashboard\ExchangeController@getPrices');
