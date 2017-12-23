@@ -2,6 +2,7 @@
 
 namespace App\Modules\Portfolio;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use App\Repositories\BittrexExchange;
 use App\Repositories\BinanceExchange;
@@ -122,9 +123,18 @@ class Exchange extends Model
 
                 //Find the coin in our database and link it to this exchange
                 foreach($coins as $coin) {
+                
                     if(($coin->code == $asset['code']) || (isset($asset['alt_code']) && ($coin->code == $asset['alt_code']))) {
-                    	$coin_info = array("coin_id"=>$coin->id, "exchange_id"=>$this->id, "code"=>$asset['code'], 'market_code'=>$market_code);
-                    	ExchangeCoin::firstOrCreate($coin_info);
+
+                    	$coin_info = array("coin_id"=>$coin->id, "exchange_id"=>$this->id, "code"=>$asset['code']);
+                        $values = array('market_code'=>$market_code);
+                        $instance = ExchangeCoin::where($coin_info);
+                        if ($instance->count() != 0) {
+                            DB::table('coin_exchange')->where($coin_info)->update($values);
+                            
+                        } else {
+                            $instance = ExchangeCoin::updateOrCreate($coin_info, $values);
+                        }
                     }
                 }
 

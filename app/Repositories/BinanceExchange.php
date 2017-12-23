@@ -304,7 +304,7 @@ class BinanceExchange {
 
 
 
-    function marketSell($symbol, $quantity) {
+    function marketSell($symbol, $quantity, $rate=false) {
 
         $bapi = new BinanceAPI();
         $bapi->setAPI($this->api_key, $this->api_secret);
@@ -322,11 +322,11 @@ class BinanceExchange {
 
         $quantity = floor($quantity/$step) * $step;
 
-        return $bapi->marketSell($symbol."BTC", $quantity);
+        return $bapi->marketSell($symbol, $quantity);
 
     }
 
-    function marketBuy($symbol, $quantity) {
+    function marketBuy($symbol, $quantity, $rate=false) {
 
         $bapi = new BinanceAPI();
         $bapi->setAPI($this->api_key, $this->api_secret);
@@ -344,7 +344,7 @@ class BinanceExchange {
 
         $quantity = floor($quantity/$step) * $step;
 
-        return $bapi->marketBuy($symbol."BTC", $quantity);
+        return $bapi->marketBuy($symbol, $quantity);
 
     }
 

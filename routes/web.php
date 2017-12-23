@@ -45,7 +45,7 @@ Route::get("/test", function() {
 
 //CMC
 Route::get('/cmc', function(){
-
+/*
 	$user_coins = UserCoin::all();
 
 	foreach($user_coins as $ucoin) {
@@ -60,9 +60,15 @@ Route::get('/cmc', function(){
 		$ucoin->user_exchange_id = $user_exchange->id;
 		$ucoin->save();
 	}
-
-		//$exchange = Exchange::find(3);
-		//$exchange->setupCoins();
+*/
+		$exchange = Exchange::find(1);
+		$exchange->setupCoins();
+		$exchange = Exchange::find(2);
+		$exchange->setupCoins();
+		$exchange = Exchange::find(3);
+		$exchange->setupCoins();
+		$exchange = Exchange::find(4);
+		$exchange->setupCoins();
 
 		//$exchange = Exchange::find(4);
 		//$exchange->setupCoins();
@@ -82,7 +88,7 @@ Route::get('/cmc', function(){
 		//$exchanges->getAccountStats();
 		//$exchanges->saveCMCPrices();
 		//$exchanges->saveExchangePrices();
-		$exchanges->calculatePortfolios();
+		//$exchanges->calculatePortfolios();
 	});
 
 

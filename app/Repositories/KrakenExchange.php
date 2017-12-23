@@ -238,4 +238,25 @@ class KrakenExchange {
 
     }
 
+
+        /** Cryptopia API doesn't allow market buy & sell so use limits & pass market price in **/
+
+    function marketSell($symbol, $quantity, $rate) {
+
+        $api = new KrakenAPI();
+        $api->setAPI($this->api_key, $this->api_secret);
+
+        return $api->limitSell($symbol, $quantity, $rate);
+
+    }
+
+    function marketBuy($symbol, $quantity, $rate) {
+
+        $api = new KrakenAPI();
+        $api->setAPI($this->api_key, $this->api_secret);
+
+        return $api->limitBuy($symbol, $quantity, $rate);
+
+    }
+
 }

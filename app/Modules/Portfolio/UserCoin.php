@@ -11,7 +11,7 @@ use App\User;
 class UserCoin extends Model
 {
     //
-    protected $fillable = ['coin_id','user_id','exchange_coin_id','balance','available','locked'];
+    protected $fillable = ['coin_id','user_id','exchange_coin_id','balance','available','locked', 'user_exchange_id'];
 
 
     protected $table = "coin_user";
@@ -26,7 +26,12 @@ class UserCoin extends Model
         $userExchange = $this->userExchange;
         $exchange_class = $userExchange->getExchangeClass();
 
-        return $exchange_class->marketSell($this->exchangeCoin->code, $quantity);
+        //Some exchanges don't do market trades through API so we have to send current price
+        $this->load("exchangeCoin");
+        //Knock off 1% to make sure we are below current market price so it will sell (usually)
+        $rate = $this->exchangeCoin->btc_price*0.99;
+
+        $exchange_class->marketSell($this->exchangeCoin->market_code, $quantity, $rate);
 
     }
 
@@ -35,7 +40,12 @@ class UserCoin extends Model
         $userExchange = $this->userExchange;
         $exchange_class = $userExchange->getExchangeClass();
 
-        return $exchange_class->marketBuy($this->exchangeCoin->code, $quantity);
+        //Some exchanges don't do market trades through API so we have to send current price
+        $this->load("exchangeCoin");
+        //Knock off 1% to make sure we are above current market price so it will buy (usually)
+        $rate = $this->exchangeCoin->btc_price*1.01;
+
+        $exchange_class->marketBuy($this->exchangeCoin->market_code, $quantity, $rate);
 
     }
 

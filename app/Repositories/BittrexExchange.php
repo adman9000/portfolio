@@ -199,6 +199,47 @@ class BittrexExchange {
 
 
 
+    //Return an array of all tradeable assets on the exchange
+    function getAssets() {
+
+         $bapi = new Client(config("bittrex.auth"), config("bittrex.urls"));
+         $assets = $bapi->getCurrencies();
+         
+        $return =array();
+      
+        foreach($assets['result'] as $result) {
+            $row = array();
+            $row['code'] = $result['Currency'];
+            $row['name'] = $result['CurrencyLong'];
+            $return[] = $row;
+        }
+
+        return $return;
+    }
+
+      //Return an array of all tradeable pairs on the exchange
+    function getMarkets() {
+
+        $bapi = new Client(config("bittrex.auth"), config("bittrex.urls"));
+        $bapi->setAPI($this->api_key, $this->api_secret);
+        $markets = $bapi->getMarketSummaries();
+        $return =array();
+
+        foreach($markets['result'] as $market) {
+            $arr = explode("-", $market['MarketName']);
+            $trade = $arr[0];
+            if($trade == "BTC") {
+                $row = array();
+                $row['market_code'] = $market['MarketName'];
+                $row['base_code'] = $arr[1];
+                $row['trade_code'] = $arr[0];
+                $return[] = $row;
+            }
+        }
+
+        return $return;
+
+    }
 
     /** getTicker()
     Get all the BTC markets available on this exchange with prices
@@ -249,6 +290,27 @@ class BittrexExchange {
         $market = $market['result'][0];
         $price_info = array("code" => "BTC",  "usd_price" => $market['Last'] , "gbp_price" => $market['Last'] / env("USD_GBP_RATE"));
                 return $price_info;
+
+    }
+
+
+        /** Bittrex API doesn't allow market buy & sell so use limits & pass market price in **/
+
+    function marketSell($symbol, $quantity, $rate) {
+
+        $api = new Client(config("bittrex.auth"), config("bittrex.urls"));
+        $api->setAPI($this->api_key, $this->api_secret);
+
+        return $api->sellLimit($symbol, $quantity, $rate);
+
+    }
+
+    function marketBuy($symbol, $quantity, $rate) {
+
+        $api = new Client(config("bittrex.auth"), config("bittrex.urls"));
+        $api->setAPI($this->api_key, $this->api_secret);
+
+        dd($api->buyLimit($symbol, $quantity, $rate));
 
     }
 }
