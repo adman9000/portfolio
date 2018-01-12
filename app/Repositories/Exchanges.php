@@ -118,7 +118,7 @@ class Exchanges {
             $data['usd_value'] = $data['exchanges_usd_value'] + $data['wallets_usd_value'];
             $data['gbp_value'] = $data['exchanges_gbp_value'] + $data['wallets_gbp_value'];
 
-            File::append($data['btc_value']);
+            File::append($log_file,$data['btc_value']);
 
             UserValue::create($data);
 
