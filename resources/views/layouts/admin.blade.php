@@ -32,6 +32,9 @@
                             <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{{ Auth::user()->name }}</strong>
                              </span> <span class="text-muted text-xs block">My Links <b class="caret"></b></span> </span> </a>
                             <ul class="dropdown-menu animated fadeIn m-t-xs">
+                                 @role('member')
+                                        <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                                    @endrole
                                 <li><a href="/admin/mydetails">My Details</a></li>
                                 <li><a href="{{ url('/logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">Logout</a></li>
                             </ul>

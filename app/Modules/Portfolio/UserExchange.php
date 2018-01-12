@@ -8,7 +8,7 @@ use App\User;
 class UserExchange extends Model
 {
     //
-    protected $fillable = [];
+    protected $guarded = [];
 
 
     protected $table = "users_exchanges";

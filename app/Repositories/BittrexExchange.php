@@ -310,7 +310,7 @@ class BittrexExchange {
         $api = new Client(config("bittrex.auth"), config("bittrex.urls"));
         $api->setAPI($this->api_key, $this->api_secret);
 
-        dd($api->buyLimit($symbol, $quantity, $rate));
+        return $api->buyLimit($symbol, $quantity, $rate);
 
     }
 }

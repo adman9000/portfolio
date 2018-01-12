@@ -168,7 +168,7 @@ class Exchanges {
 
 
     /** getBittrexPrices
-    ** called every 5 mins, saves bittrex prices to DB
+    ** called every 5 mins, saves CMC prices to DB
     **/
     function saveCMCPrices() {
 
@@ -202,8 +202,8 @@ class Exchanges {
                 }
             }
 
-            //If this coin is not already in our database and we are still in the top 100, add it
-            if((!$price_added) && ($i<=100)) {
+            //If this coin is not already in our database add it
+            if(!$price_added) {
                     
                 $coin_info = array("code"=>$base, "name"=>$market['name'], "max_supply"=>$market['max_supply']);
                 $coin = Coin::create($coin_info);
