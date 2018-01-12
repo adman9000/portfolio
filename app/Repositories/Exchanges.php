@@ -280,7 +280,7 @@ class Exchanges {
         File::append($log_file, "--------------------------------- saveExchangePrices() ----------------------------------"."\n");
 
         //Get all exchanges in the database
-        $exchanges = Exchange::all();
+        $exchanges = Exchange::all()->sortByDesc('id');
 
         //Loop through them and get the latest prices from each
         foreach($exchanges as $myexchange) {
