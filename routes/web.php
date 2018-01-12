@@ -45,6 +45,10 @@ Route::get("/test", function() {
 
 //CMC
 Route::get('/cmc', function(){
+
+	//$exchange = Exchange::find(3);
+	//	$exchange->retrievePrices();
+
 /*
 	$user_coins = UserCoin::all();
 
@@ -81,7 +85,7 @@ Route::get('/cmc', function(){
        // $exchanges->calculateWalletValues();
         
         //Get latest prices from exchanges
-        //$exchanges->saveExchangePrices();
+        $exchanges->saveExchangePrices();
 
 		//$exchanges->saveExchangePrices();
 		//$exchange->setupCoins();

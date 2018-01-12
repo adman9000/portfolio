@@ -286,31 +286,36 @@ class Exchanges {
         foreach($exchanges as $myexchange) {
            // $myexchange->setupCoins();
             $myexchange->retrievePrices();
+
             File::append($log_file, "Prices saved for ".$myexchange->title."\n");
-        }
+       
 
 
-        //Update the exchange coins records
-        $coins = ExchangeCoin::with("latestCoinprice")->get();
+            //Update the exchange coins records
+            $coins = ExchangeCoin::with("latestCoinprice")->where("exchange_id", $myexchange->id)->get();
 
 
-        foreach($coins as $coin) {
-            if($coin->latestCoinprice) {
-                //Pivot, so update with a query
-                DB::table('coin_exchange')->where('id', $coin->id)
-                ->update(['btc_price' => $coin->latestCoinprice->btc_price,
-                'usd_price' => $coin->latestCoinprice->usd_price,
-                'gbp_price' => $coin->latestCoinprice->gbp_price,
-                'updated_at' => date("Y-m-d G:i:s")
-                ]);
+            foreach($coins as $coin) {
+                if($coin->latestCoinprice) {
+                    //Pivot, so update with a query
+                    DB::table('coin_exchange')->where('id', $coin->id)
+                    ->update(['btc_price' => $coin->latestCoinprice->btc_price,
+                    'usd_price' => $coin->latestCoinprice->usd_price,
+                    'gbp_price' => $coin->latestCoinprice->gbp_price,
+                    'updated_at' => date("Y-m-d G:i:s")
+                    ]);
 
-                //Update all users coin values for this coin
-                DB::table('coin_user')->where('exchange_coin_id', $coin->id)
-                ->update(['gbp_value' => DB::raw($coin->latestCoinprice->gbp_price ." * `balance`"),
-                'updated_at' => date("Y-m-d G:i:s")
-                ]);
-               
+                    //Update all users coin values for this coin
+                    DB::table('coin_user')->where('exchange_coin_id', $coin->id)
+                    ->update(['gbp_value' => DB::raw($coin->latestCoinprice->gbp_price ." * `balance`"),
+                    'updated_at' => date("Y-m-d G:i:s")
+                    ]);
+                   
+                }
             }
+
+            File::append($log_file, "Coins saved for ".$myexchange->title."\n");
+
         }
 
         File::append($log_file, "---------------------------- saveExchangePrices() complete -----------------------------"."\n");
