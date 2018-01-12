@@ -99,29 +99,11 @@
            </tbody>
        </table>
 
-<? /*
-       <h3>BTC</h3>
-
-       <table class='table table-bordered'><tr><th>Balance</th><th>Available</th><th>Locked</th><th>GBP Value</th><th>Exchange</th></tr>
-       	<tr><td>{{ $stats['btc']['balance'] }}</td><td>{{ $stats['btc']['available'] }}</td><td>{{ $stats['btc']['locked'] }}</td><td>{{ $stats['btc']['gbp_value'] }}</td>
-       		<td>
-       		<form method='post' action='' class='form form-inline'>
-        		{{csrf_field()}}
-        		<input type='hidden' name='action' value='buy'>
-        		<input type='hidden' name='coin_2' value='BTC' />
-
-        		<div class='form-group'>
-	        		<select name='coin_1' class='form-control' >
-	        		 	@foreach($stats['assets'] as $myasset)
-	        		 		 <option value='{{ $myasset['code'] }}'>{{ $myasset['code'] }}</option>
-	        		 	@endforeach
-	        		 </select>
-        		<input type='number' name='volume' value='{{ $stats['btc']['available'] }}' step='any' class='form-control' />
-        		<input type='submit' class='btn btn-sm btn-warning' value='Buy' >
-        		</form>
-        	</td></tr>
-       </table>
-*/ ?>
+  <form method='post' action="">
+              {{ csrf_field() }}
+            <input type='hidden' name='action' value='resync' />
+            <input type='submit' value='Resync Balances' class='btn btn-sm btn-primary' />
+        </form>
 
                 </div>
 

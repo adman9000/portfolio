@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Portfolio\Exchange;
+use App\Modules\Portfolio\UserExchange;
 use App\Modules\Portfolio\Coin;
 use App\Modules\Portfolio\CoinPrice;
 use App\Modules\Portfolio\UserCoin;
@@ -122,8 +123,14 @@ class ExchangeController extends Controller
 
       $exchange = Exchange::where("slug", "=", $name)->first();
       
+      $user = Auth::user();
 
       switch(request('action')) {
+
+        case "resync" :
+          $user_exchange = UserExchange::where("exchange_id", $exchange->id)->where("user_id", $user->id)->first();
+           $user_exchange->updateBalances();
+          break;
 
         case "sell" :
           $usercoin = UserCoin::find(request('user_coin_id'));
