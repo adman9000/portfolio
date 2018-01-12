@@ -50,7 +50,7 @@
                       <td>{{ $asset['available'] }}</td>
                       <td>{{ $asset['locked'] }}</td>
                       <td>{{ $asset['btc_value'] }}</td>
-                      <td>&pound;{{ $asset['gbp_value'] }}</td>
+                      <td data-order="{{ $asset['gbp_value']}}">&pound;{{ $asset['gbp_value'] }}</td>
 
 
                       @can('trade')
