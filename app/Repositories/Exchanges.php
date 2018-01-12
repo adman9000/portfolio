@@ -72,10 +72,17 @@ class Exchanges {
     
     function calculatePortfolios() {
 
+
+        $log_file = storage_path("logs/portfolios.log");
+        File::append($log_file, "--------------------------------- ".date("d/m/Y G:i")."----------------------------------"."\n");
+        File::append($log_file, "--------------------------------- calculatePortfolios() ----------------------------------"."\n");
+
         $users = User::with("coins", "wallets")->get();
 
 
         foreach($users as $user) {
+
+            File::append($log_file, $user->name);
 
             $data = array();
             $data['exchanges_btc_value'] = 0;
@@ -110,6 +117,8 @@ class Exchanges {
             $data['btc_value'] = $data['exchanges_btc_value'] + $data['wallets_btc_value'];
             $data['usd_value'] = $data['exchanges_usd_value'] + $data['wallets_usd_value'];
             $data['gbp_value'] = $data['exchanges_gbp_value'] + $data['wallets_gbp_value'];
+
+            File::append($data['btc_value']);
 
             UserValue::create($data);
 

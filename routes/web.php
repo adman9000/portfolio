@@ -60,7 +60,7 @@ Route::get('/cmc', function(){
 		$ucoin->user_exchange_id = $user_exchange->id;
 		$ucoin->save();
 	}
-*/
+*//*
 		$exchange = Exchange::find(1);
 		$exchange->setupCoins();
 		$exchange = Exchange::find(2);
@@ -69,7 +69,7 @@ Route::get('/cmc', function(){
 		$exchange->setupCoins();
 		$exchange = Exchange::find(4);
 		$exchange->setupCoins();
-
+*/
 		//$exchange = Exchange::find(4);
 		//$exchange->setupCoins();
 
@@ -88,7 +88,7 @@ Route::get('/cmc', function(){
 		//$exchanges->getAccountStats();
 		//$exchanges->saveCMCPrices();
 		//$exchanges->saveExchangePrices();
-		//$exchanges->calculatePortfolios();
+		$exchanges->calculatePortfolios();
 	});
 
 
