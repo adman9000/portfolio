@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Modules\Portfolio\Coin;
 use App\Modules\Portfolio\CoinPrice;
 use App\Modules\Portfolio\Transaction;
-use App\Modules\Portfolio\WaLLet;
+use App\Modules\Portfolio\Wallet;
 use App\Modules\Portfolio\UserCoin;
 use App\Events\PusherEvent;
 use Illuminate\Support\Facades\Auth;
