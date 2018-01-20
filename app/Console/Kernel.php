@@ -33,6 +33,9 @@ class Kernel extends ConsoleKernel
          $schedule->call('\App\Repositories\Exchanges@runSchedule')->everyFiveMinutes();
 
          $schedule->call('\App\Repositories\Exchanges@calculatePortfolios')->hourly();
+
+         $schedule->call('\App\Repositories\Exchanges@runNightly')->dailyAt('12:17');
+
     }
 
     /**

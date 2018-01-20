@@ -78,6 +78,8 @@ Route::get('/cmc', function(){
 		//$exchange->setupCoins();
 
 		$exchanges = new Exchanges();
+		$exchanges->downloadOrders();
+		
         //Get latest prices from Coinmarketcap
        // $exchanges->saveCMCPrices(); 
 
@@ -85,14 +87,14 @@ Route::get('/cmc', function(){
        // $exchanges->calculateWalletValues();
         
         //Get latest prices from exchanges
-        $exchanges->saveExchangePrices();
+       // $exchanges->saveExchangePrices();
 
 		//$exchanges->saveExchangePrices();
 		//$exchange->setupCoins();
 		//$exchanges->getAccountStats();
 		//$exchanges->saveCMCPrices();
 		//$exchanges->saveExchangePrices();
-		$exchanges->calculatePortfolios();
+		//$exchanges->calculatePortfolios();
 	});
 
 

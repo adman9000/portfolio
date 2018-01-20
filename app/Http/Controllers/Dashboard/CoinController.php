@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Modules\Portfolio\Coin;
 use App\Modules\Portfolio\CoinPrice;
 use App\Modules\Portfolio\Transaction;
+use App\Modules\Portfolio\WaLLet;
+use App\Modules\Portfolio\UserCoin;
 use App\Events\PusherEvent;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -24,14 +26,43 @@ class CoinController extends Controller
      public function index()
     {
         $data = array();
-        $btc_value = 0;
+        
+        $user = Auth::user();
 
-         $data['usd_gbp_rate']  = env("USD_GBP_RATE");
+        //Load all this users wallets
+        $wallets = Wallet::with('coin')->where("user_id", $user->id)->get();
 
+        //Load all this users exchange coins
+        $usercoins = UserCoin::with(['coin', 'exchangeCoin'])->where("user_id", $user->id)->get();
 
-        $data['coins'] = Coin::with('latestCoinprice')->get();
+        foreach($wallets as $wallet) {
 
+            if($wallet->gbp_value > 1.00) {
 
+                //get prices from json
+                $prices = json_decode($wallet->coin->prices, true);
+                $wallet->coin->gbp_price = $prices['latest']['gbp'];
+
+                //Price & value when bought
+                $valueBoughtAt = $wallet->valueBoughtAt();
+                $wallet->coin->original_gbp_price = $valueBoughtAt->gbp_price;
+                $wallet->original_gbp_value = $valueBoughtAt->gbp_value;
+
+                $wallet->value_change = round($wallet->original_gbp_value / $wallet->gbp_value * 100, 1);
+
+                $data['coins'][] = $wallet;
+
+            }
+        }
+
+        foreach($usercoins as $ucoin) {
+
+            if($ucoin->gbp_value > 1.00) {
+                $ucoin->exchangeCoin->load(["exchange", 'latestCoinprice']);
+                $ucoin->coin->gbp_price = $ucoin->exchangeCoin->latestCoinprice->gbp_price;
+                $data['coins'][] = $ucoin;
+            }
+        }
 
         return view('dashboard.coins.index', $data);
     }

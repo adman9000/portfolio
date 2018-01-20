@@ -8,6 +8,7 @@ use App\Modules\Portfolio\Coin;
 use App\Modules\Portfolio\CoinPrice;
 use App\Modules\Portfolio\Transaction;
 use App\Modules\Portfolio\Scheme;
+use App\Modules\Portfolio\UserExchange;
 use App\Modules\Portfolio\Exchange;
 use App\Modules\Portfolio\ExchangeCoin;
 use App\Modules\Portfolio\UserValue;
@@ -68,6 +69,17 @@ class Exchanges {
 
     }
 
+    /** runNightly()
+     * Runs each night
+     * Downloads all orders from all exchanges for all users & stores them with values etc
+     * Clears out all old prices
+    **/
+    function runNightly() {
+
+        $this->downloadOrders();
+        $this->cleanupPrices();
+    }
+
     /** Called directly by cronjob every hour. Calculates current value of each users portfolio */
     
     function calculatePortfolios() {
@@ -125,6 +137,34 @@ class Exchanges {
 
         }
 
+
+    }
+
+
+    /** downloadOrders()
+     * Called every night to make sure we have all order data for all users
+     **/
+    function downloadOrders() {
+
+        $userExchanges = UserExchange::all();
+
+        foreach($userExchanges as $ue) {
+
+            echo $ue->exchange_id."<br />";
+
+            $ue->downloadOrders();
+
+        }
+
+    }
+
+    /** cleanupPrices()
+     * Called every night to remove the 5 minute prices for all previous days
+     **/
+    function cleanupPrices() {
+
+        DB::table('cmc_prices')->where('created_at', '<', date("Y-m-d G:i:s", strtotime("24 hours ago")))->delete();
+        DB::table('exchanges_prices')->where('created_at', '<', date("Y-m-d G:i:s", strtotime("24 hours ago")))->delete();
 
     }
 

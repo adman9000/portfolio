@@ -313,4 +313,46 @@ class BittrexExchange {
         return $api->buyLimit($symbol, $quantity, $rate);
 
     }
+
+
+    function getOrders() {
+
+        $api = new Client(config("bittrex.auth"), config("bittrex.urls"));
+        $api->setAPI($this->api_key, $this->api_secret);
+
+        $orders = $api->getOrderHistory();
+
+         $return = array();
+
+        foreach($orders['result'] as $order) {
+            $r = array();
+
+            $coins = explode("-", $order['Exchange']);
+            $type = explode("_", $order['OrderType']);
+
+            if($type[sizeof($type)-1] == "BUY") {
+                $r['coin_bought'] = $coins[0];
+                $r['coin_sold'] = $coins[1];
+                $r['amount_bought'] = $order['Quantity'];
+                $r['amount_sold'] = $order['Price'];
+            }
+            else {
+                $r['coin_bought'] = $coins[1];
+                $r['coin_sold'] = $coins[0];
+                $r['amount_bought'] = $order['Price'];
+                $r['amount_sold'] = $order['Quantity'];
+            }
+
+            $r['exchange_rate'] = $order['PricePerUnit'];
+            $r['fees'] = $order['Commission'];
+            if($order['Closed']) $r['status'] = "complete"; 
+            else $r['status'] = "incomplete";
+
+            $return[] = $r;
+
+        }
+
+       return $return;
+
+    }
 }

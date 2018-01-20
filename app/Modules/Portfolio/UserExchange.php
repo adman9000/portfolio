@@ -108,6 +108,18 @@ class UserExchange extends Model
         }
     }
 
+    /** downloadOrders()
+     * Download all of this users orders from this exchange to make sure we have the most up to date info
+     * Runs nightly, can also be run manually via button on exchange page
+     **/
+    function downloadOrders() {
+
+        $class = $this->getExchangeClass();
+        if($class) return $class->getOrders();
+        else return false;
+
+    }
+
 
 }
 

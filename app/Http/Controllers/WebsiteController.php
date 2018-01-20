@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
 use App\Page;
 use App\Element;
+use App\Modules\Portfolio\Coin;
 
 
 class WebsiteController extends Controller
@@ -34,6 +35,8 @@ class WebsiteController extends Controller
     public function index(Request $request)
     {
 
+        $data = array();
+        
         //The correct url for the page being loaded in case we need to redirect
         $correct_url = false;
 
@@ -48,6 +51,14 @@ class WebsiteController extends Controller
         if($request->path() == "/") {
 
             $page = Page::where("online", "=", 1)->orderBy("position","asc")->first();
+
+
+        $btc_value = 0;
+
+         $data['usd_gbp_rate']  = env("USD_GBP_RATE");
+
+
+        $data['coins'] = Coin::with('latestCoinprice')->get();
 
         }
 

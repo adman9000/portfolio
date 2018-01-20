@@ -306,4 +306,50 @@ class CryptopiaExchange {
 
     }
 
+    function getRecentTrades($count = 10) {
+
+        $api = new CryptopiaAPI();
+        $api->setAPI($this->api_key, $this->api_secret);
+
+        $trades = $api->getRecentTrades(false, $count);
+
+        $return = array();
+
+        foreach($trades as $trade) {
+            $r = array();
+
+            $coins = explode("/", $trade['Market']);
+
+            if($trade['Type'] == "Buy") {
+                $r['coin_bought'] = $coins[0];
+                $r['coin_sold'] = $coins[1];
+                $r['amount_bought'] = $trade['Amount'];
+                $r['amount_sold'] = $trade['Total'];
+            }
+            else {
+                $r['coin_bought'] = $coins[1];
+                $r['coin_sold'] = $coins[0];
+                $r['amount_bought'] = $trade['Total'];
+                $r['amount_sold'] = $trade['Amount'];
+            }
+
+            $r['exchange_rate'] = $trade['Rate'];
+            $r['fees'] = $trade['Fee'];
+            $r['status'] = "complete"; //This is a trade, so of course its complete!
+
+            $return[] = $r;
+
+        }
+
+       return $return;
+
+    }
+
+    function getOrders() {
+
+        //Cant get order history from cryptopia, only trade history!
+        return $this->getRecentTrades(100);
+
+    }
+
 }

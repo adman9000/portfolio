@@ -12,6 +12,9 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <link href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
+
 </head>
 <body >
 
@@ -105,6 +108,9 @@
 
     <script src="{{ asset('js/app.js') }}"></script>
     
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    
+<script src="{{ asset('js/custom.js') }}"></script>
  @yield('footer_scripts')
 
 </body>
