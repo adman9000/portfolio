@@ -58,12 +58,12 @@
 
 
 				                    			<table class='table table-condensed table-bordered'>
-				                    				<tr><th>Balance</th><td>{{ $ucoin->balance }}</td></tr>
-				                    				<tr><th>Current Value</th><td>&pound;{{ $ucoin->gbp_value }}</td></tr>
+				                    				<tr><th>Balance</th><td colspan=2>{{ $ucoin->balance }}</td></tr>
 
+				                    				<tr><th>Current Value</th><td>&pound;{{ $ucoin->gbp_value }}</td><td>(&pound;{{ number_format($ucoin->coin->gbp_price, 2)}})</td></tr>
+				                    				<tr><th>Original Value</th><td>&pound;{{ $ucoin->original_gbp_value }}</td><td>(&pound;{{ number_format($ucoin->coin->original_gbp_price, 2)}})</td></tr>
 
-				                    				<tr><th>Original Value</th><td>&pound;{{ $ucoin->original_gbp_value }}</td></tr>
-				                    				<tr><th>Change</th><td @if($ucoin->value_change > 100) class='text-success' @elseif($ucoin->value_change < 100) class='text-danger' @endif >{{ $ucoin->value_change }}%</td></tr>
+				                    				<tr><th>Change</th><td colspan=2  @if($ucoin->value_change > 100) class='text-success' @elseif($ucoin->value_change < 100) class='text-danger' @endif >{{ $ucoin->value_change }}%</td></tr>
 
 
 				                    			</table>
