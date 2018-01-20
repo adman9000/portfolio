@@ -48,7 +48,7 @@ class CoinController extends Controller
                 $wallet->coin->original_gbp_price = $valueBoughtAt->gbp_price;
                 $wallet->original_gbp_value = $valueBoughtAt->gbp_value;
 
-                $wallet->value_change = round($wallet->original_gbp_value / $wallet->gbp_value * 100, 1);
+                $wallet->value_change = round($wallet->gbp_value / $wallet->original_gbp_value * 100, 1);
 
                 $data['coins'][] = $wallet;
 
