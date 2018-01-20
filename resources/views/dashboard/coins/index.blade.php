@@ -5,83 +5,87 @@
 
 	<div class="container">
 
+		<div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default" id='vue-coins'>
 
-	    <div class="row">
-	        <div class="col-md-12">
-	            <div class="panel panel-default" id='vue-coins'>
+                    <div class='panel-heading'><h3 class='panel-title'>My Coins</h3></div>
 
-	            	<div class='panel-heading'><h3 class='panel-title'>Coin List</h3></div>
+                    <div class='panel-body'>
 
-	            	<div class='panel-body'>
+                    	<div class='row'>
 
-		            	<p>Full list of all coins currently available on site. Based on the top 100 coins on coinmarketcap plus a few extras. Prices are updated every 5 minutes (no auto-refresh)</p>
+	                    	@foreach($coins as $ucoin)
 
-						<div class='form-group'>
-							<div class="input-group">
-						<div class="input-group-addon"><i class="fa fa-search"></i>
-						<input type="text" class="form-control" placeholder="Search Coins" ng-model="searchCoins">
-						</div></div></div>
+	                    		<div class=' col-xs-12 col-sm-4'>
 
-						<table class='table table-bordered table-striped table-condensed datatable'>
-							<thead><tr>
+		                    		<div class='well' style='padding:10px;'>
 
-							<th>Num</th>
+		                    			<div class='row'>
 
-							<th>Code</th>
+				                    			<!--
+		                    				<div class='col-xs-3'>
 
-							<th>Name</th>
+				                    			@if($ucoin->coin->gbp_price)
 
+				                    				<p>Price: &pound;{{ number_format($ucoin->coin->gbp_price, 2) }}</p>
 
-							<th>BTC Price</th>
-							<th>USD Price</th>
-							<th>GBP Price</th>
-							<th>Current Supply</th>
-							<th>Market Cap (GBP)</th>
+				                    			@endif
+
+				                    			@if($ucoin->coin->original_gbp_price)
+
+				                    				<p>Original Price: &pound;{{ number_format($ucoin->coin->original_gbp_price, 2) }}</p>
+
+				                    			@endif
 
 
-							<th width=200></th>
+				                    		</div>
+				                    			!-->
 
-							</tr></thead>
-							<tbody>
+				                    		<div class='col-xs-12'>
 
-								<tr v-for="coin in coins">
-									
-										<td >@{{ coin.i }} </td> 
-										<td >@{{ coin.code }} </td> 
-										<td >@{{ coin.name }} </td> 
-										<td >@{{ coin.btc_price }}</td> 
-										<td >$@{{ coin.usd_price }}</td> 
-										<td >&pound;@{{ coin.gbp_price }}</td> 
-										<td >@{{ formatSupply(coin.current_supply) }}</td> 
-										<td >&pound;@{{ formatPrice(coin.market_cap) }}</td> 
-										
-										<td align=right> 
-											 <a href='' class='btn btn-xs btn-info' v-bind:href="coin.url">View</a>
-										</td></tr>
+				                    			<h4 style='margin:3px;'>{{ $ucoin->coin->name }} ({{ $ucoin->coin->code }})</h4>
 
-							</tbody>
+				                    			@if( $ucoin->exchangeCoin) 
 
-							<tfoot><tr>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-							</tr></tfoot>
+				                    				<h6> {{ $ucoin->exchangeCoin->exchange->title }} </h6>
 
-						</table>
+				                    			@else
 
-						<br />
-						<a href='{{ route('dashboard') }}/coins/create' class='btn btn-info'>Add Coin</a>
-						<br />
-					</div>
-				</div>
-			</div>
-		</div>
+				                    				<h6>Wallet</h6>
+
+				                    			@endif
+
+
+				                    			<table class='table table-condensed table-bordered'>
+				                    				<tr><th>Balance</th><td>{{ $ucoin->balance }}</td></tr>
+				                    				<tr><th>Current Value</th><td>&pound;{{ $ucoin->gbp_value }}</td></tr>
+
+
+				                    				<tr><th>Original Value</th><td>&pound;{{ $ucoin->original_gbp_value }}</td></tr>
+				                    				<tr><th>Change</th><td @if($ucoin->value_change > 100) class='text-success' @elseif($ucoin->value_change < 100) class='text-danger' @endif >{{ $ucoin->value_change }}%</td></tr>
+
+
+				                    			</table>
+
+				                    		</div>
+		                    			</div>
+
+		                    		</div>
+
+		                    	</div>
+
+	                    	@endforeach
+
+	                    </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+	 
 	</div>
 
 
@@ -90,45 +94,5 @@
 @section('footer_scripts')
 
 
-<script>
-	var i=0;
-	var app = new Vue({
-	  el: '#vue-coins',
-	  data: 
-	  {
-	  	coins: [
-
-		  @foreach ($coins as $coin)
-
-		    { 
-		     i: ++i ,
-		     id: "{{$coin['id']}}" ,
-		     code: "{{$coin['code']}}" ,
-		     name: "{{$coin['name']}}" ,
-		     btc_price: "{{$coin->latestCoinPrice['btc_price']}}" ,
-		     usd_price: "{{$coin->latestCoinPrice['usd_price']}}" ,
-		     gbp_price: "{{$coin->latestCoinPrice['gbp_price']}}" ,
-		     current_supply: "{{$coin->latestCoinPrice['current_supply']}}" ,
-		     market_cap: "{{$coin->latestCoinPrice['current_supply'] * $coin->latestCoinPrice['gbp_price']}}" ,
-		     url: "{{ route('dashboard') }}/coins/{{ $coin->id }}"
-		   },
-
-		   @endforeach
-
-		  ]
-		},
-		methods :{
-		    formatPrice(value) {
-		        let val = (value/1).toFixed(2).replace(',', '.')
-		        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-		    },
-		     formatSupply(value) {
-		        let val = (value/1).toFixed(2).replace(',', '.')
-		        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-		    }
-		}
-	})
-
-</script>
 
 @endsection

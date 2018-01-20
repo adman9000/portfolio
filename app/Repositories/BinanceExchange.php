@@ -348,4 +348,31 @@ class BinanceExchange {
 
     }
 
+
+
+  // Pointless. Binance doesnt let you get trade or order history unless you specify the market, so this is not going to work!
+
+  function getRecentTrades($market, $count = 10) {
+
+        $api = new BinanceAPI();
+        $api->setAPI($this->api_key, $this->api_secret);
+
+        $trades = $api->getRecentTrades($market, $count);
+
+        return $trades;
+
+    }
+
+    function getOrders($market) {
+
+         $api = new BinanceAPI();
+        $api->setAPI($this->api_key, $this->api_secret);
+
+        $orders = $api->getAllOrders($market);
+
+        return $orders;
+
+    }
+
+
 }

@@ -259,4 +259,49 @@ class KrakenExchange {
 
     }
 
+    function getRecentTrades() {
+
+         $api = new KrakenAPI();
+        $api->setAPI($this->api_key, $this->api_secret);
+
+        $orders = $api->getRecentTrades();
+
+        return $orders;
+
+    }
+
+    function getOpenOrders() {
+
+         $api = new KrakenAPI();
+        $api->setAPI($this->api_key, $this->api_secret);
+
+        $orders = $api->getOpenOrders();
+
+        return $orders;
+
+    }
+
+    function getClosedOrders() {
+
+         $api = new KrakenAPI();
+        $api->setAPI($this->api_key, $this->api_secret);
+
+        $orders = $api->getClosedOrders();
+
+        return $orders;
+
+    }
+
+    function getOrders() {
+
+        $open = $this->getOpenOrders();
+        $closed = $this->getClosedOrders();
+
+        $open = $open['result']['open'];
+        $closed = $closed['result']['closed'];
+        $orders = array_merge($open, $closed);
+
+        return $orders;
+    }
+
 }

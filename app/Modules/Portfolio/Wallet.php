@@ -38,5 +38,11 @@ class Wallet extends Model
     { 
       return $this->hasOne('App\Modules\Portfolio\WalletValue', 'wallet_id')->where("created_at", "<=", date("Y-m-d G:i:s", strtotime("1 week ago")))->orderBy('created_at', 'DESC')->first();
     }
+
+    //best guess for price bought at - essentially the first wallet_value record to have the same balance as the current wallet
+     public function valueBoughtAt()
+    { 
+      return $this->hasOne('App\Modules\Portfolio\WalletValue', 'wallet_id')->where("balance", $this->balance)->orderBy('created_at', 'ASC')->first();
+    }
    
 }
