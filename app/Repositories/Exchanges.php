@@ -222,6 +222,7 @@ class Exchanges {
     **/
     function saveCMCPrices() {
 
+        $time = date("Y-m-d G:i:00");
 
         $log_file = storage_path("logs/cmc.log");
         File::append($log_file, "--------------------------------- ".date("d/m/Y G:i")."----------------------------------"."\n");
@@ -255,11 +256,11 @@ class Exchanges {
             //If this coin is not already in our database add it
             if(!$price_added) {
                     
-                $coin_info = array("code"=>$base, "name"=>$market['name'], "max_supply"=>$market['max_supply']);
+                $coin_info = array("created_at" => $time, "code"=>$base, "name"=>$market['name'], "max_supply"=>$market['max_supply']);
                 $coin = Coin::create($coin_info);
 
                 //Also add the latest price record
-                $price_info = array("coin_id"=>$coin->id, "btc_price"=>$market['price_btc'], "usd_price"=>$market['price_usd'], "gbp_price"=>$market['price_gbp'], "current_supply"=>$market['total_supply']);
+                $price_info = array("created_at" => $time, "coin_id"=>$coin->id, "btc_price"=>$market['price_btc'], "usd_price"=>$market['price_usd'], "gbp_price"=>$market['price_gbp'], "current_supply"=>$market['total_supply']);
                 $price = CoinPrice::create($price_info);
                 File::append($log_file, "Coin added ".$coin->code."\n");
             }
