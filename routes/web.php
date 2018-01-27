@@ -79,6 +79,7 @@ Route::get('/cmc', function(){
 
 		$exchanges = new Exchanges();
 		$exchanges->downloadOrders();
+		$exchanges->cleanupPrices();
 		
         //Get latest prices from Coinmarketcap
        // $exchanges->saveCMCPrices(); 
