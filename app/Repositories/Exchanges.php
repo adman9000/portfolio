@@ -76,7 +76,8 @@ class Exchanges {
     **/
     function runNightly() {
 
-        $this->downloadOrders();
+        //TODO: this
+        //$this->downloadOrders();
         $this->cleanupPrices();
     }
 
