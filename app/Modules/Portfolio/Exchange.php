@@ -48,6 +48,7 @@ class Exchange extends Model
     */
     function retrievePrices() {
 
+        $time = date("Y-m-d G:i:00");
 
         $class = $this->getExchangeClass();
 
@@ -59,7 +60,7 @@ class Exchange extends Model
         foreach($ticker as $market) {
             foreach($this->coins as $coin) {
                 if(($coin->code == $market['code']) || ($coin->market_code == $market['code'])) {
-                    $price_info = array("coin_id"=>$coin->coin_id, "exchange_id"=>$this->id, "exchange_coin_id"=>$coin->id, "btc_price"=>$market['btc_price'], "usd_price"=>$market['usd_price'], "gbp_price"=>$market['gbp_price']);
+                    $price_info = array("created_at" => $time, "coin_id"=>$coin->coin_id, "exchange_id"=>$this->id, "exchange_coin_id"=>$coin->id, "btc_price"=>$market['btc_price'], "usd_price"=>$market['usd_price'], "gbp_price"=>$market['gbp_price']);
 
                     $price = ExchangeCoinPrice::create($price_info);
                 }
@@ -70,7 +71,7 @@ class Exchange extends Model
         if($btc_market) {
             foreach($this->coins as $coin) {
                 if($coin->code == "BTC") {
-                    $price_info = array("coin_id"=>$coin->coin_id, "exchange_id"=>$this->id, "exchange_coin_id"=>$coin->id, "btc_price"=>1, "usd_price"=>$btc_market['usd_price'], "gbp_price"=>$btc_market['gbp_price']);
+                    $price_info = array("created_at" => $time, "coin_id"=>$coin->coin_id, "exchange_id"=>$this->id, "exchange_coin_id"=>$coin->id, "btc_price"=>1, "usd_price"=>$btc_market['usd_price'], "gbp_price"=>$btc_market['gbp_price']);
 
                     $price = ExchangeCoinPrice::create($price_info);
                 }
