@@ -83,20 +83,20 @@
 
                             <div class='well'>
 
-                                <h4>Your Top 10 Coins</h4>
+                                <h4>Your Top 12 Coins</h4>
 
                                 <div id='chart-4'>
 
                                     <table class='table table-bordered table-condensed'>
-                                        <thead><tr><th>Code</th><th>Total Balance</th><th>GBP Value</th><th>1 hour</th><th>1 day</th><th>1 week</th></tr></thead>
+                                        <thead><tr><th>Code</th><th  class='hidden-xs hidden-sm'>Total Balance</th><th>GBP Value</th><th>1 hour</th><th>1 day</th><th>1 week</th></tr></thead>
 
                                         <tbody>
                                             <? $i=0;?>
                                             @foreach( $coins as $coin)
-                                                <? if($i++>=10) break; ?>
+                                                <? if($i++>=12) break; ?>
                                                 <tr>
                                                     <td>{{ $coin['code'] }}</td>
-                                                    <td>{{ $coin['balance'] }}</td>
+                                                    <td class='hidden-xs hidden-sm'>{{ $coin['balance'] }}</td>
                                                     <td>£{{ number_format($coin['gbp_value'], 2) }}</td>
 
                                                     <td @if ($coin['gbp_value_1_hour'] < $coin['gbp_value']) 
@@ -142,13 +142,13 @@
                     <h3 style='text-align:center;'>Current Portfolio Value</h3>
 
                     <div class='row' style='text-align:center;'>
-                        <div class='col-sm-4'>
+                        <div class='col-sm-4' style='margin-bottom:15px;'>
                             <div class='btn btn-info'><h4>{{ $btc_value }} BTC</h4></div>
                         </div>
-                        <div class='col-sm-4'>
+                        <div class='col-sm-4' style='margin-bottom:15px;'>
                             <div class='btn btn-info'><h4>${{ $usd_value }}</h4></div>
                         </div>
-                        <div class='col-sm-4'>
+                        <div class='col-sm-4' style='margin-bottom:15px;'>
                             <div class='btn btn-info'><h4>£{{ $gbp_value }}</h4></div>
                         </div>
                     </div>

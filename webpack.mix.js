@@ -16,7 +16,8 @@ mix.scripts([
 //'resources/assets/vendor/bootstrap/js/bootstrap.js',
 'resources/assets/vendor/metisMenu/jquery.metisMenu.js',
 'resources/assets/vendor/pace/pace.js',
-'resources/assets/vendor/slimscroll/jquery.slimscroll.min.js'
+'resources/assets/vendor/slimscroll/jquery.slimscroll.min.js',
+'resources/assets/vendor/isotope/isotope.js'
 ], 'public/js/code.js')
    .sass('resources/assets/sass/app.scss', 'public/css')
    .sass('resources/assets/sass/inspinia.scss', 'public/css')

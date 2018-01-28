@@ -44542,11 +44542,6 @@ var app = new Vue({
     el: '#app'
 });
 
-$(document).ready(function () {
-
-    $(".datatable").datatable();
-});
-
 /***/ }),
 /* 58 */
 /***/ (function(module, exports) {

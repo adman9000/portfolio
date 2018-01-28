@@ -244,7 +244,6 @@ class DashboardController extends Controller
           if(!isset($assets[$wallet->coin_id])) {
 
               $wallet1HourAgo = $wallet->value1HourAgo();
-
               $wallet1DayAgo = $wallet->value1DayAgo();
               $wallet1WeekAgo = $wallet->value1WeekAgo();
 

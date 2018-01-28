@@ -78,6 +78,7 @@ class ExchangeController extends Controller
       $data = array();
       $data['stats'] = array();
       $data['stats']['assets'] = array();
+      $data['stats']['btc']['balance'] = 0;
 
       $exchange = Exchange::where("slug", "=", $name)->first();
 
@@ -105,6 +106,11 @@ class ExchangeController extends Controller
               $asset->btc_value = $asset->balance * $asset->btc_price;
               $asset->gbp_value = $asset->balance * $asset->gbp_price;
               $asset->usd_value = $asset->balance * $asset->usd_price;
+
+              if($ecoin->code == "BTC") { //prob wont work on kraken
+                $data['stats']['btc']['balance'] = $ucoin->balance;
+
+              }
 
             }
           }

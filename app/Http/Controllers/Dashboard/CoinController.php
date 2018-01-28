@@ -43,12 +43,22 @@ class CoinController extends Controller
                 $prices = json_decode($wallet->coin->prices, true);
                 $wallet->coin->gbp_price = $prices['latest']['gbp'];
 
+                //TODO: Original price stuff not great atm
                 //Price & value when bought
                 $valueBoughtAt = $wallet->valueBoughtAt();
                 $wallet->coin->original_gbp_price = $valueBoughtAt->gbp_price;
                 $wallet->original_gbp_value = $valueBoughtAt->gbp_value;
-
                 $wallet->value_change = round($wallet->gbp_value / $wallet->original_gbp_value * 100, 1);
+
+                //Values X time ago
+
+                $wallet1HourAgo = $wallet->value1HourAgo();
+                $wallet1DayAgo = $wallet->value1DayAgo();
+                $wallet1WeekAgo = $wallet->value1WeekAgo();
+
+                $wallet->gbp_value_1_hour = $wallet1HourAgo ? $wallet1HourAgo->gbp_value : 0;
+                $wallet->gbp_value_1_day = $wallet1DayAgo ? $wallet1DayAgo->gbp_value : 0;
+                $wallet->gbp_value_1_week = $wallet1WeekAgo ? $wallet1WeekAgo->gbp_value : 0;
 
                 $data['coins'][] = $wallet;
 
@@ -60,6 +70,18 @@ class CoinController extends Controller
             if($ucoin->gbp_value > 1.00) {
                 $ucoin->exchangeCoin->load(["exchange", 'latestCoinprice']);
                 $ucoin->coin->gbp_price = $ucoin->exchangeCoin->latestCoinprice->gbp_price;
+
+                //Values X time ago
+
+                $coinprice1HourAgo = $ucoin->exchangeCoin->coinprice1HourAgo();
+                $coinprice1DayAgo = $ucoin->exchangeCoin->coinprice1DayAgo();
+                $coinprice1WeekAgo = $ucoin->exchangeCoin->coinprice1WeekAgo();
+
+                if($coinprice1HourAgo) $ucoin->gbp_value_1_hour = $ucoin->balance * $coinprice1HourAgo->gbp_price;
+                if($coinprice1DayAgo) $ucoin->gbp_value_1_day = $ucoin->balance * $coinprice1DayAgo->gbp_price;
+                if($coinprice1WeekAgo) $ucoin->gbp_value_1_week = $ucoin->balance * $coinprice1WeekAgo->gbp_price;
+
+
                 $data['coins'][] = $ucoin;
             }
         }
