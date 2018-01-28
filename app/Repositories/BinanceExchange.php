@@ -314,12 +314,13 @@ class BinanceExchange {
 
         $markets = $bapi->getMarkets();
 
+		$step = 1;
         foreach($markets as $market) {
             if(($market['baseAsset'] == $symbol) && ($market['quoteAsset'] == "BTC")) {
                 $step = $market['filters'][1]['stepSize'];
             }
         }
-
+		
         $quantity = floor($quantity/$step) * $step;
 
         return $bapi->marketSell($symbol, $quantity);
@@ -336,6 +337,7 @@ class BinanceExchange {
 
         $markets = $bapi->getMarkets();
 
+		$step = 1;
         foreach($markets as $market) {
             if(($market['baseAsset'] == $symbol) && ($market['quoteAsset'] == "BTC")) {
                 $step = $market['filters'][1]['stepSize'];
