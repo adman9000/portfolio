@@ -35,7 +35,7 @@
                 <p>Buy & sell crypto on {{ $exchange['title'] }}</p>
 
                 <table class='table table-bordered datatable'>
-                <thead><tr><th>Code</th><th>BTC Price</th><th>GBP Price</th><th>Balance</th><th>Available</th><th>Locked</th><th>BTC Value</th><th>GBP Value</th> @can('trade')<th>Sell</th>@endcan </tr></thead>
+                <thead><tr><th>Code</th><th class='hidden-xs hidden-sm'>BTC Price</th><th>GBP Price</th><th>Balance</th><th class='hidden-xs hidden-sm'>Available</th><th class='hidden-xs hidden-sm'>Locked</th><th class='hidden-xs hidden-sm'>BTC Value</th><th>GBP Value</th> @can('trade')<th>Sell</th>@endcan </tr></thead>
                 <tbody>
 
                 @foreach($stats['assets'] as $asset)
@@ -44,12 +44,12 @@
 
 	                	<tr>
                       <td> {{ $asset['code'] }} </td>
-                      <td>{{ $asset['btc_price'] }}</td>
+                      <td class='hidden-xs hidden-sm'>{{ $asset['btc_price'] }}</td>
                       <td>{{ $asset['gbp_price'] }}</td>
                       <td>{{ $asset['balance'] }}</td>
-                      <td>{{ $asset['available'] }}</td>
-                      <td>{{ $asset['locked'] }}</td>
-                      <td>{{ $asset['btc_value'] }}</td>
+                      <td class='hidden-xs hidden-sm'>{{ $asset['available'] }}</td>
+                      <td class='hidden-xs hidden-sm'>{{ $asset['locked'] }}</td>
+                      <td class='hidden-xs hidden-sm'>{{ $asset['btc_value'] }}</td>
                       <td data-order="{{ $asset['gbp_value']}}">&pound;{{ $asset['gbp_value'] }}</td>
 
 
@@ -64,7 +64,7 @@
 		                		<input type='hidden' name='user_coin_id' value='{{ $asset['user_coin_id'] }}' />
                         <div class='form-group'>
                           <div  class='input-group'>
-		                		    <input type='number' name='volume' value='{{ $asset['balance'] }}' step='any' class='form-control' />
+		                		    <input type='number' name='volume' value='{{ $asset['balance'] }}' placeholder='0.00' step='any' class='form-control' style='min-width:120px;' />
 		                		    <span class='input-group-btn'>
                               <input type='submit' class='btn btn-warning' value='Sell'>
                             </span>
@@ -78,7 +78,7 @@
                         <input type='hidden' name='user_coin_id' value='{{ $asset['user_coin_id'] }}' />
                         <div class='form-group'>
                           <div  class='input-group'>
-                            <input type='number' name='volume' value='' step='any' class='form-control' />
+                            <input type='number' name='volume' value="{{ $stats['btc']['balance'] / $asset['btc_price'] }}" step='any' class='form-control'  placeholder='0.00' style='min-width:120px;'  />
                             <span class='input-group-btn'>
                               <input type='submit' class='btn btn-warning' value='Buy'>
                             </span>
