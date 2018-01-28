@@ -69,8 +69,8 @@ class CoinController extends Controller
 
             if($ucoin->gbp_value > 1.00) {
                 $ucoin->exchangeCoin->load(["exchange", 'latestCoinprice']);
-                $ucoin->coin->gbp_price = $ucoin->exchangeCoin->latestCoinprice->gbp_price;
-
+                if($ucoin->exchangeCoin->latestCoinprice) $ucoin->coin->gbp_price = $ucoin->exchangeCoin->latestCoinprice->gbp_price;
+                else $ucoin->coin->gbp_price = 0;
                 //Values X time ago
 
                 $coinprice1HourAgo = $ucoin->exchangeCoin->coinprice1HourAgo();
