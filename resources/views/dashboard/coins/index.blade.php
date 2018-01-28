@@ -27,8 +27,8 @@
 							</div>
                     		<div class='col-xs-6 col-sm-3'>
 								<select name='sort-by' class="form-control sort-by-button-group">
-								  <option data-sort-by="original-order">original order</option>
-								  <option data-sort-by="name" data-sort-asc='true'>name</option>
+								  <option data-sort-by="original-order">Original order</option>
+								  <option data-sort-by="name" data-sort-asc='true'>Coin Name</option>
 								  <option data-sort-by="value" data-sort-asc=0 >GBP value</option>
 								</select>
 
@@ -70,11 +70,11 @@
 
 				                    			@if( $ucoin->exchangeCoin) 
 
-				                    				<h6> <b><a href="{{route('exchanges') }}/{{$ucoin->exchangeCoin->exchange->slug}}">{{ $ucoin->exchangeCoin->exchange->title }}</a></b> GBP price &pound;{{ number_format($ucoin->coin->gbp_price, 4)}}</h6>
+				                    				<h6> <b><a href="{{route('exchanges') }}/{{$ucoin->exchangeCoin->exchange->slug}}">{{ $ucoin->exchangeCoin->exchange->title }}</a></b> - GBP price &pound;{{ number_format($ucoin->coin->gbp_price, 4)}}</h6>
 
 				                    			@else
 
-				                    				<h6><b><a href="{{route('wallets') }}/{{$ucoin->id}}">Wallet</a></b> GBP price &pound;{{ number_format($ucoin->coin->gbp_price, 4)}}</h6>
+				                    				<h6><b><a href="{{route('wallets') }}/{{$ucoin->id}}">Wallet</a></b> - GBP price &pound;{{ number_format($ucoin->coin->gbp_price, 4)}}</h6>
 
 				                    			@endif
 
@@ -82,7 +82,7 @@
 				                    			<table class='table table-condensed table-bordered'>
 				                    				<tr><th>Balance</th><td colspan=2>{{ $ucoin->balance }}</td></tr>
 
-				                    				<tr><th>Current </th><td>&pound;<span class='value'>{{ $ucoin->gbp_value }}</span></td></tr>
+				                    				<tr><th>Current </th><td><b>&pound;<span class='value'>{{ number_format($ucoin->gbp_value, 2) }}</span></b></td></tr>
 
 				                    				<tr>
 				                    					<th>1 Hour</th>
@@ -172,15 +172,19 @@ $(document).ready(function() {
 	});
 
 	// filter items on button click
-	$('.filter-button-group').on( 'click', 'option', function() {
-	  var filterValue = $(this).attr('data-filter');
-	  $grid.isotope({ filter: filterValue });
+	$('.filter-button-group').on( 'change', function() {
+		$elem = $(this).find(":selected");
+		var filterValue = $elem.attr('data-filter');
+		console.log(filterValue);
+		$grid.isotope({ filter: filterValue });
 	});
 
 	// sort items on button click
-	$('.sort-by-button-group').on( 'click', 'option', function() {
-	  var sortByValue = $(this).attr('data-sort-by');
-	  $grid.isotope({ sortBy: sortByValue});
+	$('.sort-by-button-group').on( 'change', function() {
+		$elem = $(this).find(":selected");
+		var sortByValue = $elem.attr('data-sort-by');
+		console.log(sortByValue);
+		$grid.isotope({ sortBy: sortByValue});
 	});
 
 
