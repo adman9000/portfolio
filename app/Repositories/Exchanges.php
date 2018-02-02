@@ -229,7 +229,7 @@ class Exchanges {
         File::append($log_file, "--------------------------------- saveCMCPrices() ----------------------------------"."\n");
 
         //Get latest markets for everythign on CMC
-        $markets = CoinmarketcapAPIFacade::getTicker(0, 0, "GBP");
+        $markets = CoinmarketcapAPIFacade::getTickers(0, 0, "GBP");
 
         //Get an array of all coins in my DB
         $coins = Coin::all();
