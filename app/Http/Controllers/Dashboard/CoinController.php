@@ -46,8 +46,8 @@ class CoinController extends Controller
                 //TODO: Original price stuff not great atm
                 //Price & value when bought
                 $valueBoughtAt = $wallet->valueBoughtAt();
-                $wallet->coin->original_gbp_price = $valueBoughtAt->gbp_price;
-                $wallet->original_gbp_value = $valueBoughtAt->gbp_value;
+                $wallet->coin->original_gbp_price = $valueBoughtAt ? $valueBoughtAt->gbp_price : 0;
+                $wallet->original_gbp_value = $valueBoughtAt ? $valueBoughtAt->gbp_value : 0;
                 $wallet->value_change = round($wallet->gbp_value / $wallet->original_gbp_value * 100, 1);
 
                 //Values X time ago
