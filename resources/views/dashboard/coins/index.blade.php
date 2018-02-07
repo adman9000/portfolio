@@ -39,7 +39,7 @@
 
 	                    	@foreach($coins as $ucoin)
 
-	                    		<div class="col-xs-12 col-sm-6 col-md-4 grid-item {{ $ucoin->exchangeCoin ? $ucoin->exchangeCoin->exchange->slug : 'wallet' }}">
+	                    		<div class="col-xs-12 col-sm-6 col-md-4 grid-item {{ $ucoin->exchangeCoin ? $ucoin->exchangeCoin->exchange->slug : 'wallet' }}" data-value="<?=$ucoin->gbp_value?>">
 
 		                    		<div class='well' style='padding:10px;'>
 
@@ -82,7 +82,7 @@
 				                    			<table class='table table-condensed table-bordered'>
 				                    				<tr><th>Balance</th><td colspan=2>{{ $ucoin->balance }}</td></tr>
 
-				                    				<tr><th>Current </th><td><b>&pound;<span class='value'>{{ number_format($ucoin->gbp_value, 2) }}</span></b></td></tr>
+				                    				<tr><th>Current </th><td><b>&pound;{{ number_format($ucoin->gbp_value, 2) }}</b></td></tr>
 
 				                    				<tr>
 				                    					<th>1 Hour</th>
@@ -157,10 +157,7 @@ $(document).ready(function() {
 	  layoutMode: 'fitRows',
 	   getSortData: {
 		    name: '.name', // text from querySelector
-		    value: function( itemElem ) { // function
-		      var weight = $( itemElem ).find('.value').text();
-		      return parseFloat( weight.replace( /[\(\)]/g, '') );
-		    }
+		    value: '[data-value] parseFloat'
 		}
 	});
 

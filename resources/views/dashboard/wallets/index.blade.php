@@ -31,7 +31,7 @@
 									<td align=right> 
 									<a class='btn btn-info btn-sm' href='{{ route('dashboard') }}/wallets/{{ $wallet->id }}'>View</a> 
 									<a class='btn btn-info btn-sm' href='{{ route('dashboard') }}/wallets/{{ $wallet->id }}/edit'>Edit</a>
-									<form method='post' action='{{ route('dashboard') }}/wallets/{{$wallet->id}}' class='pull-right' style='margin-left:5px;'>
+									<form method='post' action='{{ route('dashboard') }}/wallets/{{$wallet->id}}' class='pull-right' style='margin-left:5px;' onsubmit="return confirm('Are you sure?')">
 										{{ csrf_field() }}
 										{{ method_field('DELETE') }} 
 										<input type='submit' class='btn btn-danger btn-sm' value='Delete' />

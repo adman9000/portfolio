@@ -104,7 +104,10 @@ class WalletController extends Controller
     public function edit(Wallet $wallet)
     {
         //
-        return view("dashboard.wallets.edit", array("wallet" => $wallet));
+        $data = array();
+        $data['coins'] = Coin::with('latestCoinprice')->get();
+        $data['wallet'] = $wallet;
+        return view("dashboard.wallets.edit", $data);
     }
 
     /**
@@ -137,7 +140,9 @@ class WalletController extends Controller
      */
     public function destroy(Wallet $wallet)
     {
-        //
+        //delete wallet values first
+        DB::delete("DELETE FROM wallet_values WHERE wallet_id=".$wallet->id);
+
         $wallet->delete();
  		return $this->index();
     }
