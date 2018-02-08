@@ -199,7 +199,8 @@ class KrakenExchange {
         //Get the BTC price in USD
         $btc_market = KrakenAPIFacade::getTicker(array("XBTUSD"));
 
-        $btc_usd = $btc_market['result']['XXBTZUSD']['l'][0];
+
+        $btc_usd = $btc_market['result']['XXBTZUSD']['c'][0];
 
         //We need to specify with kraken which markets we want the ticker for - annoying!
         $exchange_coins = ExchangeCoin::where("exchange_id", 1)->where("code", "!=", "XBT")->get();
@@ -215,12 +216,11 @@ class KrakenExchange {
         foreach($markets['result'] as $market_code=>$market) {
            
                 
-                $price_info = array("code" => $market_code, "btc_price"=>$market['l'][0], "usd_price" => $market['l'][0] * $btc_usd, "gbp_price" => $market['l'][0] * $btc_usd / env("USD_GBP_RATE"));
+                $price_info = array("code" => $market_code, "btc_price"=>$market['c'][0], "usd_price" => $market['c'][0] * $btc_usd, "gbp_price" => $market['c'][0] * $btc_usd / env("USD_GBP_RATE"));
                   
                 $ticker[] = $price_info;
    
         }
-
 
             return $ticker;
     }
@@ -233,8 +233,9 @@ class KrakenExchange {
         $market = KrakenAPIFacade::getTicker(array("XBTUSD"));
 
         $market = $market['result']['XXBTZUSD'];
-        $price_info = array("code" => "BTC",  "usd_price" => $market['l'][0] , "gbp_price" => $market['l'][0] / env("USD_GBP_RATE"));
-                return $price_info;
+        $price_info = array("code" => "BTC",  "usd_price" => $market['c'][0] , "gbp_price" => $market['c'][0] / env("USD_GBP_RATE"));
+
+        return $price_info;
 
     }
 
