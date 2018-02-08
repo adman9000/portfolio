@@ -8,7 +8,7 @@ class ExchangeCoinPrice extends Model
 {
     //
    
-    protected $fillable = ['coin_id', 'exchange_id','exchange_coin_id','btc_price','usd_price','gbp_price', 'price_at'];
+    protected $fillable = ['coin_id', 'exchange_id','exchange_coin_id','btc_price','usd_price','gbp_price', 'created_at'];
 
     protected $table = "exchanges_prices";
 
