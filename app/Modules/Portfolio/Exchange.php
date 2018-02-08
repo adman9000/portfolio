@@ -46,9 +46,8 @@ class Exchange extends Model
     /* retreivePrices()
      * Get the latest prices from this exchange and save to DB
     */
-    function retrievePrices() {
+    function retrievePrices($time) {
 
-        $time = date("Y-m-d G:i:00");
 
         $class = $this->getExchangeClass();
 

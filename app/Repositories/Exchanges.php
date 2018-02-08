@@ -29,7 +29,7 @@ class Exchanges {
 
 
 
-
+    protected $current_time;
 
 //REFACTOR BELOW FUNCTIONS
 
@@ -44,6 +44,8 @@ class Exchanges {
      * 4. Push latest BTC price & amount via pusher
      **/
     function runSchedule() {
+
+        $this->current_time = date("Y-m-d G:i:00");
 
         //Get latest prices from Coinmarketcap
         $this->saveCMCPrices();
@@ -222,7 +224,7 @@ class Exchanges {
     **/
     function saveCMCPrices() {
 
-        $time = date("Y-m-d G:i:00");
+        $time = $this->current_time;
 
         $log_file = storage_path("logs/cmc.log");
         File::append($log_file, "--------------------------------- ".date("d/m/Y G:i")."----------------------------------"."\n");
@@ -331,7 +333,7 @@ class Exchanges {
         //Loop through them and get the latest prices from each
         foreach($exchanges as $myexchange) {
            // $myexchange->setupCoins();
-            $myexchange->retrievePrices();
+            $myexchange->retrievePrices($this->current_time);
 
             File::append($log_file, "Prices saved for ".$myexchange->title."\n");
        
