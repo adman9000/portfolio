@@ -78,7 +78,7 @@ class BittrexExchange {
 
                           //Set the amount of this altcoin held, plus its BTC value if amount is >0
                         if($balance['Balance'] > 0) {
-	                        $data[$balance['Currency']]['btc_value']['balance'] = $balance['Balance'] ;
+	                        $data[$balance['Currency']]['balance'] = $balance['Balance'] ;
 	                        $data[$balance['Currency']]['btc_value'] = $value;
 	                        $data[$balance['Currency']]['usd_value'] = $value * $btc_usd;
 	                    }

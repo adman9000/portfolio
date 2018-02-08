@@ -82,7 +82,7 @@ class BinanceExchange {
 
                         //Set the amount of this altcoin held, plus its BTC value if amount is >0
                         if($wallet['free'] > 0) {
-	                        $data[$wallet['asset']]['btc_value']['balance'] = $wallet['free'] + $wallet['locked'];
+	                        $data[$wallet['asset']]['balance'] = $wallet['free'] + $wallet['locked'];
 	                        $data[$wallet['asset']]['btc_value'] = $value;
 	                        $data[$wallet['asset']]['usd_value'] = $value * $btc_usd;
 	                    }
@@ -215,8 +215,7 @@ class BinanceExchange {
         $bapi->setAPI($this->api_key, $this->api_secret);
 
         $markets = $bapi->getTickers();
-        dd($markets);
-
+       
          //find the BTCUSD ticker
         foreach($markets as $market) {
             if($market['symbol'] == "BTCUSDT") {

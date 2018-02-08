@@ -82,7 +82,7 @@ class CryptopiaExchange {
 
                         //Set the amount of this altcoin held, plus its BTC value if amount is >0
                         if($wallet['Total'] > 0) {
-	                        $data[$wallet['Symbol']]['btc_value']['balance'] = $wallet['Total'];
+	                        $data[$wallet['Symbol']]['balance'] = $wallet['Total'];
 	                        $data[$wallet['Symbol']]['btc_value'] = $value;
 	                        $data[$wallet['Symbol']]['usd_value'] = $value * $btc_usd;
 	                    }
