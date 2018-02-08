@@ -30,9 +30,9 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
 
-         $schedule->call('\App\Repositories\Exchanges@runSchedule')->everyFiveMinutes();
+         $schedule->call('\App\Repositories\Exchanges@runSchedule')->cron("0,5,10,15,20,25,30,35,40,45,50,55 * * * *");
 
-         $schedule->call('\App\Repositories\Exchanges@calculatePortfolios')->hourly();
+         $schedule->call('\App\Repositories\Exchanges@calculatePortfolios')->cron("0 * * * * ");
 
          $schedule->call('\App\Repositories\Exchanges@runNightly')->dailyAt('12:17');
 
