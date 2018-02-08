@@ -63,6 +63,7 @@ class Exchange extends Model
                     $price_info = array("created_at" => $time, "coin_id"=>$coin->coin_id, "exchange_id"=>$this->id, "exchange_coin_id"=>$coin->id, "btc_price"=>$market['btc_price'], "usd_price"=>$market['usd_price'], "gbp_price"=>$market['gbp_price']);
 
                     $price = ExchangeCoinPrice::create($price_info);
+
                 }
             }
         }

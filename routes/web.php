@@ -74,23 +74,27 @@ Route::get('/cmc', function(){
 		$exchange = Exchange::find(4);
 		$exchange->setupCoins();
 */
-		$exchange = Exchange::find(1);
-		$exchange->retrievePrices();
-		die();
+		//$exchange = Exchange::find(1);
+		//$exchange->retrievePrices();
+		//die();
+
+		//$exchange = Exchange::find(2);
+		//$exchange->retrievePrices();
+		//die();
 
 		$exchanges = new Exchanges();
 		//$exchanges->downloadOrders();
 		//$exchanges->cleanupPrices();
 		
         //Get latest prices from Coinmarketcap
-        //$exchanges->saveCMCPrices(); 
+       // $exchanges->saveCMCPrices(); 
 
         //Update users wallet values
        // $exchanges->calculateWalletValues();
         
         //Get latest prices from exchanges
-       // $exchanges->saveExchangePrices();
-
+        $exchanges->saveExchangePrices();
+        die();
 		//$exchanges->saveExchangePrices();
 		//$exchange->setupCoins();
 		//$exchanges->getAccountStats();

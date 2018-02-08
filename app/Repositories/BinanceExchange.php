@@ -48,7 +48,7 @@ class BinanceExchange {
         $bapi = new BinanceAPI();
         $bapi->setAPI($this->api_key, $this->api_secret);
 
-		$ticker = $bapi->getTicker();
+		$ticker = $bapi->getTickers();
         $balances = $bapi->getBalances();
 
         //Convert it to consistent data format
@@ -214,7 +214,8 @@ class BinanceExchange {
         $bapi = new BinanceAPI();
         $bapi->setAPI($this->api_key, $this->api_secret);
 
-        $markets = $bapi->getTicker();
+        $markets = $bapi->getTickers();
+        dd($markets);
 
          //find the BTCUSD ticker
         foreach($markets as $market) {

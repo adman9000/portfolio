@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "6eb859e6158063cb195bc471632aab3c",
+    "content-hash": "7890a94dff7861717d6e0eca0da583fe",
     "packages": [
         {
             "name": "adman9000/laravel-binance",
@@ -53,6 +53,54 @@
             ],
             "description": "Implementation of Binance trading API for Laravel",
             "time": "2018-01-19T17:46:12+00:00"
+        },
+        {
+            "name": "adman9000/laravel-bittrex",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/adman9000/laravel-bittrex.git",
+                "reference": "4c8ba50b3f9e31ab5cf788b77b4305a0c8a9c381"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/adman9000/laravel-bittrex/zipball/4c8ba50b3f9e31ab5cf788b77b4305a0c8a9c381",
+                "reference": "4c8ba50b3f9e31ab5cf788b77b4305a0c8a9c381",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "laravel/framework": ">=5.3",
+                "php": ">=5.6.4"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "adman9000\\bittrex\\BittrexServiceProvider"
+                    ],
+                    "aliases": {
+                        "Bittrex": "adman9000\\bittrex\\BittrexAPIFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "adman9000\\bittrex\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Adam Harding",
+                    "email": "myaddressistaken@googlemail.com"
+                }
+            ],
+            "description": "Laravel implementation of the Bittrex crypto exchange trading API",
+            "time": "2018-02-08T19:59:14+00:00"
         },
         {
             "name": "adman9000/laravel-coinmarketcap",
@@ -151,55 +199,17 @@
             "time": "2018-01-19T17:46:49+00:00"
         },
         {
-            "name": "adman9000/laravelbittrex",
+            "name": "adman9000/laravel-kraken",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/adman9000/laravelbittrex.git",
-                "reference": "31e34cd1ee0be009909e337953c9e6c6b1410ead"
+                "url": "https://github.com/adman9000/laravel-kraken.git",
+                "reference": "c3aa096508cc201e0a72dfe734834c4233f2e5ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/adman9000/laravelbittrex/zipball/31e34cd1ee0be009909e337953c9e6c6b1410ead",
-                "reference": "31e34cd1ee0be009909e337953c9e6c6b1410ead",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "laravel/framework": ">=5.3",
-                "php": ">=5.6.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "adman9000\\Bittrex\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Adam Harding",
-                    "email": "myaddressistaken@googlemail.com"
-                }
-            ],
-            "description": "Bittrex API wrapper for Laravel",
-            "time": "2017-09-13T00:58:43+00:00"
-        },
-        {
-            "name": "adman9000/laravelkraken",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/adman9000/laravelkraken.git",
-                "reference": "bcf86eb15f64eecb8c5311b535e6ce41523aea4a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/adman9000/laravelkraken/zipball/bcf86eb15f64eecb8c5311b535e6ce41523aea4a",
-                "reference": "bcf86eb15f64eecb8c5311b535e6ce41523aea4a",
+                "url": "https://api.github.com/repos/adman9000/laravel-kraken/zipball/c3aa096508cc201e0a72dfe734834c4233f2e5ca",
+                "reference": "c3aa096508cc201e0a72dfe734834c4233f2e5ca",
                 "shasum": ""
             },
             "require": {
@@ -222,7 +232,7 @@
                 }
             ],
             "description": "Kraken.com Trading API integration for Laravel",
-            "time": "2017-12-01T17:03:43+00:00"
+            "time": "2018-02-08T18:38:38+00:00"
         },
         {
             "name": "defuse/php-encryption",
@@ -3659,6 +3669,81 @@
     ],
     "packages-dev": [
         {
+            "name": "adman9000/laravelbittrex",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/adman9000/laravelbittrex.git",
+                "reference": "31e34cd1ee0be009909e337953c9e6c6b1410ead"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/adman9000/laravelbittrex/zipball/31e34cd1ee0be009909e337953c9e6c6b1410ead",
+                "reference": "31e34cd1ee0be009909e337953c9e6c6b1410ead",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "laravel/framework": ">=5.3",
+                "php": ">=5.6.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "adman9000\\Bittrex\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Adam Harding",
+                    "email": "myaddressistaken@googlemail.com"
+                }
+            ],
+            "description": "Bittrex API wrapper for Laravel",
+            "time": "2017-09-13T00:58:43+00:00"
+        },
+        {
+            "name": "adman9000/laravelkraken",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/adman9000/laravelkraken.git",
+                "reference": "bcf86eb15f64eecb8c5311b535e6ce41523aea4a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/adman9000/laravelkraken/zipball/bcf86eb15f64eecb8c5311b535e6ce41523aea4a",
+                "reference": "bcf86eb15f64eecb8c5311b535e6ce41523aea4a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "adman9000\\kraken\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Adam Harding",
+                    "email": "adam@diligencegroup.co.uk"
+                }
+            ],
+            "description": "Kraken.com Trading API integration for Laravel",
+            "abandoned": "adman9000/laravel-kraken",
+            "time": "2017-12-01T17:03:43+00:00"
+        },
+        {
             "name": "doctrine/instantiator",
             "version": "dev-master",
             "source": {
@@ -5346,10 +5431,10 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "adman9000/laravel-binance": 20,
+        "adman9000/laravel-bittrex": 20,
         "adman9000/laravel-coinmarketcap": 20,
         "adman9000/laravel-cryptopia": 20,
-        "adman9000/laravelbittrex": 20,
-        "adman9000/laravelkraken": 20,
+        "adman9000/laravel-kraken": 20,
         "doctrine/dbal": 20,
         "laravel/passport": 20,
         "pusher/pusher-php-server": 20

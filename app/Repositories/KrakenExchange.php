@@ -197,7 +197,7 @@ class KrakenExchange {
         $markets = array();
 
         //Get the BTC price in USD
-        $btc_market = KrakenAPIFacade::getTicker(array("XBTUSD"));
+        $btc_market = KrakenAPIFacade::getTicker("XBTUSD");
 
 
         $btc_usd = $btc_market['result']['XXBTZUSD']['c'][0];
@@ -210,7 +210,7 @@ class KrakenExchange {
         }
 
         //Get all the BTC markets for coins we have got recorded on kraken
-        $markets = KrakenAPIFacade::getTicker($markets);
+        $markets = KrakenAPIFacade::getTickers($markets);
 
         //Loop through markets, find any of my coins and save the latest price to DB
         foreach($markets['result'] as $market_code=>$market) {
@@ -230,7 +230,7 @@ class KrakenExchange {
     function getBTCMarket() {
 
          //Get the BTC price in USD
-        $market = KrakenAPIFacade::getTicker(array("XBTUSD"));
+        $market = KrakenAPIFacade::getTicker("XBTUSD");
 
         $market = $market['result']['XXBTZUSD'];
         $price_info = array("code" => "BTC",  "usd_price" => $market['c'][0] , "gbp_price" => $market['c'][0] / env("USD_GBP_RATE"));
