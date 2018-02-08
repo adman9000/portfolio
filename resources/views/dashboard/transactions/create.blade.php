@@ -7,13 +7,28 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
 
-            	<form method='post' action='/transactions'>
+            	<form method='post' action='/dashboard/transactions'>
 
             	{{csrf_field()}}
 
                 <div class="panel-heading">Record a Transaction</div>
 
                 <div class="panel-body">
+
+					<div class='form-group'>
+						<label>Exchange</label>
+						
+						<select name='exchange_id' class='form-control' required>
+
+							@foreach($exchanges as $exchange)
+
+								<option value='{{ $exchange->id }}' > {{ $exchange->title }} </option>
+
+							@endforeach
+
+						</select>
+
+					</div>
 
 					 <div class='form-group'>
 						<label>Coin Sold</label>

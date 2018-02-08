@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class CoinPrice extends Model
 {
     //
-    protected $fillable = ['coin_id', 'btc_price', 'usd_price', 'gbp_price', 'current_supply'];
+    protected $fillable = ['coin_id', 'btc_price', 'usd_price', 'gbp_price', 'current_supply', 'price_at', 'created_at'];
 
     protected $table = "cmc_prices";
 

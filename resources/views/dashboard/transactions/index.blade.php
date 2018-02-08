@@ -37,7 +37,7 @@
 					</table>
 
 					<br />
-					<a href='/transactions/create' class='btn btn-info'>Add Transaction</a>
+					<a href='{{ route('transactions') }}/create' class='btn btn-info'>Add Transaction</a>
 				</div>
 			</div>
 		</div>

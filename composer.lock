@@ -60,12 +60,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/adman9000/laravel-coinmarketcap.git",
-                "reference": "d0312927d7aac45f5911c2819c1e59d2f3e58c7f"
+                "reference": "15ab9b6dedff886465df3878bc05c4b2c0f35646"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/adman9000/laravel-coinmarketcap/zipball/d0312927d7aac45f5911c2819c1e59d2f3e58c7f",
-                "reference": "d0312927d7aac45f5911c2819c1e59d2f3e58c7f",
+                "url": "https://api.github.com/repos/adman9000/laravel-coinmarketcap/zipball/15ab9b6dedff886465df3878bc05c4b2c0f35646",
+                "reference": "15ab9b6dedff886465df3878bc05c4b2c0f35646",
                 "shasum": ""
             },
             "require": {
@@ -100,7 +100,7 @@
                 }
             ],
             "description": "Implementation of Coinmarketcap trading API for Laravel",
-            "time": "2018-02-02T17:15:27+00:00"
+            "time": "2018-02-02T17:24:26+00:00"
         },
         {
             "name": "adman9000/laravel-cryptopia",

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Modules\Portfolio\Coin;
+use App\Modules\Portfolio\Exchange;
 use App\Modules\Portfolio\Transaction;
 //use App\Events\PusherEvent;
 use Illuminate\Support\Facades\Auth;
@@ -38,6 +39,7 @@ class TransactionController extends Controller
         //
         $data = array();
         $data['coins'] = Coin::with('latestCoinprice')->get();
+        $data['exchanges'] = Exchange::all();
         return view("dashboard.transactions.create", $data);
     }
 
@@ -52,12 +54,21 @@ class TransactionController extends Controller
          //Validate input
         $this->validate(request(), [
             'coin_sold_id' => 'required',
+            'exchange_id' => 'required',
             'coin_bought_id' => 'required']
             );
 
         //only safe if fillable/guarded set
         $data = request()->all();
         $data['user_id'] = Auth::id();
+        $data['status'] = "complete";
+        $data['uuid'] = "";
+        //TODO
+        $data['coin_user_id'] = 0;
+        $data['btc_value'] = 0;
+        $data['usd_value'] = 0;
+        $data['gbp_value'] = 0;
+
         Transaction::create($data);
 
         return $this->index();
@@ -105,10 +116,12 @@ class TransactionController extends Controller
          //Validate input
         $this->validate(request(), [
             'coin_sold_id' => 'required',
+            'exchange_id' => 'required',
             'coin_bought_id' => 'required']
             );
 
         //TODO: must be better way for editing lots of fields..
+        $transaction->exchange_id = $request->exchange_id;
         $transaction->coin_sold_id = $request->coin_sold_id;
         $transaction->coin_bought_id = $request->coin_bought_id;
         $transaction->amount_bought = $request->amount_bought;
