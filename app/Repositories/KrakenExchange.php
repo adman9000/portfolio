@@ -197,8 +197,13 @@ class KrakenExchange {
         $markets = array();
 
         //Get the BTC price in USD
-        $btc_market = KrakenAPIFacade::getTicker("XBTUSD");
-
+        try {
+            $btc_market = KrakenAPIFacade::getTicker("XBTUSD");
+        }
+        catch(\Exception $e) {
+            echo "API FAILED";
+            return false;
+        }
 
         $btc_usd = $btc_market['result']['XXBTZUSD']['c'][0];
 
@@ -210,8 +215,13 @@ class KrakenExchange {
         }
 
         //Get all the BTC markets for coins we have got recorded on kraken
-        $markets = KrakenAPIFacade::getTickers($markets);
-
+        try {
+            $markets = KrakenAPIFacade::getTickers($markets);
+        }
+        catch(\Exception $e) {
+            echo "API FAILED";
+            return false;
+        }
         //Loop through markets, find any of my coins and save the latest price to DB
         foreach($markets['result'] as $market_code=>$market) {
            

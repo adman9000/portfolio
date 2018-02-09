@@ -259,7 +259,13 @@ class BittrexExchange {
         $btc_market = $this->getBTCMarket();
         $btc_usd = $btc_market['usd_price'];
 
-        $markets =  $bapi->getTickers();
+        try {
+            $markets = $bapi->getTickers();
+        }
+        catch(\Exception $e) {
+            echo "API FAILED";
+            return false;
+        }
 
         //Loop through markets, find any of my coins and save the latest price to DB
         foreach($markets['result'] as $market) {
@@ -284,7 +290,13 @@ class BittrexExchange {
         $bapi = new BittrexAPI(config("bittrex.auth"), config("bittrex.urls"));
         $bapi->setAPI($this->api_key, $this->api_secret);
 
-        $market = $bapi->getTicker("USDT-BTC");
+        try {
+            $market = $bapi->getTicker("USDT-BTC");
+          }
+        catch(\Exception $e) {
+            echo "API FAILED";
+            return false;
+        }
         $market = $market['result'];
         $price_info = array("code" => "BTC",  "usd_price" => $market['Last'] , "gbp_price" => $market['Last'] / env("USD_GBP_RATE"));
                 return $price_info;

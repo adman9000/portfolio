@@ -78,8 +78,8 @@ Route::get('/cmc', function(){
 		//$exchange->retrievePrices();
 		//die();
 
-		//$exchange = Exchange::find(2);
-		//$exchange->retrievePrices();
+		//$exchange = Exchange::find(3);
+		//$exchange->retrievePrices(date("Y-m-d G:i:s"));
 		//die();
 
 		$exchanges = new Exchanges();
@@ -93,7 +93,7 @@ Route::get('/cmc', function(){
        // $exchanges->calculateWalletValues();
         
         //Get latest prices from exchanges
-        $exchanges->saveExchangePrices();
+        $exchanges->calculatePortfolios();
         die();
 		//$exchanges->saveExchangePrices();
 		//$exchange->setupCoins();

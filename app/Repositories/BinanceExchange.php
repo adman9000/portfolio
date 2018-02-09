@@ -214,8 +214,14 @@ class BinanceExchange {
         $bapi = new BinanceAPI();
         $bapi->setAPI($this->api_key, $this->api_secret);
 
-        $markets = $bapi->getTickers();
-       
+        try {
+            $markets = $bapi->getTickers();
+        }
+        catch(\Exception $e) {
+            echo "API FAILED";
+            return false;
+        }
+
          //find the BTCUSD ticker
         foreach($markets as $market) {
             if($market['symbol'] == "BTCUSDT") {
@@ -290,8 +296,14 @@ class BinanceExchange {
         $bapi = new BinanceAPI();
         $bapi->setAPI($this->api_key, $this->api_secret);
 
-        $markets = $bapi->getTicker();
-
+        try {
+            $markets = $bapi->getTicker("BTCUSDT");
+        }
+        catch(\Exception $e) {
+            echo "API FAILED";
+            return false;
+        }
+dd($markets);
          //find the BTCUSD ticker
         foreach($markets as $market) {
             if($market['symbol'] == "BTCUSDT") {

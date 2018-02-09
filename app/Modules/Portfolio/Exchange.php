@@ -55,6 +55,9 @@ class Exchange extends Model
 
         $btc_market =  $class->getBTCMarket();
 
+        if(!$ticker) return false;
+        if(!$btc_market) return false;
+
         //Loop through markets, find any of my coins and save the latest price to DB
         foreach($ticker as $market) {
             foreach($this->coins as $coin) {

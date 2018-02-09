@@ -49,7 +49,13 @@ class CryptopiaExchange {
         $bapi = new CryptopiaAPI();
         $bapi->setAPI($this->api_key, $this->api_secret);
 
-		$ticker = $bapi->getTicker("BTC");
+		try {
+            $markets = $bapi->getTicker("BTC");
+        }
+        catch(\Exception $e) {
+            echo "API FAILED";
+            return false;
+        }
 
         $balances = $bapi->getBalances();
 
