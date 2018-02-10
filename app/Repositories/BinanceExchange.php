@@ -309,7 +309,6 @@ class BinanceExchange {
             echo "API FAILED";
             return false;
         }
-dd($markets);
          //find the BTCUSD ticker
         foreach($markets as $market) {
             if($market['symbol'] == "BTCUSDT") {
