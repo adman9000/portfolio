@@ -45,15 +45,20 @@ class BittrexExchange {
         $bapi = new BittrexAPI(config("bittrex.auth"), config("bittrex.urls"));
         $bapi->setAPI($this->api_key, $this->api_secret);
 
-		 //Get balances of my coins
-        $balances = $bapi->getBalances();
+		  try {
+            //Get latest markets for everythign on bittrex
+            $markets = $bapi->getTickers();
+            $balances = $bapi->getBalances();
+            //Get the BTC-USD rate
+            $btc_market = $bapi->getTicker("USDT-BTC");
+        }
+        catch(\Exception $e) {
+            echo "API FAILED";
+            return false;
+        }
 
-        //Get the BTC-USD rate
-        $btc_market = $bapi->getTicker("USDT-BTC");
         $btc_usd = $btc_market['result'][0]['Last'];
 
-        //Get latest markets for everythign on bittrex
-        $markets = $bapi->getTickers();
 
 
         foreach($balances['result'] as $balance) {

@@ -77,7 +77,13 @@ class KrakenExchange {
         $kraken = new KrakenAPI();
         $kraken->setAPI($this->api_key, $this->api_secret);
 
-        $balances = KrakenAPIFacade::getBalances();
+         try {
+            $balances = $kraken->getBalances();
+        }
+        catch(\Exception $e) {
+            echo "API FAILED";
+            return false;
+        }
 
         //Get the BTC-USD rate
        // $btc_market = KrakenAPIFacade::getTicker(array("XBTUSD"));

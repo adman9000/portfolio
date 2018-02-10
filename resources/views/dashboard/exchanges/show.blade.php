@@ -72,7 +72,9 @@
                         </div>
 		                		</form>
 
-<form method='post' action='' class='form form-inline'>
+                  @if($asset['btc_price']>0)
+
+                    <form method='post' action='' class='form form-inline'>
                         {{csrf_field()}}
                         <input type='hidden' name='action' value='buy'>
                         <input type='hidden' name='user_coin_id' value='{{ $asset['user_coin_id'] }}' />
@@ -85,6 +87,8 @@
                           </div >
                         </div>
                         </form>
+
+                  @endif
 
 
 	                	</td>

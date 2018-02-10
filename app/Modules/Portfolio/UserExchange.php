@@ -68,6 +68,8 @@ class UserExchange extends Model
 
         $balances = $this->getBalances(true);
 
+        if(!$balances) return false;
+
         //BTC is done different
         $coin = ExchangeCoin::where('code',"BTC")->where('exchange_id', $this->exchange_id)->get()->first();
 

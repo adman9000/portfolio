@@ -136,8 +136,14 @@ class CryptopiaExchange {
          $bapi = new CryptopiaAPI();
         $bapi->setAPI($this->api_key, $this->api_secret);
 
-        $ticker = $bapi->getTicker();
-        $balances = $bapi->getBalances();
+         try {
+            $ticker = $bapi->getTickers();
+            $balances = $bapi->getBalances();
+        }
+        catch(\Exception $e) {
+            echo "API FAILED";
+            return false;
+        }
 
         //The standardised array I'm going to return
         $return = array();
