@@ -244,9 +244,11 @@
             ['Coin','Value']
 
             @foreach($coins as $coin) 
+                @if($coin['gbp_value'] > 2)
 
-            ,['{{ $coin['code'] }}', {{ $coin['gbp_value'] }}]
-            
+                    ,['{{ $coin['code'] }}', {{ $coin['gbp_value'] }}]
+
+                @endif
             @endforeach
         ]);
 
@@ -266,9 +268,11 @@
             ['Date','Value']
 
             @foreach($chart as $date=>$value) 
+                 @if($value > 2)
 
-            <? if($value) { ?>,['{{ $date }}', {{ $value }}]<? } ?>
+                    <? if($value) { ?>,['{{ $date }}', {{ $value }}]<? } ?>
             
+                @endif
             @endforeach
         ]);
 
