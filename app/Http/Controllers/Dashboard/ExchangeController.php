@@ -84,12 +84,15 @@ class ExchangeController extends Controller
 
       $user = Auth::user();
 
+      $user_exchange = UserExchange::where("user_id", "=", $user->id)->where("exchange_id", "=", $exchange->id)->first();
+	  
       //Load all this users coins
         $user->load('coins');
 
         $exchange->load('coins');
 
         $data['exchange'] = $exchange;
+		$data['user_exchange'] = $user_exchange;
 
         foreach($exchange->coins as $ecoin) {
 
@@ -146,6 +149,17 @@ class ExchangeController extends Controller
 
           case "buy" :
           $usercoin = UserCoin::find(request('user_coin_id'));
+		  
+		  if(!$usercoin) {
+			$ucoin_data = $request->all();
+			$ucoin_data['user_id'] = $user->id;
+			$ucoin_data['balance'] = 0;
+			$ucoin_data['available'] = 0;
+			$ucoin_data['locked'] = 0;
+			$ucoin_data['gbp_value'] = 0;
+			$usercoin = UserCoin::create($ucoin_data);
+			
+			}
           $usercoin->marketBuy(request('volume'));
 
         break;
