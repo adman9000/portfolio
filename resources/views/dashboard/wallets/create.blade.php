@@ -22,7 +22,7 @@
 
 							@foreach($coins as $coin)
 
-								<option value='{{ $coin->id }}' > {{ $coin->name }} </option>
+								<option value='{{ $coin->id }}' > {{ $coin->code }} - {{ $coin->name }} </option>
 
 							@endforeach
 
@@ -35,6 +35,16 @@
 					 <div class='form-group'>
 						<label>Balance</label>
 						<input type='text' name='balance' class='form-control' />
+					</div>
+
+					 <div class='form-group'>
+						<label>Address</label>
+						<input type='text' name='address' class='form-control' />
+					</div>
+
+					 <div class='form-group'>
+						<label>Notes</label>
+						<input type='text' name='notes' class='form-control' placeholder="Ledger, Paper etc" />
 					</div>
 
 					<div class='form-group'>

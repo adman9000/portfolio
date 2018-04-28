@@ -38,6 +38,16 @@
 						<input type='text' name='balance' class='form-control' value="{{ $wallet->balance }}" />
 					</div>
 
+					 <div class='form-group'>
+						<label>Address</label>
+						<input type='text' name='address' class='form-control' value="{{ $wallet->address }}" />
+					</div>
+
+					 <div class='form-group'>
+						<label>Notes</label>
+						<input type='text' name='notes' class='form-control' placeholder="Ledger, Paper etc" value="{{ $wallet->notes }}" />
+					</div>
+
 					<div class='form-group'>
 						<input type='submit' value='Submit' class='btn btn-primary' />
 					</div>

@@ -39,7 +39,7 @@ class WalletController extends Controller
     {
         //
         $data = array();
-        $data['coins'] = Coin::with('latestCoinprice')->get();
+        $data['coins'] = Coin::with('latestCoinprice')->orderBy('code', 'asc')->get();
         return view("dashboard.wallets.create", $data);
     }
 
@@ -89,8 +89,10 @@ class WalletController extends Controller
      * @param  \App\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function show(Coin $coin)
+    public function show(Wallet $wallet)
     {
+
+        $data['wallet'] = $wallet;
 
         return view("dashboard.wallets.show", $data);
     }
@@ -126,7 +128,7 @@ class WalletController extends Controller
     		);
 
         //TODO: must be better way for editing lots of fields..use fill
-		$wallet->balance = $request->balance;
+		$wallet->fill($request->post());
 		$wallet->save();
 
  		return $this->index();
