@@ -46,6 +46,8 @@ Route::get("/test", function() {
 //CMC
 Route::get('/cmc', function(){
 
+	ini_set("max_execution_time", 120);
+
 	//$exchange = Exchange::find(3);
 	//	$exchange->retrievePrices();
 
@@ -84,8 +86,9 @@ Route::get('/cmc', function(){
 
 		$exchanges = new Exchanges();
 		//$exchanges->downloadOrders();
-		$exchanges->cleanupPrices();
-		
+		//$exchanges->cleanupPrices();
+		//$exchanges->saveCMCPrices(); 
+		$exchanges->saveExchangePrices();
         //Get latest prices from Coinmarketcap
        // $exchanges->saveCMCPrices(); 
 

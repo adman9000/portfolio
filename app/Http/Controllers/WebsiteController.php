@@ -60,6 +60,13 @@ class WebsiteController extends Controller
 
         $data['coins'] = Coin::with('latestCoinprice')->get();
 
+        //GET COINS FROM CRYPTOCOMPARE
+        $json = file_get_contents ("https://min-api.cryptocompare.com/data/all/coinlist");
+
+        $result = json_decode($json, true);
+
+        $data['coins'] = $result['Data'];
+
         }
 
         else {

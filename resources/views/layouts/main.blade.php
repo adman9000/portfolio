@@ -15,6 +15,11 @@
 
     <link href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
 
+
+    <!-- Cryptocompare !-->
+    <link rel="stylesheet" type="text/css" href="/cryptocompare/current/style.css"></link>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
+
 </head>
 <body >
 

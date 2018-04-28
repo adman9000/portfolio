@@ -229,8 +229,11 @@ class CryptopiaExchange {
 
          //find the BTCUSD price
         $coin = Coin::with("latestCoinprice")->where("code", "BTC")->first();
-        $btc_usd = $coin->latestCoinprice->usd_price;
 
+        if($coin->latestCoinprice)
+            $btc_usd = $coin->latestCoinprice->usd_price;
+        else $btc_usd = 0;
+        
         //Loop through markets and return in standardised fashion
         foreach($markets as $market) {
             $base = "BTC";
