@@ -78,6 +78,9 @@
                         {{csrf_field()}}
                         <input type='hidden' name='action' value='buy'>
                         <input type='hidden' name='user_coin_id' value='{{ $asset['user_coin_id'] }}' />
+                        <input type='hidden' name='coin_id' value='{{ $asset['coin_id'] }}' />
+                        <input type='hidden' name='exchange_coin_id' value='{{ $asset['id'] }}' />
+                        <input type='hidden' name='user_exchange_id' value='{{ $user_exchange['id'] }}' />
                         <div class='form-group'>
                           <div  class='input-group'>
                             <input type='number' name='volume' value="{{ $stats['btc']['balance'] / $asset['btc_price'] }}" step='any' class='form-control'  placeholder='0.00' style='min-width:120px;'  />

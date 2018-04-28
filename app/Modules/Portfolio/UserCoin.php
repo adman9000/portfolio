@@ -42,10 +42,8 @@ class UserCoin extends Model
 
         //Some exchanges don't do market trades through API so we have to send current price
         $this->load("exchangeCoin");
-        //Knock off 1% to make sure we are above current market price so it will buy (usually)
+        //Add on 1% to make sure we are above current market price so it will buy (usually)
         $rate = $this->exchangeCoin->btc_price*1.01;
-
-        $exchange_class->marketBuy($this->exchangeCoin->market_code, $quantity, $rate);
 
     }
 
