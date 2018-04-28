@@ -134,7 +134,7 @@ class BittrexExchange {
 
         //Get the BTC-USD rate
         $btc_market = $bapi->getTicker("USDT-BTC");
-        $btc_usd = $btc_market['result'][0]['Last'];
+        $btc_usd = $btc_market['result']['Last'];
 
         //Get latest markets for everythign on bittrex
         $ticker = $bapi->getTickers();
