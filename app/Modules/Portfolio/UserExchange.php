@@ -123,6 +123,17 @@ class UserExchange extends Model
     }
 
 
+    /** 
+     * getAssetAddress
+     * @param $symbol
+     * @return $address
+    **/
+    function getAssetAddress($symbol) {
+
+         $class = $this->getExchangeClass();
+         return $class->getAssetAddress($symbol);
+         
+    }
 }
 
    

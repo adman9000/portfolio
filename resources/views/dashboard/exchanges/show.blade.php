@@ -93,6 +93,8 @@
 
                   @endif
 
+                      <!-- View Address !-->
+                      <a href="{{route('exchanges')}}/{{$exchange->id}}/address/{{$asset['coin_id']}}" data-toggle='modal-ajax' class='btn btn-info'>View Address</a>
 
 	                	</td>
 

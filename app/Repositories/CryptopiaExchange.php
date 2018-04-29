@@ -210,6 +210,20 @@ class CryptopiaExchange {
         return $return;
 	}
 
+    //Get deposit address for specified asset
+    function getAssetAddress($asset) {
+
+        $bapi = new CryptopiaAPI();
+        $bapi->setAPI($this->api_key, $this->api_secret);
+        $result = $bapi->depositAddress($asset);
+
+        if($result['Success'])
+            return $result['Data']['Address'];
+        else return false;
+
+    }
+
+    
 
     /*** PUBLIC API CALLS **/
 

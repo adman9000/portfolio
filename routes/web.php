@@ -196,6 +196,7 @@ Route::prefix('dashboard')->group(function() {
 	Route::get('/exchanges/{name}', 'Dashboard\ExchangeController@show'); //view all
 
 
+	Route::get('/exchanges/{exchange}/address/{coin}', 'Dashboard\ExchangeController@getAssetAddress');
 	Route::get('/exchanges/getprices', 'Dashboard\ExchangeController@getPrices');
 	Route::get('/exchanges/trade', 'Dashboard\ExchangeController@runTradingRules');
 	Route::get('/exchanges/resetCoins', 'Dashboard\ExchangeController@resetCoins');

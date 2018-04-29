@@ -156,6 +156,18 @@ class KrakenExchange {
         return $return;
 	}
 
+       //Get deposit address for specified asset
+    function getAssetAddress($asset) {
+
+        $bapi = new KrakenAPI();
+        $bapi->setAPI($this->api_key, $this->api_secret);
+        $result = $bapi->depositAddress($asset);
+
+        if(!$result['error']) return $result['result'][0]['address'];
+        else return false;
+
+    }
+
 
     //Return an array of all tradeable assets on the exchange
     function getAssets() {

@@ -75,6 +75,7 @@ class ExchangeController extends Controller
     public function show($name, Request $request) {
 
 
+
       $data = array();
       $data['stats'] = array();
       $data['stats']['assets'] = array();
@@ -108,7 +109,7 @@ class ExchangeController extends Controller
               $asset->locked = $ucoin->locked;
               $asset->btc_value = $asset->balance * $asset->btc_price;
               $asset->gbp_value = $asset->balance * $asset->gbp_price;
-              $asset->usd_value = $asset->balance * $asset->usd_price;
+              $asset->usd_value = $asset->balance * $asset->usd_price;       
 
               if($ecoin->code == "BTC") { //prob wont work on kraken
                 $data['stats']['btc']['balance'] = $ucoin->balance;
@@ -166,6 +167,21 @@ class ExchangeController extends Controller
       }
 
       return $this->show($name, $request);
+    }
+
+
+    //Display the deposit address for this asset
+    public function getAssetAddress(Exchange $exchange, Coin $coin) {
+
+      $user = Auth::user();
+
+      $user_exchange = UserExchange::where("user_id", "=", $user->id)->where("exchange_id", "=", $exchange->id)->first();
+
+      $data['coin'] = $coin;
+      $data['exchange'] = $exchange;
+      $data['address'] = $user_exchange->getAssetAddress($coin->code);
+
+      return view('dashboard.exchanges.ajax.address', $data);
     }
 
 

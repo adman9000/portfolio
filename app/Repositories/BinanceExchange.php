@@ -208,6 +208,19 @@ class BinanceExchange {
 	}
 
 
+    //Get deposit address for specified asset
+    function getAssetAddress($asset) {
+        $bapi = new BinanceAPI();
+        $bapi->setAPI($this->api_key, $this->api_secret);
+        $result = $bapi->depositAddress($asset);
+        if($result['success']) return $result['address'];
+        else return false;
+
+    }
+
+    
+
+
     /** getTicker()
     Get all the BTC markets available on this exchange with prices
     **/
@@ -273,6 +286,8 @@ class BinanceExchange {
 
         return $return;
     }
+
+
 
       //Return an array of all tradeable pairs on the exchange
     function getMarkets() {

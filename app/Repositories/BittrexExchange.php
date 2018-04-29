@@ -201,7 +201,17 @@ class BittrexExchange {
         return $return;
 	}
 
+           //Get deposit address for specified asset
+    function getAssetAddress($asset) {
 
+        $bapi = new BittrexAPI(config("bittrex.auth"), config("bittrex.urls"));
+        $bapi->setAPI($this->api_key, $this->api_secret);
+        $result = $bapi->depositAddress($asset);
+       
+        if($result['success']) return $result['result']['Address'];
+        else return false;
+
+    }
 
     //Return an array of all tradeable assets on the exchange
     function getAssets() {
@@ -220,6 +230,8 @@ class BittrexExchange {
 
         return $return;
     }
+
+ 
 
       //Return an array of all tradeable pairs on the exchange
     function getMarkets() {

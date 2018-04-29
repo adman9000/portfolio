@@ -4,21 +4,19 @@ $(document).ready(function() {
 	$(".datatable").DataTable();
 })
 
-//Ajax loaded modal popup using content from the href and wrapping in modal code
-	$("body").on("click", '[data-toggle="modal-ajax"]', function(e) {
-		e.preventDefault();
-		var url = $(this).attr('href');
-		if (url.indexOf('#') == 0) {
-			$(url).modal('open');
-		} else {
-			$.get(url, function(data) {
-				$("#ajax-modal").remove();
-				if(data)  $('<div class="modal  fade" id="ajax-modal"><div class="modal-dialog"><div class="modal-content">' + data + '  </div></div></div>').modal();
-			
-				
-			});
-		}
-	});
+//Ajax loaded modal popup using content from the href and wrapping in modal code 
+$("body").on("click", '[data-toggle="modal-ajax"]', function (e) {
+    e.preventDefault();
+    var url = $(this).attr('href');
+    if (url.indexOf('#') == 0) {
+        $(url).modal('open');
+    } else {
+        $.get(url, function (data) {
+            $("#ajax-modal").remove();
+            if (data) $(data).modal();
+        });
+    }
+});
 
 
 	//Convert a form to ajax submission by adding 'data-async' attribute	
