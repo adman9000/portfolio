@@ -9,6 +9,8 @@ use App\Repositories\BinanceExchange;
 use App\Repositories\KrakenExchange;
 use App\Repositories\CryptopiaExchange;
 
+use adman9000\cryptoexchange\CryptoExchange;
+
 class Exchange extends Model
 {
     //
@@ -96,7 +98,16 @@ class Exchange extends Model
 
     	$coins = Coin::all();
 
+        $exchange = new CryptoExchange($this->slug, $this->api_key, $this->api_secret);
+        //$assets = $exchange->getCurrencies();
+        $ticker = $exchange->getTickers();
+        //$markets = $exchange->getMarkets();
+
+        dd($ticker);
+
+/**
         $class = $this->getExchangeClass();
+
 
         //$ticker = $class->getTicker();
 
@@ -105,6 +116,7 @@ class Exchange extends Model
         $assets =  $class->getAssets();
 
         $markets =  $class->getMarkets();
+**/
 
         //dd($markets);
 

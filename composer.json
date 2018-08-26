@@ -7,11 +7,8 @@
     "minimum-stability" : "dev",
     "require": {
         "php": ">=5.6.4",
-        "adman9000/laravel-binance": "dev-master",
-        "adman9000/laravel-bittrex": "dev-master",
         "adman9000/laravel-coinmarketcap": "dev-master",
-        "adman9000/laravel-cryptopia": "dev-master",
-        "adman9000/laravel-kraken": "dev-master",
+        "adman9000/laravel-cryptoexchange": "dev-withdrawals",
         "doctrine/dbal": "^2.5@dev",
         "laravel/framework": "5.5.*",
         "laravel/passport": "^4.0@dev",

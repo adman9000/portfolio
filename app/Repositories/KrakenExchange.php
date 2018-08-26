@@ -333,4 +333,13 @@ class KrakenExchange {
         return $orders;
     }
 
+    //Kraken withdrawals need the address key stored against the currency, not an actual address
+    function withdraw($code, $amount, $address) {
+         $api = new KrakenAPI();
+        $api->setAPI($this->api_key, $this->api_secret);
+        $response = $api->WithdrawFunds($code, $address, $amount);
+
+        dd($response);
+    }
+
 }

@@ -177,8 +177,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        adman9000\kraken\KrakenServiceProvider::class,
-        adman9000\Bittrex\BittrexServiceProvider::class,
+        //adman9000\kraken\KrakenServiceProvider::class,
+        //adman9000\Bittrex\BittrexServiceProvider::class,
 
         Laravel\Passport\PassportServiceProvider::class,
 
@@ -231,9 +231,9 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         
-        'Kraken' => adman9000\kraken\KrakenAPIFacade::class,
+        //'Kraken' => adman9000\kraken\KrakenAPIFacade::class,
         'Pusher' => Pusher\Pusher::class,
-    'Bittrex' => adman9000\Bittrex\Bittrex::class,
+    //'Bittrex' => adman9000\Bittrex\Bittrex::class,
 
 
     ],

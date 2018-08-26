@@ -26,6 +26,7 @@ class CoinController extends Controller
      public function index()
     {
         $data = array();
+        $data['coins'] = [];
         
         $user = Auth::user();
 
@@ -34,6 +35,7 @@ class CoinController extends Controller
 
         //Load all this users exchange coins
         $usercoins = UserCoin::with(['coin', 'exchangeCoin'])->where("user_id", $user->id)->get();
+
 
         foreach($wallets as $wallet) {
 

@@ -38,10 +38,10 @@ class Cmc extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->integer('coin_id')->unsigned()->index();
-            $table->Double('btc_price', 16, 10);
-            $table->Double('usd_price', 16, 10);
-            $table->Double('gbp_price', 16, 10);
-            $table->bigInteger('current_supply');
+            $table->Double('btc_price', 16, 10)->nullable();
+            $table->Double('usd_price', 16, 10)->nullable();
+            $table->Double('gbp_price', 16, 10)->nullable();
+            $table->bigInteger('current_supply')->nullable();
         });
 
          Schema::create('exchanges_prices', function (Blueprint $table) {
@@ -50,9 +50,9 @@ class Cmc extends Migration
             $table->integer('coin_id')->unsigned()->index();
             $table->integer('exchange_id')->unsigned()->index();
             $table->integer('exchange_coin_id')->unsigned()->index();
-            $table->Double('btc_price', 16, 10);
-            $table->Double('usd_price', 16, 10);
-            $table->Double('gbp_price', 16, 10);
+            $table->Double('btc_price', 16, 10)->nullable();
+            $table->Double('usd_price', 16, 10)->nullable();
+            $table->Double('gbp_price', 16, 10)->nullable();
         });
 
          Schema::table('cmc_prices', function (Blueprint $table) {
@@ -62,7 +62,7 @@ class Cmc extends Migration
          Schema::table('exchanges_prices', function (Blueprint $table) {
             $table->foreign('coin_id')->references('id')->on('coins');
             $table->foreign('exchange_id')->references('id')->on('exchanges');
-            $table->foreign('exchange_coin_id')->references('id')->on('exchanges_coins');
+            //$table->foreign('exchange_coin_id')->references('id')->on('coin_exchange');
         });
 
 

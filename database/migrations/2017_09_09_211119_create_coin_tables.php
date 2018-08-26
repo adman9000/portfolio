@@ -24,9 +24,11 @@ class CreateCoinTables extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->Integer('coin_id');
-            $table->Double('amount_owned', 15, 7);
-            $table->Double('bought_at', 15, 7);
-            $table->Double('sold_at', 15, 7);
+            $table->Double('amount_owned', 15, 7)->nullable();
+            $table->Double('bought_at', 15, 7)->nullable();
+            $table->Double('sold_at', 15, 7)->nullable();
+            $table->Double('balance', 15, 7)->nullable();
+            $table->Double('gbp_value', 15, 7)->nullable();
         });
 
         Schema::create('transactions', function (Blueprint $table) {

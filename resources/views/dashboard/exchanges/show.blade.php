@@ -96,6 +96,9 @@
                       <!-- View Address !-->
                       <a href="{{route('exchanges')}}/{{$exchange->id}}/address/{{$asset['coin_id']}}" data-toggle='modal-ajax' class='btn btn-info'>View Address</a>
 
+                      <!-- Withdrawal !-->
+                      <a href="{{route('exchanges')}}/{{$exchange->id}}/withdraw/{{$asset['coin_id']}}/{{$asset['id']}}" data-toggle='modal-ajax' class='btn btn-info'>Withdrawal</a>
+
 	                	</td>
 
                     @endcan
@@ -108,7 +111,13 @@
            </tbody>
        </table>
 
-  <form method='post' action="">
+       <form method='post' action="">
+              {{ csrf_field() }}
+            <input type='hidden' name='action' value='rescan' />
+            <input type='submit' value='Scan for Coins' class='btn btn-sm btn-primary' />
+        </form>
+
+      <form method='post' action="">
               {{ csrf_field() }}
             <input type='hidden' name='action' value='resync' />
             <input type='submit' value='Resync Balances' class='btn btn-sm btn-primary' />

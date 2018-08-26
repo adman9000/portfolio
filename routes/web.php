@@ -24,18 +24,21 @@ use App\Modules\Portfolio\UserCoin;
 
 Auth::routes();
 
-Route::get("/test", function() { 
+Route::get("/permissions", function() { 
 
-	//Role::create(['name' => 'administrator']);
-	//Role::create(['name' => 'member']);
-	//Permission::create(['name' => 'edit users']);
-	//Permission::create(['name' => 'view users']);
-	//Permission::create(['name' => 'publish content']);
+	Role::create(['name' => 'administrator']);
+	Role::create(['name' => 'member']);
+	Permission::create(['name' => 'edit users']);
+	Permission::create(['name' => 'view users']);
+	Permission::create(['name' => 'publish content']);
+
+	Permission::create(['name' => 'trade']);
 
          $user = Auth::user();
 
-         //$user->assignRole('administrator');
+         $user->assignRole('administrator');
          $user->givePermissionTo('edit users');
+         $user->givePermissionTo('trade');
 
 	echo "OK";
 	dd($user->hasRole("administrator"));
@@ -43,67 +46,34 @@ Route::get("/test", function() {
 
 });
 
-//CMC
-Route::get('/cmc', function(){
+//One-off setup scripts if this is being installed on a new server
+Route::get('/setup', function(){
 
-	ini_set("max_execution_time", 120);
+	ini_set("max_execution_time", 300);
 
-	//$exchange = Exchange::find(3);
-	//	$exchange->retrievePrices();
-
-/*
-	$user_coins = UserCoin::all();
-
-	foreach($user_coins as $ucoin) {
-
-		$ucoin->load('exchangeCoin');
-
-		$exchange_id = $ucoin->exchangeCoin->exchange_id;
-		$user_id = $ucoin->user_id;
-
-		$user_exchange = UserExchange::where("exchange_id", $exchange_id)->where("user_id", $user_id)->first();
-
-		$ucoin->user_exchange_id = $user_exchange->id;
-		$ucoin->save();
-	}
-*//*
-		$exchange = Exchange::find(1);
-		$exchange->setupCoins();
-		$exchange = Exchange::find(2);
-		$exchange->setupCoins();
-		$exchange = Exchange::find(3);
-		$exchange->setupCoins();
-		$exchange = Exchange::find(4);
-		$exchange->setupCoins();
-*/
-		//$exchange = Exchange::find(1);
-		//$exchange->retrievePrices();
-		//die();
-
-		//$exchange = Exchange::find(3);
-		//$exchange->retrievePrices(date("Y-m-d G:i:s"));
-		//die();
 
 		$exchanges = new Exchanges();
-		//$exchanges->downloadOrders();
-		//$exchanges->cleanupPrices();
+		//Add all coins from CoinMarketCap
 		//$exchanges->saveCMCPrices(); 
+		//Set up the coins for each exchange
+		$exchanges->setupCoins();
+		//Get the latest exchange prices
 		$exchanges->saveExchangePrices();
-        //Get latest prices from Coinmarketcap
-       // $exchanges->saveCMCPrices(); 
+		die();
 
-        //Update users wallet values
-       // $exchanges->calculateWalletValues();
-        
-        //Get latest prices from exchanges
-        //$exchanges->calculatePortfolios();
-        die();
-		//$exchanges->saveExchangePrices();
-		//$exchange->setupCoins();
-		//$exchanges->getAccountStats();
-		//$exchanges->saveCMCPrices();
-		//$exchanges->saveExchangePrices();
-		//$exchanges->calculatePortfolios();
+	});
+
+//
+Route::get('/schedule', function(){
+
+	ini_set("max_execution_time", 300);
+
+
+		$exchanges = new Exchanges();
+		//Add all coins from CoinMarketCap
+		$exchanges->runSchedule();
+		die();
+
 	});
 
 
@@ -197,6 +167,7 @@ Route::prefix('dashboard')->group(function() {
 
 
 	Route::get('/exchanges/{exchange}/address/{coin}', 'Dashboard\ExchangeController@getAssetAddress');
+	Route::get('/exchanges/{exchange}/withdraw/{coin}/{ucoin}', 'Dashboard\ExchangeController@modalWithdraw');
 	Route::get('/exchanges/getprices', 'Dashboard\ExchangeController@getPrices');
 	Route::get('/exchanges/trade', 'Dashboard\ExchangeController@runTradingRules');
 	Route::get('/exchanges/resetCoins', 'Dashboard\ExchangeController@resetCoins');

@@ -47,6 +47,14 @@ class UserCoin extends Model
 
     }
 
+    function withdraw($amount, $address) {
+
+        $userExchange = $this->userExchange;
+        $exchange_class = $userExchange->getExchangeClass();
+        $exchange_class->withdraw($this->exchangeCoin->code, $amount, $address);
+
+    }
+
     // Relationships
      function coin() {
 

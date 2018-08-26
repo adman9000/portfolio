@@ -37,7 +37,7 @@ class ExchangeController extends Controller
        $user = Auth::user();
 
         //Load all this users coins
-        $user->load('coins');
+        $user->load(['coins','exchanges']);
 
         //Load all the coins for each of their exchanges
         foreach($user->exchanges as $exchange) {
@@ -53,12 +53,11 @@ class ExchangeController extends Controller
                         $exchangedata['gbp_value'] += $ucoin->balance * $ecoin->gbp_price;
                     }
                 }
-                $data['stats'][$exchange->exchange->slug] = $exchangedata;
 
             }
+                $data['stats'][$exchange->exchange->slug] = $exchangedata;
 
         }
-
         //Format the currency values
        // $data['usd_value'] = number_format($data['usd_value'], 2);
        // $data['gbp_value'] = number_format($data['gbp_value'], 2);
@@ -138,32 +137,47 @@ class ExchangeController extends Controller
       switch(request('action')) {
 
         case "resync" :
+
           $user_exchange = UserExchange::where("exchange_id", $exchange->id)->where("user_id", $user->id)->first();
-           $user_exchange->updateBalances();
+          $user_exchange->updateBalances();
+
+          break;
+
+        case "rescan" :
+
+          $exchange->setupCoins();
+
           break;
 
         case "sell" :
+
           $usercoin = UserCoin::find(request('user_coin_id'));
           $usercoin->marketSell(request('volume'));
 
         break;
 
-          case "buy" :
+        case "buy" :
+
           $usercoin = UserCoin::find(request('user_coin_id'));
 		  
-		  if(!$usercoin) {
-			$ucoin_data = $request->all();
-			$ucoin_data['user_id'] = $user->id;
-			$ucoin_data['balance'] = 0;
-			$ucoin_data['available'] = 0;
-			$ucoin_data['locked'] = 0;
-			$ucoin_data['gbp_value'] = 0;
-			$usercoin = UserCoin::create($ucoin_data);
-			
-			}
+    		  if(!$usercoin) {
+      			$ucoin_data = $request->all();
+      			$ucoin_data['user_id'] = $user->id;
+      			$ucoin_data['balance'] = 0;
+      			$ucoin_data['available'] = 0;
+      			$ucoin_data['locked'] = 0;
+      			$ucoin_data['gbp_value'] = 0;
+      			$usercoin = UserCoin::create($ucoin_data);	
+    			}
+
           $usercoin->marketBuy(request('volume'));
 
         break;
+
+        case "withdraw" :
+          $usercoin = UserCoin::find(request('user_coin_id'));
+          $usercoin->withdraw(request('amount'), request('address'));
+          break;
       }
 
       return $this->show($name, $request);
@@ -184,6 +198,19 @@ class ExchangeController extends Controller
       return view('dashboard.exchanges.ajax.address', $data);
     }
 
+  //Display the withdraw modal for this asset
+    public function modalWithdraw(Exchange $exchange, Coin $coin, Usercoin $ucoin) {
+
+      $user = Auth::user();
+
+      $user_exchange = UserExchange::where("user_id", "=", $user->id)->where("exchange_id", "=", $exchange->id)->first();
+
+      $data['coin'] = $coin;
+      $data['user_coin'] = $ucoin;
+      $data['exchange'] = $exchange;
+
+      return view('dashboard.exchanges.ajax.withdraw', $data);
+    }
 
     //////////Maybe not used any more
 
