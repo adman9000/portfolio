@@ -5,6 +5,8 @@ namespace App\Modules\Portfolio;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 
+use adman9000\cryptoexchange\CryptoExchange;
+
 class UserExchange extends Model
 {
     //
@@ -25,38 +27,42 @@ class UserExchange extends Model
     }
 
 
+    function getExchangeAPI() {
+
+        $exchange = $this->exchange->getExchangeAPI($this->api_key, $this->api_secret);
+
+        return $exchange;
+    }
 
     function getExchangeClass() {
 
         $exchange = $this->exchange->getExchangeClass();
-        $exchange->setAPI($this->api_key, $this->api_secret);
+        $exchange->setAPIKey($this->api_key, $this->api_secret);
         return $exchange;
     }
 
-    /* getAccountStats()
+    /**
+     * getAccountStats() - TODO
      * @param exchange name
      * @return array of stats for users account on given exchange (or all if no params passed)
     **/
     public function getAccountStats() {
 
-
-         $class = $this->getExchangeClass();
-        if($class) return $class->getAccountStats();
-        else return false;
+        return false;
          
-
     }
 
 
-    /** getBalances()
-     * return coin balances for the given exchange in consistent format
+    /** 
+     * getBalances()
+     * @return coin balances for the given exchange in consistent format
     **/
     public function getBalances($inc_zero=true) {
 
         //Must be an exchange selected
-        if(!$class = $this->getExchangeClass()) return false;
+        if(!$class = $this->getExchangeAPI()) return false;
         else {
-            return $class->getBalances($inc_zero);
+            return $class->getBalances();
         }
 
     }
@@ -66,14 +72,18 @@ class UserExchange extends Model
      **/
     public function updateBalances() {
 
-        $balances = $this->getBalances(true);
+        $result = $this->getBalances(true);
 
-        if(!$balances) return false;
+        if(!$result['success'])  {
+            var_dump($result['errors']);
+            return false;
+        }
 
+/**
         //BTC is done different
         $coin = ExchangeCoin::where('code',"BTC")->where('exchange_id', $this->exchange_id)->get()->first();
 
-        if($balances['btc']['balance']>0) {
+        if($balances['BTC']['balance']>0) {
             if($coin) {
                 $ucoin = UserCoin::updateOrCreate(
                    [ 'exchange_coin_id'=>$coin->id, 'user_id'=>$this->user_id], 
@@ -84,9 +94,9 @@ class UserExchange extends Model
             //No BTC, delete existing BTC balance record
             UserCoin::where('user_id', $this->user_id)->where('exchange_coin_id', $coin->id)->delete();
         }
-
+**/
         //Loop through the balances at the exchange and make sure they are stored in the DB
-        foreach($balances['assets'] as $asset) {
+        foreach($result['data'] as $asset) {
 
             $coin = ExchangeCoin::where('code',$asset['code'])->where('exchange_id', $this->exchange_id)->get()->first();
 
@@ -130,9 +140,30 @@ class UserExchange extends Model
     **/
     function getAssetAddress($symbol) {
 
-         $class = $this->getExchangeClass();
-         return $class->getAssetAddress($symbol);
+        $exchange_api = $this->getExchangeAPI();
+
+        $result = $exchange_api->depositAddress($symbol);
+
+        return $result['data']['address'];
          
+    }
+
+    function getWithdrawalHistory($symbol) {
+
+        $exchange_api = $this->getExchangeAPI();
+
+        $result = $exchange_api->withdrawalHistory($symbol);
+
+        return $result;
+    }
+
+    function getDepositHistory($symbol) {
+
+        $exchange_api = $this->getExchangeAPI();
+
+        $result = $exchange_api->depositHistory($symbol);
+
+        return $result;
     }
 }
 

@@ -92,7 +92,8 @@ class ExchangeController extends Controller
         $exchange->load('coins');
 
         $data['exchange'] = $exchange;
-		$data['user_exchange'] = $user_exchange;
+		    $data['user_exchange'] = $user_exchange;
+
 
         foreach($exchange->coins as $ecoin) {
 
@@ -211,6 +212,25 @@ class ExchangeController extends Controller
 
       return view('dashboard.exchanges.ajax.withdraw', $data);
     }
+
+  //Display the history for this asset
+    public function modalHistory(Exchange $exchange, Coin $coin, Usercoin $ucoin) {
+
+      $user = Auth::user();
+
+      $user_exchange = UserExchange::where("user_id", "=", $user->id)->where("exchange_id", "=", $exchange->id)->first();
+
+      $data['coin'] = $coin;
+      $data['user_coin'] = $ucoin;
+      $data['exchange'] = $exchange;
+
+      //Get withdrawal and deposit history
+      $data['withdrawals'] = $user_exchange->getWithdrawalHistory($coin->code);
+      $data['deposits'] = $user_exchange->getDepositHistory($coin->code);
+
+      return view('dashboard.exchanges.ajax.history', $data);
+    }
+
 
     //////////Maybe not used any more
 

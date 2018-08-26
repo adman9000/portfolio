@@ -76,6 +76,15 @@ Route::get('/schedule', function(){
 
 	});
 
+Route::get('/test', function(){
+
+	ini_set("max_execution_time", 300);
+
+
+		$exchange = Exchange::find(3);
+		dd($exchange->setupCoins());
+
+	});
 
 //ADMIN ROUTES
 Route::get("/admin", "Admin\AdminController@index")->name("admin");
@@ -168,6 +177,7 @@ Route::prefix('dashboard')->group(function() {
 
 	Route::get('/exchanges/{exchange}/address/{coin}', 'Dashboard\ExchangeController@getAssetAddress');
 	Route::get('/exchanges/{exchange}/withdraw/{coin}/{ucoin}', 'Dashboard\ExchangeController@modalWithdraw');
+	Route::get('/exchanges/{exchange}/history/{coin}/{ucoin}', 'Dashboard\ExchangeController@modalHistory');
 	Route::get('/exchanges/getprices', 'Dashboard\ExchangeController@getPrices');
 	Route::get('/exchanges/trade', 'Dashboard\ExchangeController@runTradingRules');
 	Route::get('/exchanges/resetCoins', 'Dashboard\ExchangeController@resetCoins');

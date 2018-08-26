@@ -94,10 +94,13 @@
                   @endif
 
                       <!-- View Address !-->
-                      <a href="{{route('exchanges')}}/{{$exchange->id}}/address/{{$asset['coin_id']}}" data-toggle='modal-ajax' class='btn btn-info'>View Address</a>
+                      <a href="{{route('exchanges')}}/{{$exchange->id}}/address/{{$asset['coin_id']}}" data-toggle='modal-ajax' class='btn btn-info btn-sm'>View Address</a>
 
                       <!-- Withdrawal !-->
-                      <a href="{{route('exchanges')}}/{{$exchange->id}}/withdraw/{{$asset['coin_id']}}/{{$asset['id']}}" data-toggle='modal-ajax' class='btn btn-info'>Withdrawal</a>
+                      <a href="{{route('exchanges')}}/{{$exchange->id}}/withdraw/{{$asset['coin_id']}}/{{$asset['user_coin_id']}}" data-toggle='modal-ajax' class='btn btn-info btn-sm'>Withdrawal</a>
+
+                      <!-- History !-->
+                      <a href="{{route('exchanges')}}/{{$exchange->id}}/history/{{$asset['coin_id']}}/{{$asset['user_coin_id']}}" data-toggle='modal-ajax' class='btn btn-info btn-sm'>History</a>
 
 	                	</td>
 

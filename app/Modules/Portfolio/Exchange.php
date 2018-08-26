@@ -19,6 +19,17 @@ class Exchange extends Model
     protected $api_key, $api_secret;
 
 
+//Replace getExchangeClass with new cryptoexchange package
+ function getExchangeAPI($key = false, $secret = false) {
+
+        $api = new CryptoExchange($this->slug);
+        if($key && $secret)
+            $api->setAPIKey($key, $secret);
+
+        return $api;
+    }
+
+
    function getExchangeClass() {
 
 
@@ -51,11 +62,11 @@ class Exchange extends Model
     function retrievePrices($time) {
 
 
-        $class = $this->getExchangeClass();
+        $exchange_api = $this->getExchangeAPI();
 
-        $ticker =  $class->getTicker();
+        $ticker =  $exchange_api->getTicker();
 
-        $btc_market =  $class->getBTCMarket();
+        $btc_market =  $exchange_api->getBTCUSDTicker();
 
         if(!$ticker) return false;
         if(!$btc_market) return false;
@@ -98,27 +109,23 @@ class Exchange extends Model
 
     	$coins = Coin::all();
 
-        $exchange = new CryptoExchange($this->slug, $this->api_key, $this->api_secret);
-        //$assets = $exchange->getCurrencies();
-        $ticker = $exchange->getTickers();
-        //$markets = $exchange->getMarkets();
+        $exchange_api = $this->getExchangeAPI();
 
-        dd($ticker);
+        $result = $exchange_api->getCurrencies();
 
-/**
-        $class = $this->getExchangeClass();
+        if(!$result['success']) return false;
+        $assets = $result['data'];
 
+        $result = $exchange_api->getTickers();
 
-        //$ticker = $class->getTicker();
+        if(!$result['success']) return false;
+        $ticker = $result['data'];
 
-        //dd($ticker);
+        $result = $exchange_api->getMarkets();
 
-        $assets =  $class->getAssets();
+        if(!$result['success']) return false;
+        $markets = $result['data'];
 
-        $markets =  $class->getMarkets();
-**/
-
-        //dd($markets);
 
         foreach($assets as $asset) {
 
@@ -127,9 +134,9 @@ class Exchange extends Model
             //Make sure there is a BTC market for this asset on this exchange
             foreach($markets as $market) {
 
-                if($asset['code'] == $market['base_code']) {
+                if($asset['code'] == $market['alt']) {
                     $accepted = true;
-                    $market_code = $market['market_code'];
+                    $market_code = $market['code'];
                     break;
                 }
 
